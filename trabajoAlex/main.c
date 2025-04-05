@@ -101,6 +101,28 @@ char *remove_quotes(char *str)
     return str;
 }
 
+// Función para limpiar las comillas del input completo
+char *clean_input(char *input)
+{
+    if (!input)
+        return NULL;
+
+    size_t len = strlen(input);
+    char *cleaned_input = malloc(len + 1);  // Almacenamos el resultado final
+    size_t j = 0;
+
+    for (size_t i = 0; i < len; i++) {
+        if (input[i] == '"' || input[i] == '\'') {
+            // Ignoramos las comillas
+            continue;
+        }
+        cleaned_input[j++] = input[i];  // Copiamos el carácter sin comillas
+    }
+
+    cleaned_input[j] = '\0';  // Finalizamos la cadena
+    return cleaned_input;
+}
+
 // Función para imprimir el prompt con colores
 void print_prompt()
 {
@@ -129,6 +151,7 @@ void print_prompt()
     printf("%s%s@%s:%s%s$ %s", red, username, hostname, yellow, cwd, reset);
 }
 
+// Función principal
 int main(int argc, char **argv, char **envp)
 {
     char *input = NULL;
@@ -151,9 +174,12 @@ int main(int argc, char **argv, char **envp)
         size_t input_len = strlen(input);
         if (input_len > 0 && input[input_len - 1] == '\n')
             input[input_len - 1] = '\0';
-        
+
+        // Limpiar el input de comillas
+        char *cleaned_input = clean_input(input);
+
         // Utilizar ft_split de libft para separar el input en tokens
-        args = ft_split(input, ' ');
+        args = ft_split(cleaned_input, ' ');
 
         // Procesar las comillas en los argumentos
         if (args) {
@@ -177,6 +203,7 @@ int main(int argc, char **argv, char **envp)
         while (args && args[cont])
             free(args[cont++]);
         free(args);
+        free(cleaned_input);
     }
     free(input);
 
