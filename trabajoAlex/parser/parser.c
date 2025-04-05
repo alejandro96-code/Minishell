@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include "../libft/libft.h"
 
 // Función para verificar si el comando es un builtin (puedes agregar más)
 int is_builtin_command(const char *cmd) {

@@ -25,4 +25,5 @@ int builtin_echo(char **args)
     }
     if (newline)
         printf("\n");
+    return 0;
 }

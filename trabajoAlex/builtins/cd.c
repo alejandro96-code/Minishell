@@ -6,6 +6,8 @@
 
 int builtin_cd(char **args, char **env)
 {
+    (void)env;
+    
     char *path = args[1];
 
     if (!path)
