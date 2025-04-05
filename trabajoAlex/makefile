@@ -1,16 +1,18 @@
 NAME = minishell
 
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 SRC = main.c \
+      executors/exec_cmd.c \
       builtins/cd.c \
       builtins/echo.c \
       builtins/env.c \
       builtins/exit.c \
       builtins/export.c \
       builtins/pwd.c \
-      builtins/unset.c
+      builtins/unset.c \
+      
 
 OBJ = $(SRC:.c=.o)
 
