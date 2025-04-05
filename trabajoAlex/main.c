@@ -31,7 +31,10 @@ int execute_builtin(char **args, char ***env)
     if (!strcmp(args[0], "env"))
         return builtin_env(*env);
     if (!strcmp(args[0], "exit"))
+    {
+        printf("Exit command recognized\n");
         return builtin_exit(args);
+    }
     return (1);
 }
 
