@@ -35,6 +35,26 @@ int execute_builtin(char **args, char ***env)
     return (1);
 }
 
+// Ejecuta un comando externo
+void execute_external(char **args)
+{
+    pid_t pid = fork();
+    
+    if (pid == 0) {
+        // Proceso hijo: intenta ejecutar el comando
+        if (execvp(args[0], args) == -1) {
+            perror("Error ejecutando el comando");
+            exit(EXIT_FAILURE);
+        }
+    } else if (pid > 0) {
+        // Proceso padre: espera que termine el hijo
+        wait(NULL);
+    } else {
+        // Error al hacer fork
+        perror("Error en fork");
+    }
+}
+
 // Copia el envp al entorno local
 char **copy_env(char **envp)
 {
@@ -143,7 +163,7 @@ int main(int argc, char **argv, char **envp)
             if (is_builtin(args[0]))
                 execute_builtin(args, &env);
             else
-                printf("Comando no encontrado: %s\n", args[0]);
+                execute_external(args);
         }
 
         // Liberar la memoria de los argumentos
