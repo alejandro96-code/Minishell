@@ -57,9 +57,9 @@ char *remove_quotes(char *str)
 {
     if (!str)
         return NULL;
-    
+
     size_t len = strlen(str);
-    
+
     // Si el string tiene comillas al inicio y al final, las eliminamos
     if (len >= 2 && ((str[0] == '"' && str[len-1] == '"') || 
                      (str[0] == '\'' && str[len-1] == '\'')))
@@ -76,6 +76,7 @@ char *remove_quotes(char *str)
         return result;
     }
     
+    // Si las comillas están desbalanceadas, no hacemos nada
     return str;
 }
 
@@ -127,12 +128,12 @@ int main(int argc, char **argv, char **envp)
         
         // Utilizar ft_split de libft para separar el input en tokens
         args = ft_split(input, ' ');
-        
+
         // Procesar las comillas en los argumentos
         if (args) {
             int i = 0;
             while (args[i]) {
-                args[i] = remove_quotes(args[i]);
+                args[i] = remove_quotes(args[i]);  // Eliminar comillas de cada argumento
                 i++;
             }
         }
