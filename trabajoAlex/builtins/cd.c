@@ -1,9 +1,9 @@
-#include "../minishell.h"
-/*
-    Cambia el directorio actual.
-    Si no recibe argumento, va al HOME.
-*/
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+// Función para obtener el valor de una variable de entorno
 char *get_env_var(char *name, char **env)
 {
     int i = 0;
@@ -18,6 +18,7 @@ char *get_env_var(char *name, char **env)
     return NULL;
 }
 
+// Implementación del builtin cd
 int builtin_cd(char **args, char **env)
 {
     char *path = args[1];
@@ -29,7 +30,48 @@ int builtin_cd(char **args, char **env)
         if (!path)
         {
             fprintf(stderr, "cd: HOME not set\n");
-            return (1);
+            return 1;
+        }
+    }
+
+    // Si la ruta es relativa, se resuelve en relación al directorio actual
+    if (path[0] != '/' && path[0] != '~')
+    {
+        char cwd[1024];
+        if (getcwd(cwd, sizeof(cwd)) != NULL)
+        {
+            // Concatenar la ruta relativa al directorio actual
+            strcat(cwd, "/");
+            strcat(cwd, path);
+            path = cwd;  // Ahora 'path' es la ruta absoluta
+        }
+        else
+        {
+            perror("cd");
+            return 1;
+        }
+    }
+    // Si la ruta empieza con '~', es una ruta relativa al directorio HOME
+    else if (path[0] == '~')
+    {
+        char *home = get_env_var("HOME", env);
+        if (home)
+        {
+            // Reemplazar el '~' por el directorio HOME
+            char *new_path = malloc(strlen(home) + strlen(path));
+            if (!new_path)
+            {
+                perror("malloc");
+                return 1;
+            }
+            strcpy(new_path, home);
+            strcat(new_path, path + 1);  // Eliminar '~' al concatenar
+            path = new_path;
+        }
+        else
+        {
+            fprintf(stderr, "cd: HOME not set\n");
+            return 1;
         }
     }
 
@@ -38,8 +80,8 @@ int builtin_cd(char **args, char **env)
     {
         // En caso de error, mostrar el error específico
         perror("cd");
-        return (1);
+        return 1;
     }
 
-    return (0);
+    return 0;
 }
