@@ -4,22 +4,6 @@
 
 #include "minishell.h" // tu header con prototipos
 
-// Función para dividir el input en argumentos
-char **split_args(char *input)
-{
-    char **args = malloc(100 * sizeof(char *));
-    int i = 0;
-    char *token = strtok(input, " \t\n");
-
-    while (token)
-    {
-        args[i++] = strdup(token);
-        token = strtok(NULL, " \t\n");
-    }
-    args[i] = NULL;
-    return args;
-}
-
 // Detecta si es un builtin
 int is_builtin(char *cmd)
 {
@@ -81,7 +65,10 @@ int main(int argc, char **argv, char **envp)
         printf("> ");
         if (getline(&input, &len, stdin) == -1)
             break;
-        args = split_args(input);
+        
+        // Utilizar ft_split de libft para separar el input en tokens
+        args = ft_split(input, ' ');
+
         if (args[0])
         {
             if (is_builtin(args[0]))
@@ -89,15 +76,20 @@ int main(int argc, char **argv, char **envp)
             else
                 printf("Comando no encontrado: %s\n", args[0]);
         }
+
+        // Liberar la memoria de los argumentos
         int i = 0;
         while (args[i])
             free(args[i++]);
         free(args);
     }
     free(input);
+
+    // Liberar la memoria del entorno
     int i = 0;
     while (env[i])
         free(env[i++]);
     free(env);
+
     return 0;
 }
