@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 /*
     Elimina una variable del entorno si existe.

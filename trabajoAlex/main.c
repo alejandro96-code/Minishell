@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include "libft/libft.h"
 
 // Detecta si es un builtin
 int is_builtin(char *cmd)
@@ -26,7 +27,7 @@ int execute_builtin(char **args, char ***env)
     if (!strcmp(args[0], "export"))
         return builtin_export(args, env);
     if (!strcmp(args[0], "unset"))
-        return builtin_unset(args, env);cont
+        return builtin_unset(args, env);
     if (!strcmp(args[0], "env"))
         return builtin_env(*env);
     if (!strcmp(args[0], "exit"))

@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 /*
     Imprime todas las variables del entorno en formato KEY=VALUE.

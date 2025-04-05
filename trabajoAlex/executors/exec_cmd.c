@@ -1,4 +1,5 @@
-#include "minishell.h"
+#include "../minishell.h"
+#include "../libft/libft.h"
 
 char	*get_path(char *cmd, char **envp)
 {

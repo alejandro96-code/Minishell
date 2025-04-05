@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 /*
     Cambia el directorio actual.
     Si no recibe argumento, va al HOME.

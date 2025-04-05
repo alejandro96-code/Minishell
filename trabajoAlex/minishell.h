@@ -6,8 +6,6 @@
 # include <unistd.h>
 # include <string.h>
 # include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
 
 
 typedef struct s_command {

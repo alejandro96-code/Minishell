@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 /*
     Muestra el directorio actual de trabajo usando getcwd.

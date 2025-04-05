@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 /*
     Agrega o reemplaza una variable de entorno.

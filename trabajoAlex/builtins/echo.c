@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 /*
 Imprime en pantalla lo que se le pase como argumento.

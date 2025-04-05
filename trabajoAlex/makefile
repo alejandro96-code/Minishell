@@ -13,19 +13,27 @@ SRC = main.c \
       builtins/export.c \
       builtins/pwd.c \
       builtins/unset.c \
-      
 
 OBJ = $(SRC:.c=.o)
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+LIBFT_DIR = libft
+LIBFT = $(LIBFT_DIR)/libft.a
+INCLUDES = -I$(LIBFT_DIR)
+
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(NAME) $(OBJ) $(LIBFT)
+
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_DIR)
 
 all: $(NAME)
 
 clean:
 	rm -f $(OBJ)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
