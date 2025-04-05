@@ -24,12 +24,6 @@ char	*get_path(char *cmd, char **envp);
 int is_builtin_command(const char *cmd);
 t_command *parse_input(const char *input);
 
-// Utils
-char	**ft_split(char const *s, char c);
-char	*ft_strjoin(char const *s1, char const *s2);
-void	ft_free_split(char **arr);
-
-
 // funciones de builtin
 int builtin_echo(char **args);
 int builtin_cd(char **args, char **env);

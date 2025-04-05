@@ -1,15 +1,17 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-#include "minishell.h" // tu header con prototipos
+#include "minishell.h"
 
 // Detecta si es un builtin
 int is_builtin(char *cmd)
 {
-    return (!strcmp(cmd, "cd") || !strcmp(cmd, "echo") || !strcmp(cmd, "pwd") ||
-            !strcmp(cmd, "export") || !strcmp(cmd, "unset") || 
-            !strcmp(cmd, "env") || !strcmp(cmd, "exit"));
+    return (
+        !strcmp(cmd, "cd") ||
+        !strcmp(cmd, "echo") ||
+        !strcmp(cmd, "pwd") ||
+        !strcmp(cmd, "export") ||
+        !strcmp(cmd, "unset") || 
+        !strcmp(cmd, "env") ||
+        !strcmp(cmd, "exit")
+    );
 }
 
 // Ejecuta el builtin correspondiente
@@ -24,7 +26,7 @@ int execute_builtin(char **args, char ***env)
     if (!strcmp(args[0], "export"))
         return builtin_export(args, env);
     if (!strcmp(args[0], "unset"))
-        return builtin_unset(args, env);
+        return builtin_unset(args, env);cont
     if (!strcmp(args[0], "env"))
         return builtin_env(*env);
     if (!strcmp(args[0], "exit"))
@@ -35,17 +37,17 @@ int execute_builtin(char **args, char ***env)
 // Copia el envp al entorno local
 char **copy_env(char **envp)
 {
-    int i = 0;
-    while (envp[i])
-        i++;
-    char **copy = malloc((i + 1) * sizeof(char *));
-    i = 0;
-    while (envp[i])
+    int cont = 0;
+    while (envp[cont])
+        cont++;
+    char **copy = malloc((cont + 1) * sizeof(char *));
+    cont = 0;
+    while (envp[cont])
     {
-        copy[i] = strdup(envp[i]);
-        i++;
+        copy[cont] = strdup(envp[cont]);
+        cont++;
     }
-    copy[i] = NULL;
+    copy[cont] = NULL;
     return copy;
 }
 
@@ -78,17 +80,17 @@ int main(int argc, char **argv, char **envp)
         }
 
         // Liberar la memoria de los argumentos
-        int i = 0;
-        while (args[i])
-            free(args[i++]);
+        int cont = 0;
+        while (args[cont])
+            free(args[cont++]);
         free(args);
     }
     free(input);
 
     // Liberar la memoria del entorno
-    int i = 0;
-    while (env[i])
-        free(env[i++]);
+    int cont = 0;
+    while (env[cont])
+        free(env[cont++]);
     free(env);
 
     return 0;

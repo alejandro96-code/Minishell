@@ -5,17 +5,17 @@ char	*get_path(char *cmd, char **envp)
 	char	**paths;
 	char	*full_path;
 	char	*temp;
-	int		i = 0;
+	int		cont = 0;
 
-	while (envp[i] && strncmp(envp[i], "PATH=", 5) != 0)
-		i++;
-	if (!envp[i])
+	while (envp[cont] && strncmp(envp[cont], "PATH=", 5) != 0)
+		cont++;
+	if (!envp[cont])
 		return (NULL);
-	paths = ft_split(envp[i] + 5, ':');
-	i = 0;
-	while (paths[i])
+	paths = ft_split(envp[cont] + 5, ':');
+	cont = 0;
+	while (paths[cont])
 	{
-		temp = ft_strjoin(paths[i], "/");
+		temp = ft_strjoin(paths[cont], "/");
 		full_path = ft_strjoin(temp, cmd);
 		free(temp);
 		if (access(full_path, X_OK) == 0)
@@ -24,7 +24,7 @@ char	*get_path(char *cmd, char **envp)
 			return (full_path);
 		}
 		free(full_path);
-		i++;
+		cont++;
 	}
 	ft_free_split(paths);
 	return (NULL);

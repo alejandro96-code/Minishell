@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <string.h>
+#include "minishell.h"
 
 /*
     Muestra el directorio actual de trabajo usando getcwd.

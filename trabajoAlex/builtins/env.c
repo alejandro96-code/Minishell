@@ -1,10 +1,8 @@
-#include <stdio.h>
+#include "minishell.h"
 
 /*
     Imprime todas las variables del entorno en formato KEY=VALUE.
 */
-
-#include <stdio.h>
 
 int builtin_env(char **env)
 {

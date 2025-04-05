@@ -1,8 +1,4 @@
-#include <stdio.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "minishell.h"
 
 /*
     Agrega o reemplaza una variable de entorno.

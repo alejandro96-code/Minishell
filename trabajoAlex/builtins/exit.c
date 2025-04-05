@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include "minishell.h"
 
 /*
 Finaliza el programa con un código de salida.

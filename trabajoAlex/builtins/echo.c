@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <string.h>
+#include "minishell.h"
 
 /*
 Imprime en pantalla lo que se le pase como argumento.

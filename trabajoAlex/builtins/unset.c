@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include <string.h>
+#include "minishell.h"
 
 /*
     Elimina una variable del entorno si existe.

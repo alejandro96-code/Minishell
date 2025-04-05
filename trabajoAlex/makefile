@@ -5,6 +5,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRC = main.c \
       executors/exec_cmd.c \
+      parser/parser.c \
       builtins/cd.c \
       builtins/echo.c \
       builtins/env.c \

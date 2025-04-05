@@ -1,7 +1,4 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-
+#include "minishell.h"
 /*
     Cambia el directorio actual.
     Si no recibe argumento, va al HOME.
