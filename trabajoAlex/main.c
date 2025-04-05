@@ -61,6 +61,7 @@ char **copy_env(char **envp)
     int cont = 0;
     while (envp[cont])
         cont++;
+    
     char **copy = malloc((cont + 1) * sizeof(char *));
     cont = 0;
     while (envp[cont])
@@ -100,9 +101,14 @@ char *remove_quotes(char *str)
     return str;
 }
 
-// Función para imprimir el prompt
+// Función para imprimir el prompt con colores
 void print_prompt()
 {
+    // Colores ANSI
+    const char *red = "\033[31m";    // Rojo
+    const char *yellow = "\033[33m"; // Amarillo
+    const char *reset = "\033[0m";   // Resetear color
+
     char *username = getenv("USER");  // Obtener el nombre de usuario
     if (!username)
         username = "user";  // Si no se encuentra el nombre de usuario, usar un valor por defecto
@@ -119,8 +125,8 @@ void print_prompt()
         return;
     }
 
-    // Imprimir el prompt con el formato deseado
-    printf("%s@%s:%s$ ", username, hostname, cwd);
+    // Imprimir el prompt con colores: rojo para el usuario/host y amarillo para el directorio
+    printf("%s%s@%s:%s%s$ %s", red, username, hostname, yellow, cwd, reset);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -163,7 +169,7 @@ int main(int argc, char **argv, char **envp)
             if (is_builtin(args[0]))
                 execute_builtin(args, &env);
             else
-                execute_external(args);
+                execute_external(args);  // Ejecutar comando externo
         }
 
         // Liberar la memoria de los argumentos
