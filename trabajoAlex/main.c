@@ -21,7 +21,7 @@ int execute_builtin(char **args, char ***env)
     if (!strcmp(args[0], "cd"))
         return builtin_cd(args, *env);
     if (!strcmp(args[0], "echo"))
-        return builtin_echo(args);
+        return builtin_echo(args, *env);
     if (!strcmp(args[0], "pwd"))
         return builtin_pwd(*env);
     if (!strcmp(args[0], "export"))
@@ -31,10 +31,7 @@ int execute_builtin(char **args, char ***env)
     if (!strcmp(args[0], "env"))
         return builtin_env(*env);
     if (!strcmp(args[0], "exit"))
-    {
-        printf("Exit command recognized\n");
         return builtin_exit(args);
-    }
     return (1);
 }
 

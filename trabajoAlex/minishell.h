@@ -23,12 +23,15 @@ int is_builtin_command(const char *cmd);
 t_command *parse_input(const char *input);
 
 // funciones de builtin
-int builtin_echo(char **args);
+int builtin_echo(char **args, char **env);
 int builtin_cd(char **args, char **env);
 int builtin_pwd(char **env);
 int builtin_export(char **args, char ***env);
 int builtin_unset(char **args, char ***env);
 int builtin_env(char **env);
 int builtin_exit(char **args);
+
+//utils
+char *expand_variable(char *str, char **env);
 
 #endif

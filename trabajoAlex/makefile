@@ -13,6 +13,7 @@ SRC = main.c \
       builtins/export.c \
       builtins/pwd.c \
       builtins/unset.c \
+      utils/expand_variable.c \
 
 OBJ = $(SRC:.c=.o)
 

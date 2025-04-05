@@ -6,24 +6,21 @@ Si la opción -n está presente,
 no imprime el salto de línea final.
 */
 
-int builtin_echo(char **args)
+int builtin_echo(char **args, char **env)  // Agrega env como argumento
 {
-    int cont = 1;
-    int newline = 1;
+    int i = 1;
 
-    if (args[cont] && strcmp(args[cont], "-n") == 0)
+    while (args[i])
     {
-        newline = 0;
-        cont++;
-    }
-    while (args[cont])
-    {
-        printf("%s", args[cont]);
-        if (args[cont + 1])
+        char *expanded_str = expand_variable(args[i], env);  // Pasamos env a expand_variable
+        printf("%s", expanded_str);
+        free(expanded_str);
+
+        if (args[i + 1])  // Si hay más argumentos, poner un espacio
             printf(" ");
-        cont++;
+        i++;
     }
-    if (newline)
-        printf("\n");
-    return 0;
+
+    printf("\n");
+    return (0);
 }
