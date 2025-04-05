@@ -79,6 +79,29 @@ char *remove_quotes(char *str)
     return str;
 }
 
+// Función para imprimir el prompt
+void print_prompt()
+{
+    char *username = getenv("USER");  // Obtener el nombre de usuario
+    if (!username)
+        username = "user";  // Si no se encuentra el nombre de usuario, usar un valor por defecto
+
+    char hostname[256];
+    if (gethostname(hostname, sizeof(hostname)) != 0) {
+        perror("gethostname");
+        return;
+    }
+
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) == NULL) {
+        perror("getcwd");
+        return;
+    }
+
+    // Imprimir el prompt con el formato deseado
+    printf("%s@%s:%s$ ", username, hostname, cwd);
+}
+
 int main(int argc, char **argv, char **envp)
 {
     char *input = NULL;
@@ -92,7 +115,8 @@ int main(int argc, char **argv, char **envp)
     printf("Minishell builtins test mode. Ctrl+C to exit.\n");
     while (1)
     {
-        printf("> ");
+        print_prompt();  // Mostrar el prompt antes de pedir la entrada
+
         if (getline(&input, &len, stdin) == -1)
             break;
         
