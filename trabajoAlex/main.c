@@ -95,7 +95,7 @@ int main(int argc, char **argv, char **envp)
         free(args);
     }
     free(input);
-    i = 0;
+    int i = 0;
     while (env[i])
         free(env[i++]);
     free(env);

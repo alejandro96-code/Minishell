@@ -4,13 +4,13 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
 SRC = main.c \
-      builtins/builtin_cd.c \
-      builtins/builtin_echo.c \
-      builtins/builtin_env.c \
-      builtins/builtin_exit.c \
-      builtins/builtin_export.c \
-      builtins/builtin_pwd.c \
-      builtins/builtin_unset.c
+      builtins/cd.c \
+      builtins/echo.c \
+      builtins/env.c \
+      builtins/exit.c \
+      builtins/export.c \
+      builtins/pwd.c \
+      builtins/unset.c
 
 OBJ = $(SRC:.c=.o)
 
