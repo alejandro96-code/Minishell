@@ -1,41 +1,77 @@
 #include "../minishell.h"
-#include "../libft/libft.h"
 
 char *expand_variable(char *str, char **env)
 {
-    char *expanded_str = strdup(str);
-    if (!expanded_str)
+    if (!str)
         return NULL;
-
-    int i = 0;
-    while (env[i])
+    
+    // Buffer para construir el resultado
+    char *result = malloc(4096);
+    if (!result)
+        return strdup(str);
+    
+    int i = 0;  // Índice para str
+    int j = 0;  // Índice para result
+    
+    while (str[i] && j < 4095)
     {
-        char *key = strtok(strdup(env[i]), "="); // Obtener la clave
-        char *value = strchr(env[i], '=') + 1;   // Obtener el valor
-
-        // Buscar la variable en la cadena
-        if (key && value)
+        if (str[i] == '$' && str[i+1] != '\0' && str[i+1] != ' ')
         {
-            char *pos = strstr(expanded_str, "$"); // Buscar el signo $ indicando una variable
-            if (pos)
+            i++;  // Avanzar después del $
+            
+            // Extraer el nombre de la variable
+            char var_name[256] = {0};
+            int name_len = 0;
+            
+            while (str[i] && (isalnum(str[i]) || str[i] == '_') && name_len < 255)
             {
-                if (strncmp(pos + 1, key, strlen(key)) == 0)
+                var_name[name_len++] = str[i++];
+            }
+            var_name[name_len] = '\0';
+            
+            if (name_len > 0)
+            {
+                int k = 0;
+                int found = 0;  // Se mantiene para verificar si se encontró la variable
+                
+                while (env[k])
                 {
-                    size_t key_len = strlen(key);
-                    size_t value_len = strlen(value);
-                    char *new_str = malloc(strlen(expanded_str) - key_len + value_len + 1);
+                    // Comprobar si comienza con "VAR="
+                    if (strncmp(env[k], var_name, name_len) == 0 && env[k][name_len] == '=')
+                    {
+                        // Obtener el valor (después del =)
+                        char *value = env[k] + name_len + 1;
+                        
+                        // Copiar el valor al resultado
+                        int value_len = strlen(value);
+                        if (j + value_len < 4095)
+                        {
+                            strcpy(result + j, value);
+                            j += value_len;
+                        }
+                        
+                        found = 1;  // Marcamos como encontrado
+                        break;
+                    }
+                    k++;
+                }
 
-                    strncpy(new_str, expanded_str, pos - expanded_str);
-                    strcpy(new_str + (pos - expanded_str), value);
-                    strcpy(new_str + (pos - expanded_str) + value_len, pos + key_len + 1);
-
-                    free(expanded_str);
-                    expanded_str = new_str;
+                // Si la variable no se encontró, podrías hacer algo, como imprimir un mensaje de advertencia:
+                if (!found)
+                {
+                    fprintf(stderr, "Warning: Variable %s not found in environment\n", var_name);
                 }
             }
         }
-        i++;
+        else
+        {
+            // Simplemente copiar el carácter actual
+            result[j++] = str[i++];
+        }
     }
-
-    return expanded_str;
+    
+    // Asegurar que el resultado esté terminado correctamente
+    result[j] = '\0';
+    
+    return result;
 }

@@ -6,6 +6,7 @@
 # include <unistd.h>
 # include <string.h>
 # include <sys/wait.h>
+#include <ctype.h>
 
 
 typedef struct s_command {

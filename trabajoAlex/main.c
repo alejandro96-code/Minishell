@@ -52,6 +52,33 @@ char **copy_env(char **envp)
     return copy;
 }
 
+// Función para eliminar comillas del inicio y final del string si existen
+char *remove_quotes(char *str)
+{
+    if (!str)
+        return NULL;
+    
+    size_t len = strlen(str);
+    
+    // Si el string tiene comillas al inicio y al final, las eliminamos
+    if (len >= 2 && ((str[0] == '"' && str[len-1] == '"') || 
+                     (str[0] == '\'' && str[len-1] == '\'')))
+    {
+        // Crear una copia sin las comillas
+        char *result = malloc(len - 1); // -2 por las comillas, +1 por el null terminator
+        if (!result)
+            return str; // Si falla, devolver el original
+        
+        strncpy(result, str + 1, len - 2);
+        result[len - 2] = '\0';
+        
+        free(str); // Liberar el string original
+        return result;
+    }
+    
+    return str;
+}
+
 int main(int argc, char **argv, char **envp)
 {
     char *input = NULL;
@@ -69,10 +96,24 @@ int main(int argc, char **argv, char **envp)
         if (getline(&input, &len, stdin) == -1)
             break;
         
+        // Eliminar el salto de línea final
+        size_t input_len = strlen(input);
+        if (input_len > 0 && input[input_len - 1] == '\n')
+            input[input_len - 1] = '\0';
+        
         // Utilizar ft_split de libft para separar el input en tokens
         args = ft_split(input, ' ');
+        
+        // Procesar las comillas en los argumentos
+        if (args) {
+            int i = 0;
+            while (args[i]) {
+                args[i] = remove_quotes(args[i]);
+                i++;
+            }
+        }
 
-        if (args[0])
+        if (args && args[0])
         {
             if (is_builtin(args[0]))
                 execute_builtin(args, &env);
@@ -82,7 +123,7 @@ int main(int argc, char **argv, char **envp)
 
         // Liberar la memoria de los argumentos
         int cont = 0;
-        while (args[cont])
+        while (args && args[cont])
             free(args[cont++]);
         free(args);
     }
