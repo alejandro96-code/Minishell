@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "minishell.h": "c",
+        "prueba.h": "c",
+        "libft.h": "c"
+    }
+}
