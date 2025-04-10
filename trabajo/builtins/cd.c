@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../minishell.h"
 
 // Función para obtener el valor de una variable de entorno
 char *get_env_var(char *name, char **env)
@@ -11,7 +12,7 @@ char *get_env_var(char *name, char **env)
     
     while (env[i])
     {
-        if (strncmp(env[i], name, name_len) == 0 && env[i][name_len] == '=')
+        if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len] == '=')
             return &env[i][name_len + 1];
         i++;
     }
@@ -29,7 +30,7 @@ int builtin_cd(char **args, char **env)
         path = get_env_var("HOME", env);
         if (!path)
         {
-            fprintf(stderr, "cd: HOME not set\n");
+            perror("cd: HOME not set\n");
             return 1;
         }
     }
@@ -41,8 +42,8 @@ int builtin_cd(char **args, char **env)
         if (getcwd(cwd, sizeof(cwd)) != NULL)
         {
             // Concatenar la ruta relativa al directorio actual
-            strcat(cwd, "/");
-            strcat(cwd, path);
+            ft_strcat(cwd, "/");
+            ft_strcat(cwd, path);
             path = cwd;  // Ahora 'path' es la ruta absoluta
         }
         else
@@ -65,7 +66,7 @@ int builtin_cd(char **args, char **env)
                 return 1;
             }
             strcpy(new_path, home);
-            strcat(new_path, path + 1);  // Eliminar '~' al concatenar
+            ft_strcat(new_path, path + 1);  // Eliminar '~' al concatenar
             path = new_path;
         }
         else

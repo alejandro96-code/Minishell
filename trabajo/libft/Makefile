@@ -6,7 +6,7 @@
 #    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/28 23:36:25 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/04/07 20:30:02 by dgasco-g         ###   ########.fr        #
+#    Updated: 2025/04/10 00:18:53 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,8 @@ SRC	= ft_isascii.c \
 	ft_putstr_fd.c	\
 	ft_putendl_fd.c \
 	ft_putnbr_fd.c \
-	ft_strjoin_s1_free.c
+	ft_strjoin_s1_free.c \
+	ft_strcat.c
 
 BONUS = ft_lstnew_bonus.c \
 		ft_lstsize_bonus.c \

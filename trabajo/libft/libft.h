@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 18:36:05 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/07 20:25:25 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/10 00:20:41 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,5 @@ void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 char	*ft_strjoin_s1_free(char *s1, char *s2);
+char	*ft_strcat(char* dst, const char* orig);
 #endif

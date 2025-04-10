@@ -70,7 +70,7 @@ char **copy_env(char **envp)
     cont = 0;
     while (envp[cont])
     {
-        copy[cont] = strdup(envp[cont]);
+        copy[cont] = ft_strdup(envp[cont]);
         cont++;
     }
     copy[cont] = NULL;
@@ -83,7 +83,7 @@ char *remove_quotes(char *str)
     if (!str)
         return NULL;
 
-    size_t len = strlen(str);
+    size_t len = ft_strlen(str);
 
     // Si el string tiene comillas al inicio y al final, las eliminamos
     if (len >= 2 && ((str[0] == '"' && str[len-1] == '"') || 
@@ -94,7 +94,7 @@ char *remove_quotes(char *str)
         if (!result)
             return str; // Si falla, devolver el original
         
-        strncpy(result, str + 1, len - 2);
+        ft_strlcpy(result, str + 1, len - 2);
         result[len - 2] = '\0';
         
         free(str); // Liberar el string original
@@ -124,25 +124,23 @@ char *clean_input(char *input)
     }
 
     cleaned_input[j] = '\0';  // Finalizamos la cadena
-    return cleaned_input;
+    return (cleaned_input);
 }
 
 // Función para imprimir el prompt con colores
 char	*get_prompt(char ** env)
 {
-
 	char *text;
 	char cwd[1024];
 
 	text = find_user(env);
-
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("getcwd");
 		return (free (text), NULL);
 	}
 	text = ft_strjoin_s1_free(text, cwd);
-    text = ft_strjoin_s1_free(text, "~ ");
+    text = ft_strjoin_s1_free(text, ": ");
     return (text);
 }
 

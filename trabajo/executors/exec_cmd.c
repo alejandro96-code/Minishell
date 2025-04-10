@@ -24,7 +24,7 @@ char	*get_path(char *cmd, char **envp)
 	char	*temp;
 	int		cont = 0;
 
-	while (envp[cont] && strncmp(envp[cont], "PATH=", 5) != 0)
+	while (envp[cont] && ft_strncmp(envp[cont], "PATH=", 5) != 0)
 		cont++;
 	if (!envp[cont])
 		return (NULL);
