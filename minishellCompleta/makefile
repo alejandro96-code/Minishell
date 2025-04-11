@@ -25,7 +25,7 @@ SRC =	builtins/cd.c\
       executors/exec_cmd.c\
       parser/parser.c\
       utils/expand_variable.c\
-      utils/utils.c\
+      utils/find_user.c\
       main.c
 
 OBJS = $(SRC:.c=.o)

@@ -33,15 +33,24 @@ typedef struct s_command {
     int is_builtin;  // Indica si es un comando builtin (1 si lo es, 0 si no)
 } t_command;
 
-// Funciones de ejecución
-void	execute_command(char *cmd_line, char **envp);
-char	*get_path(char *cmd, char **envp);
+//funciones del main
+char **copy_env(char **envp);
+char *remove_quotes(char *str);
+char *clean_input(char *input);
+char	*get_prompt(char ** env);
+void process_input(char *input, char ***env);
+int main(int argc, char **argv, char **envp);
 
-//parseo de comandos
+// exec_cmd.c
+void	ft_free_split(char **split);
+char	*get_path(char *cmd, char **envp);
+void	execute_command(char *cmd_line, char **envp);
+
+//parser.c
 int is_builtin_command(const char *cmd);
 t_command *parse_input(const char *input);
 
-// funciones de builtin
+// buildins
 int builtin_echo(char **args, char **env);
 int builtin_cd(char **args, char **env);
 int builtin_pwd(char **env);
@@ -50,8 +59,11 @@ int builtin_unset(char **args, char ***env);
 int builtin_env(char **env);
 int builtin_exit(char **args);
 
-//utils
-char	*expand_variable(char *str, char **env);
+//expand_variable
+char *expand_variable(char *str, char **env);
+int process_env_variable(char *str, char *result, int *j, char **env);
+
+//cfind_user
 char	*find_user(char **env);
 
 #endif
