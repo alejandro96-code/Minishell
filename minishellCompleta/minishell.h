@@ -60,10 +60,25 @@ int builtin_env(char **env);
 int builtin_exit(char **args);
 
 //expand_variable
-char *expand_variable(char *str, char **env);
+char *expand_variable(char *str, char **env, int last_exit_status);
 int process_env_variable(char *str, char *result, int *j, char **env);
 
 //cfind_user
 char	*find_user(char **env);
+
+// Redirecciones
+int redirect_input(char *filename);
+int redirect_output(char *filename, int append);
+int heredoc(char *delimiter);
+void handle_redirections(char ***args);
+
+// Pipes
+int execute_pipeline(char *input, char **env);
+
+// Señales
+extern int g_signal_received;
+void signal_handler(int signum);
+void setup_signals(void);
+
 
 #endif

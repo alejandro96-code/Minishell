@@ -100,22 +100,47 @@ char	*get_prompt(char ** env)
 //limpia, tokeniza, ejecuta y libera memoria
 void process_input(char *input, char ***env)
 {
+    static int last_exit_status = 0;
+    
+    // Verificar si la entrada contiene pipes
+    if (strchr(input, '|') != NULL)
+    {
+        last_exit_status = execute_pipeline(input, *env);
+        free(input);
+        return;
+    }
+    
     char *cleaned_input = clean_input(input);
     free(input);
+    
     char **args = ft_split(cleaned_input, ' ');
     int cont = 0;
     while (args && args[cont])
     {
+        // Expandir variables, incluyendo $?
+        char *expanded = expand_variable(args[cont], *env, last_exit_status);
+        free(args[cont]);
+        args[cont] = expanded;
+        
+        // Quitar comillas
         args[cont] = remove_quotes(args[cont]);
         cont++;
     }
+    
+    // Manejar redirecciones
+    handle_redirections(&args);
+    
     if (args && args[0])
     {
         if (is_builtin(args[0]))
-            execute_builtin(args, env);
+            last_exit_status = execute_builtin(args, env);
         else
+        {
             execute_external(args, *env);
+            last_exit_status = 0; // Simplificado, deberías capturar el estado real
+        }
     }
+    
     cont = 0;
     while (args && args[cont])
         free(args[cont++]);
@@ -132,16 +157,35 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
 
-    printf("Minishell builtins test mode. Ctrl+C to exit.\n");
+    // Configurar manejo de señales
+    setup_signals();
+
+    printf("Minishell builtins test mode. Ctrl+C to get new prompt, Ctrl+D to exit.\n");
     while (1)
     {
+        // Reiniciar la variable global de señal
+        g_signal_received = 0;
+        
         input = readline(get_prompt(env));
+        
+        // Manejar Ctrl+D (EOF)
+        if (!input)
+        {
+            printf("exit\n");
+            break;
+        }
+        
         if (input && *input)
+        {
             add_history(input);
-        process_input(input, &env);
+            process_input(input, &env);
+        }
+        else
+        {
+            free(input);
+        }
     }
 
-    free(input);
     int cont = 0;
     while (env[cont])
         free(env[cont++]);
