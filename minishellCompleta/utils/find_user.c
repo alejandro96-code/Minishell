@@ -16,18 +16,18 @@ char	*find_user(char **env)
 {
 
 	char	*user;
-	int		i;
+	int		cont;
 
 	user = NULL;
-	i = 0;
-	while (env[i] != NULL)
+	cont = 0;
+	while (env[cont] != NULL)
 	{
-		if (ft_strncmp(env[i], "USER=", 5) == 0)
+		if (ft_strncmp(env[cont], "USER=", 5) == 0)
 		{
-			user = env[i] + 5;
+			user = env[cont] + 5;
 			break ;
 		}
-		i++;
+		cont++;
 	}
 	if (!user)
 		return (ft_strjoin("unknown", "@Minishell~"));

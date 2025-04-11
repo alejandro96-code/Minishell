@@ -1,12 +1,12 @@
 #include "../minishell.h"
 
-/*
-    Elimina una variable del entorno si existe.
-*/
+
+//Elimina una variable del entorno si existe.
+
 
 int builtin_unset(char **args, char ***env)
 {
-    int i = 1;
+    int cont = 1;
     
     // Verificar que se pase al menos un argumento a unset
     if (!args[1])
@@ -16,9 +16,9 @@ int builtin_unset(char **args, char ***env)
     }
 
     // Recorrer las variables a eliminar
-    while (args[i])
+    while (args[cont])
     {
-        char *var_to_remove = args[i];
+        char *var_to_remove = args[cont];
         size_t var_len = strlen(var_to_remove);
         
         // Buscar la variable en el entorno y eliminarla
@@ -45,7 +45,7 @@ int builtin_unset(char **args, char ***env)
             }
             j++;
         }
-        i++;
+        cont++;
     }
 
     return (0);

@@ -65,19 +65,19 @@ char *clean_input(char *input)
         return NULL;
 
     size_t len = strlen(input);
-    char *cleaned_input = malloc(len + 1);  // Almacenamos el resultado final
-    size_t j = 0;
+    char *cleaned_input = malloc(len + 1);
+    size_t cont_input_1 = 0;
+    size_t cont_input_2 = 0;
 
-    for (size_t i = 0; i < len; i++) {
-        if (input[i] == '"' || input[i] == '\'') {
-            // Ignoramos las comillas
-            continue;
-        }
-        cleaned_input[j++] = input[i];  // Copiamos el carácter sin comillas
+    while (cont_input_1 < len)
+    {
+        if (input[cont_input_1] != '"' && input[cont_input_1] != '\'')
+            cleaned_input[cont_input_2++] = input[cont_input_1];
+        cont_input_1++;
     }
 
-    cleaned_input[j] = '\0';  // Finalizamos la cadena
-    return (cleaned_input);
+    cleaned_input[cont_input_2] = '\0';
+    return cleaned_input;
 }
 
 // Función para imprimir el prompt
@@ -103,11 +103,11 @@ void process_input(char *input, char ***env)
     char *cleaned_input = clean_input(input);
     free(input);
     char **args = ft_split(cleaned_input, ' ');
-    int i = 0;
-    while (args && args[i])
+    int cont = 0;
+    while (args && args[cont])
     {
-        args[i] = remove_quotes(args[i]);
-        i++;
+        args[cont] = remove_quotes(args[cont]);
+        cont++;
     }
     if (args && args[0])
     {
@@ -116,9 +116,9 @@ void process_input(char *input, char ***env)
         else
             execute_external(args, *env);
     }
-    i = 0;
-    while (args && args[i])
-        free(args[i++]);
+    cont = 0;
+    while (args && args[cont])
+        free(args[cont++]);
     free(args);
     free(cleaned_input);
 }
