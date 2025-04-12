@@ -1,3 +1,5 @@
+//si, he intentado liberar memoria y me he cargado los builtin, sorry
+
 valgrind --leak-check=full ls -la                                                       Segmentation fault (core dumped)
 valgrind --leak-check=full echo hola mundo                                              Segmentation fault (core dumped)
 valgrind --leak-check=full ls > output.txt                                              Segmentation fault (core dumped)
