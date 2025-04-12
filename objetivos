@@ -9,9 +9,5 @@ Gestión de errores:
 Mejoras en los mensajes de error y códigos de retorno específicos
 
 
-Integración completa:
-Algunas funciones definidas no parecen estar completamente integradas
-
-
 Memoria:
 Posibles fugas de memoria en algunas partes del código
