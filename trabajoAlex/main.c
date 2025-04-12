@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 12:57:13 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/12 17:13:22 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,10 @@ void process_input(char *input, char ***env)
         args[cont] = remove_quotes(args[cont]);
         cont++;
     }
+    
+    // Expandir wildcards (*)
+    int num_args = cont;
+    args = expand_wildcards_in_args(args, &num_args);
     
     // Manejar redirecciones
     handle_redirections(&args, *env);

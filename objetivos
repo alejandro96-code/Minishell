@@ -9,17 +9,9 @@ Gestión de errores:
 Mejoras en los mensajes de error y códigos de retorno específicos
 
 
-Expansión de variables en redirecciones:
-No veo la expansión de variables dentro de los argumentos de redirección
-
-
 Integración completa:
 Algunas funciones definidas no parecen estar completamente integradas
 
 
 Memoria:
 Posibles fugas de memoria en algunas partes del código
-
-
-Manejo de wildcards (*):
-No veo implementación para esto

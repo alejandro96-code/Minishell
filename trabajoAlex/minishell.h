@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 12:55:41 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/12 17:15:44 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/wait.h>
 # include <ctype.h>
 # include <fcntl.h>
+# include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -84,5 +85,12 @@ int process_env_variable(char *str, char *result, int *j, char **env);
 
 //utils > find_user
 char	*find_user(char **env);
+
+// Wildcards
+int contains_wildcard(const char *str);
+int match_pattern(const char *pattern, const char *filename);
+int count_matching_files(const char *pattern);
+char **expand_wildcards(const char *arg, int *num_expanded);
+char **expand_wildcards_in_args(char **args, int *num_args);
 
 #endif
