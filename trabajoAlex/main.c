@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 17:23:11 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/12 17:34:03 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ char *clean_input(char *input)
 char *get_prompt(char **env)
 {
     char *username = find_user(env);
+    char *text = NULL;
     char cwd[1024];
-    char *prompt = NULL;
-    
+
     if (getcwd(cwd, sizeof(cwd)) == NULL)
     {
         perror("getcwd");
@@ -94,15 +94,15 @@ char *get_prompt(char **env)
         return NULL;
     }
     
-    prompt = ft_strjoin(YELLOW, username);
-    free(username); // Liberar memoria después de usar username
+    text = ft_strjoin(YELLOW, username);
+    free(username);  // Liberar la memoria del username después de usarlo
     
-    prompt = ft_strjoin_s1_free(prompt, RED);
-    prompt = ft_strjoin_s1_free(prompt, cwd);
-    prompt = ft_strjoin_s1_free(prompt, RESET);
-    prompt = ft_strjoin_s1_free(prompt, ": ");
+    text = ft_strjoin_s1_free(text, RED);
+    text = ft_strjoin_s1_free(text, cwd);
+    text = ft_strjoin_s1_free(text, RESET);
+    text = ft_strjoin_s1_free(text, ": ");
     
-    return prompt;
+    return text;
 }
 
 //limpia, tokeniza, ejecuta y libera memoria
@@ -118,45 +118,62 @@ void process_input(char *input, char ***env)
         return;
     }
     
-    // Usar la función parse_input para obtener la estructura t_command
-    t_command *cmd = parse_input(input);
-    if (!cmd)
-    {
-        free(input);
-        return;
-    }
+    char *cleaned_input = clean_input(input);
+    free(input);
     
-    // Expandir variables y wildcards en los argumentos
-    int i = 0;
-    while (i < cmd->argc)
+    char **args = ft_split(cleaned_input, ' ');
+    free(cleaned_input);  // Liberar después de usar
+    
+    if (!args)
+        return;  // Evitar seguir si no se pudo crear args
+    
+    int cont = 0;
+    while (args[cont])
     {
         // Expandir variables, incluyendo $?
-        char *expanded = expand_variable(cmd->argv[i], *env, last_exit_status);
-        free(cmd->argv[i]);
-        cmd->argv[i] = expanded;
+        char *expanded = expand_variable(args[cont], *env, last_exit_status);
+        free(args[cont]);
+        args[cont] = expanded;
         
         // Quitar comillas
-        cmd->argv[i] = remove_quotes(cmd->argv[i]);
-        i++;
+        args[cont] = remove_quotes(args[cont]);
+        cont++;
     }
     
     // Expandir wildcards (*)
-    cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
+    int num_args = cont;
+    char **expanded_args = expand_wildcards_in_args(args, &num_args);
     
-    // Manejar redirecciones
-    handle_redirections(&cmd->argv, *env);
-    
-    if (cmd->argv && cmd->argv[0])
-    {
-        if (cmd->is_builtin)
-            last_exit_status = execute_builtin(cmd->argv, env);
-        else
-            execute_external(cmd->argv, *env);
+    // Si expand_wildcards_in_args no libera args, deberíamos hacerlo aquí
+    if (expanded_args != args) {
+        cont = 0;
+        while (args[cont]) {
+            free(args[cont]);
+            cont++;
+        }
+        free(args);
+        args = expanded_args;
     }
     
-    // Liberar memoria
-    free(input);
-    free(cmd);
+    // Manejar redirecciones
+    handle_redirections(&args, *env);
+    
+    if (args && args[0])
+    {
+        if (is_builtin(args[0]))
+            last_exit_status = execute_builtin(args, env);
+        else
+        {
+            execute_external(args, *env);
+            last_exit_status = 0;
+        }
+    }
+    
+    // Liberar todos los args
+    cont = 0;
+    while (args && args[cont])
+        free(args[cont++]);
+    free(args);
 }
 
 // Función principal (Inicia, muestra el mensaje y entra al bucle)
@@ -196,5 +213,6 @@ int main(int argc, char **argv, char **envp)
     while (env[cont])
         free(env[cont++]);
     free(env);
+    clear_history();
     return 0;
 }

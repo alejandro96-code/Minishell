@@ -63,7 +63,17 @@ int builtin_cd(char **args, char **env)
             }
             strcpy(new_path, home);
             ft_strcat(new_path, path + 1);  // Eliminar '~' al concatenar
-            path = new_path;
+            
+            // Usar new_path y luego liberarlo
+            int result = chdir(new_path);
+            free(new_path);
+            
+            if (result != 0)
+            {
+                perror("cd");
+                return 1;
+            }
+            return 0;
         }
         else
         {
