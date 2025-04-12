@@ -6,7 +6,7 @@
 */
 
 // Valida que el formato sea VAR=VAL
-int is_valid_export(char *str)
+static int is_valid_export(char *str)
 {
     int cont = 0;
     

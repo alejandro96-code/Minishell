@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/07 20:38:17 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/12 12:23:02 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,14 +157,9 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
 
-    // Configurar manejo de señales
-    setup_signals();
-
     printf("Minishell builtins test mode. Ctrl+C to get new prompt, Ctrl+D to exit.\n");
     while (1)
     {
-        // Reiniciar la variable global de señal
-        g_signal_received = 0;
         
         input = readline(get_prompt(env));
         

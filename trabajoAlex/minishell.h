@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/10 01:29:34 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/12 12:20:44 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <ctype.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -33,13 +34,19 @@ typedef struct s_command {
     int is_builtin;  // Indica si es un comando builtin (1 si lo es, 0 si no)
 } t_command;
 
-//funciones del main
-char **copy_env(char **envp);
-char *remove_quotes(char *str);
-char *clean_input(char *input);
-char	*get_prompt(char ** env);
-void process_input(char *input, char ***env);
-int main(int argc, char **argv, char **envp);
+// builtins
+int builtin_cd(char **args, char **env);
+int builtin_echo(char **args, char **env);
+int builtin_env(char **env);
+int builtin_exit(char **args);
+int builtin_export(char **args, char ***env);
+int builtin_pwd(char **env);
+int builtin_unset(char **args, char ***env);
+
+//general_build.c
+int is_builtin(char *cmd);
+int execute_builtin(char **args, char ***env);
+void execute_external(char **args, char **env);
 
 // exec_cmd.c
 void	ft_free_split(char **split);
@@ -50,21 +57,20 @@ void	execute_command(char *cmd_line, char **envp);
 int is_builtin_command(const char *cmd);
 t_command *parse_input(const char *input);
 
-// buildins
-int builtin_echo(char **args, char **env);
-int builtin_cd(char **args, char **env);
-int builtin_pwd(char **env);
-int builtin_export(char **args, char ***env);
-int builtin_unset(char **args, char ***env);
-int builtin_env(char **env);
-int builtin_exit(char **args);
+//funciones del main
+char **copy_env(char **envp);
+char *remove_quotes(char *str);
+char *clean_input(char *input);
+char	*get_prompt(char ** env);
+void process_input(char *input, char ***env);
+int main(int argc, char **argv, char **envp);
 
-//expand_variable
-char *expand_variable(char *str, char **env, int last_exit_status);
-int process_env_variable(char *str, char *result, int *j, char **env);
-
-//cfind_user
-char	*find_user(char **env);
+// Pipes
+int count_commands_and_split(char *input, char ***commands);
+void setup_pipes_and_fork(int i, int cmd_count, int pipefd[2], int *prev_pipe);
+char **parse_args_and_handle(char *command);
+void child_exec_or_builtin(char *command, char ***env);
+int execute_pipeline(char *input, char **env);
 
 // Redirecciones
 int redirect_input(char *filename);
@@ -72,13 +78,12 @@ int redirect_output(char *filename, int append);
 int heredoc(char *delimiter);
 void handle_redirections(char ***args);
 
-// Pipes
-int execute_pipeline(char *input, char **env);
 
-// Señales
-extern int g_signal_received;
-void signal_handler(int signum);
-void setup_signals(void);
+//utils > expand_variable
+char *expand_variable(char *str, char **env, int last_exit_status);
+int process_env_variable(char *str, char *result, int *j, char **env);
 
+//utils > find_user
+char	*find_user(char **env);
 
 #endif

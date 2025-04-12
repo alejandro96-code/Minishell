@@ -1,3 +1,5 @@
+#include "../minishell.h"
+
 // Divide el input por '|', guarda el resultado en commands y retorna el número de comandos
 int count_commands_and_split(char *input, char ***commands)
 {

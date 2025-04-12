@@ -56,6 +56,7 @@ static void read_heredoc_input(int write_fd, char *delimiter)
 {
     char *line = NULL;
     size_t bufsize = 0;
+    ssize_t bytes_written;
 
     printf("> ");
     while (getline(&line, &bufsize, stdin) != -1)
@@ -65,8 +66,15 @@ static void read_heredoc_input(int write_fd, char *delimiter)
             line[len - 1] = '\0';
         if (strcmp(line, delimiter) == 0)
             break;
-        write(write_fd, line, strlen(line));
-        write(write_fd, "\n", 1);
+
+        bytes_written = write(write_fd, line, strlen(line));
+        if (bytes_written == -1)
+            perror("write");
+
+        bytes_written = write(write_fd, "\n", 1);
+        if (bytes_written == -1)
+            perror("write");
+
         printf("> ");
     }
     free(line);
