@@ -122,14 +122,42 @@ static void process_redirection(char **args, int *i, char **env)
     if (!args[*i + 1])
         return;
 
+    // Expandir variables en el argumento de redirección y quitar comillas
+    char *expanded_filename = expand_variable(args[*i + 1], env, 0);
+    char *cleaned_filename = remove_quotes(expanded_filename);
+
     if (strcmp(args[*i], "<") == 0)
-        redirect_input(args[++(*i)]);
+    {
+        redirect_input(cleaned_filename);
+        (*i)++;
+    }
     else if (strcmp(args[*i], "<<") == 0)
-        heredoc(args[++(*i)], env);  // Pasar el entorno aquí
+    {
+        // Para heredoc no expandimos el delimitador, solo lo limpiamos
+        char *cleaned_delimiter = remove_quotes(args[*i + 1]);
+        heredoc(cleaned_delimiter, env);
+        
+        if (cleaned_delimiter != args[*i + 1])
+            free(cleaned_delimiter);
+        (*i)++;
+    }
     else if (strcmp(args[*i], ">") == 0)
-        redirect_output(args[++(*i)], 0);
+    {
+        redirect_output(cleaned_filename, 0);
+        (*i)++;
+    }
     else if (strcmp(args[*i], ">>") == 0)
-        redirect_output(args[++(*i)], 1);
+    {
+        redirect_output(cleaned_filename, 1);
+        (*i)++;
+    }
+
+    // Liberar la memoria si se crearon nuevas cadenas
+    if (expanded_filename != args[*i])
+        free(expanded_filename);
+    if (cleaned_filename != expanded_filename)
+        free(cleaned_filename);
+    
     (*i)++;
 }
 
@@ -144,7 +172,7 @@ void handle_redirections(char ***args, char **env)
         if (strcmp((*args)[i], "<") == 0 || strcmp((*args)[i], "<<") == 0 ||
             strcmp((*args)[i], ">") == 0 || strcmp((*args)[i], ">>") == 0)
         {
-            process_redirection(*args, &i, env);  // Pasar el entorno aquí
+            process_redirection(*args, &i, env);
             continue;
         }
         new_args[j++] = (*args)[i++];
