@@ -1,17 +1,16 @@
 #include "../minishell.h"
-#include "../libft/libft.h"
 
 void	ft_free_split(char **split)
 {
-	int	i;
+	int	cont;
 
 	if (!split)
 		return;
-	i = 0;
-	while (split[i])
+	cont = 0;
+	while (split[cont])
 	{
-		free(split[i]);
-		i++;
+		free(split[cont]);
+		cont++;
 	}
 	free(split);
 }

@@ -1,20 +1,16 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../minishell.h"
 
 // Función para obtener el valor de una variable de entorno
 char *get_env_var(char *name, char **env)
 {
-    int i = 0;
+    int cont = 0;
     size_t name_len = strlen(name);
     
-    while (env[i])
+    while (env[cont])
     {
-        if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len] == '=')
-            return &env[i][name_len + 1];
-        i++;
+        if (ft_strncmp(env[cont], name, name_len) == 0 && env[cont][name_len] == '=')
+            return &env[cont][name_len + 1];
+        cont++;
     }
     return NULL;
 }
