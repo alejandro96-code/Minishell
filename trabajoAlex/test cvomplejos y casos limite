@@ -1,0 +1,15 @@
+# Comandos con argumentos y redirecciones
+cat archivo_prueba.txt > nuevo.txt 2> error.log
+ls -la /directorio/inexistente 2> error2.log
+cat < archivo_prueba.txt > copia.txt
+
+# Combinación de pipes y redirecciones
+ls -la | grep .txt > txt_files.txt
+cat archivo_prueba.txt | grep "Prueba" > coincidencias.txt
+
+# Comandos concatenados con separadores
+echo "Primero" && echo "Segundo"
+ls directorio_inexistente || echo "Falló el comando anterior"
+
+# Comandos en segundo plano
+sleep 5 &

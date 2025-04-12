@@ -1,0 +1,23 @@
+# Redirección de salida
+echo "Prueba" > archivo_prueba.txt
+cat archivo_prueba.txt
+echo "Otra prueba" >> archivo_prueba.txt
+cat archivo_prueba.txt
+
+# Redirección de entrada
+cat < archivo_prueba.txt
+
+# Heredoc básico
+cat << EOF
+Esto es un heredoc
+con múltiples líneas
+$USER debería expandirse
+'$USER' no debería expandirse
+EOF
+
+# Redirecciones mixtas
+cat << FIN > salida.txt
+línea 1
+línea 2
+FIN
+cat salida.txt

@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 12:23:02 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/12 12:45:45 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,10 @@ char	*get_prompt(char ** env)
 		perror("getcwd");
 		return (free (text), NULL);
 	}
-	text = ft_strjoin_s1_free(text, cwd);
+    text = ft_strjoin(YELLOW, find_user(env));
+    text = ft_strjoin_s1_free(text, RED);
+    text = ft_strjoin_s1_free(text, cwd);
+    text = ft_strjoin_s1_free(text, RESET);
     text = ft_strjoin_s1_free(text, ": ");
     return (text);
 }

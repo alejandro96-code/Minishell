@@ -1,0 +1,11 @@
+# Pipes simples
+ls -la | grep .txt
+echo "hola mundo" | wc -c
+cat archivo_prueba.txt | grep "Prueba"
+
+# Pipes múltiples
+ls -la | grep .txt | wc -l
+cat /etc/passwd | grep root | cut -d: -f1
+
+# Pipes con builtins
+echo $PATH | tr ':' '\n' | sort

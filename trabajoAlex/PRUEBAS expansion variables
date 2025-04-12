@@ -1,0 +1,13 @@
+# Variables básicas
+echo $USER
+echo "Mi usuario es $USER"
+echo '$USER no se expande'
+
+# Variables especiales
+echo $?
+ls comando_inexistente
+echo $?
+
+# Variables combinadas
+echo "$USER$HOME"
+echo "${USER}${HOME}"

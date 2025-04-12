@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 12:20:44 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/12 12:44:48 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
-# define red = "\033[31m";    // Rojo
-# define yellow = "\033[33m"; // Amarillo
-# define reset = "\033[0m";  
+# define RED "\033[31m"    // Rojo
+# define YELLOW "\033[33m" // Amarillo
+# define RESET "\033[0m"   // Reset
 
 
 typedef struct s_command {
