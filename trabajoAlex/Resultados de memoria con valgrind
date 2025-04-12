@@ -1,0 +1,23 @@
+valgrind --leak-check=full ls -la                                                       Segmentation fault (core dumped)
+valgrind --leak-check=full echo hola mundo                                              Segmentation fault (core dumped)
+valgrind --leak-check=full ls > output.txt                                              Segmentation fault (core dumped)
+valgrind --leak-check=full cat < input.txt                                              Segmentation fault (core dumped)
+valgrind --leak-check=full echo hola > file1 >> file2                                   Segmentation fault (core dumped)
+valgrind --leak-check=full ls -la | grep .c                                             346 allocs, 316 frees
+valgrind --leak-check=full cat archivo.txt | wc -l                                      227 allocs, 227 frees
+valgrind --leak-check=full ls | grep a | wc -l                                          259 allocs, 88 frees
+valgrind --leak-check=full ls > file.txt | wc -l                                        260 allocs, 234 frees
+valgrind --leak-check=full cat < input.txt | grep palabra > output.txt                  228 allocs, 228 frees
+valgrind --leak-check=full cd ..                                                        Segmentation fault (core dumped)
+valgrind --leak-check=full export VAR=valor                                             Segmentation fault (core dumped)
+valgrind --leak-check=full env                                                          Segmentation fault (core dumped)
+valgrind --leak-check=full unset VAR                                                    Segmentation fault (core dumped)
+valgrind --leak-check=full cat inexistente                                              Segmentation fault (core dumped)
+valgrind --leak-check=full /bin/cat                                                     Segmentation fault (core dumped)
+valgrind --leak-check=full echo \"texto con espacios\"                                  Segmentation fault (core dumped)
+valgrind --leak-check=full echo $HOME                                                   Segmentation fault (core dumped)  
+valgrind --leak-check=full echo '$HOME'                                                 Segmentation fault (core dumped)
+valgrind --leak-check=full export A=value; echo $A | cat > file.txt; cat file.txt       Segmentation fault (core dumped)
+valgrind --leak-check=full ls |                                                         Segmentation fault (core dumped)
+valgrind --leak-check=full echo hola >                                                  Segmentation fault (core dumped)
+valgrind --leak-check=full cat <                                                        Segmentation fault (core dumped)
