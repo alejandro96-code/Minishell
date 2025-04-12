@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 12:45:45 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/12 12:57:13 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void process_input(char *input, char ***env)
     }
     
     // Manejar redirecciones
-    handle_redirections(&args);
+    handle_redirections(&args, *env);
     
     if (args && args[0])
     {

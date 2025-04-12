@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 12:44:48 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/12 12:55:41 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,16 +68,15 @@ int main(int argc, char **argv, char **envp);
 // Pipes
 int count_commands_and_split(char *input, char ***commands);
 void setup_pipes_and_fork(int i, int cmd_count, int pipefd[2], int *prev_pipe);
-char **parse_args_and_handle(char *command);
+char **parse_args_and_handle(char *command, char **env);
 void child_exec_or_builtin(char *command, char ***env);
 int execute_pipeline(char *input, char **env);
 
 // Redirecciones
 int redirect_input(char *filename);
 int redirect_output(char *filename, int append);
-int heredoc(char *delimiter);
-void handle_redirections(char ***args);
-
+int heredoc(char *delimiter, char **env);
+void handle_redirections(char ***args, char **env);
 
 //utils > expand_variable
 char *expand_variable(char *str, char **env, int last_exit_status);

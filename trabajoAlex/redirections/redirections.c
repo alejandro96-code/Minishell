@@ -50,13 +50,14 @@ int redirect_output(char *filename, int append)
     return 0;
 }
 
-// Implementación del heredoc (<<)
-// Lee línea por línea desde stdin hasta encontrar el delimitador, escribiéndolas en un pipe
-static void read_heredoc_input(int write_fd, char *delimiter)
+// Implementación del heredoc (<<) con expansión de variables
+static void read_heredoc_input(int write_fd, char *delimiter, char **env)
 {
     char *line = NULL;
+    char *expanded_line;
     size_t bufsize = 0;
     ssize_t bytes_written;
+    int last_exit_status = 0; // Valor por defecto
 
     printf("> ");
     while (getline(&line, &bufsize, stdin) != -1)
@@ -64,24 +65,33 @@ static void read_heredoc_input(int write_fd, char *delimiter)
         size_t len = strlen(line);
         if (len > 0 && line[len - 1] == '\n')
             line[len - 1] = '\0';
+            
+        // Verificar si llegamos al delimitador
         if (strcmp(line, delimiter) == 0)
             break;
-
-        bytes_written = write(write_fd, line, strlen(line));
+            
+        // Expandir variables en la línea
+        expanded_line = expand_variable(line, env, last_exit_status);
+            
+        // Escribir la línea expandida en el pipe
+        bytes_written = write(write_fd, expanded_line, strlen(expanded_line));
         if (bytes_written == -1)
             perror("write");
-
+            
         bytes_written = write(write_fd, "\n", 1);
         if (bytes_written == -1)
             perror("write");
-
+            
+        // Liberar la memoria de la línea expandida
+        free(expanded_line);
+            
         printf("> ");
     }
     free(line);
 }
 
 // Implementación del heredoc (<<): crea un pipe y redirige su lectura a stdin
-int heredoc(char *delimiter)
+int heredoc(char *delimiter, char **env)
 {
     int pipefd[2];
 
@@ -91,7 +101,7 @@ int heredoc(char *delimiter)
         return (1);
     }
 
-    read_heredoc_input(pipefd[1], delimiter);
+    read_heredoc_input(pipefd[1], delimiter, env);
     close(pipefd[1]);
 
     if (dup2(pipefd[0], STDIN_FILENO) == -1)
@@ -107,7 +117,7 @@ int heredoc(char *delimiter)
 
 // Función para procesar las redirecciones en los argumentos
 // Procesa una redirección individual según el tipo y avanza el índice
-static void process_redirection(char **args, int *i)
+static void process_redirection(char **args, int *i, char **env)
 {
     if (!args[*i + 1])
         return;
@@ -115,7 +125,7 @@ static void process_redirection(char **args, int *i)
     if (strcmp(args[*i], "<") == 0)
         redirect_input(args[++(*i)]);
     else if (strcmp(args[*i], "<<") == 0)
-        heredoc(args[++(*i)]);
+        heredoc(args[++(*i)], env);  // Pasar el entorno aquí
     else if (strcmp(args[*i], ">") == 0)
         redirect_output(args[++(*i)], 0);
     else if (strcmp(args[*i], ">>") == 0)
@@ -124,7 +134,7 @@ static void process_redirection(char **args, int *i)
 }
 
 // Filtra los argumentos quitando las redirecciones y aplicándolas
-void handle_redirections(char ***args)
+void handle_redirections(char ***args, char **env)
 {
     char **new_args = malloc(sizeof(char *) * 100);
     int i = 0, j = 0;
@@ -134,7 +144,7 @@ void handle_redirections(char ***args)
         if (strcmp((*args)[i], "<") == 0 || strcmp((*args)[i], "<<") == 0 ||
             strcmp((*args)[i], ">") == 0 || strcmp((*args)[i], ">>") == 0)
         {
-            process_redirection(*args, &i);
+            process_redirection(*args, &i, env);  // Pasar el entorno aquí
             continue;
         }
         new_args[j++] = (*args)[i++];
