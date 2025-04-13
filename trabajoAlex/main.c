@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 17:34:03 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/13 12:39:45 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,7 @@
 // Copia el envp al entorno local
 char **copy_env(char **envp)
 {
-    int cont = 0;
-    while (envp[cont])
-        cont++;
-    
-    char **copy = malloc((cont + 1) * sizeof(char *));
-    cont = 0;
-    while (envp[cont])
-    {
-        copy[cont] = ft_strdup(envp[cont]);
-        cont++;
-    }
-    copy[cont] = NULL;
-    return copy;
+    return safe_copy_env(envp);
 }
 
 // Función para eliminar comillas del inicio y final del string si existen
@@ -106,52 +94,63 @@ char *get_prompt(char **env)
 }
 
 //limpia, tokeniza, ejecuta y libera memoria
+// Limpia, tokeniza, ejecuta y libera memoria de forma segura
 void process_input(char *input, char ***env)
 {
     static int last_exit_status = 0;
+    char *cleaned_input = NULL;
+    char **args = NULL;
+    char **expanded_args = NULL;
+    int cont = 0;
+    int num_args = 0;
+    
+    if (!input || !env || !*env)
+        return;
     
     // Verificar si la entrada contiene pipes
     if (strchr(input, '|') != NULL)
     {
         last_exit_status = execute_pipeline(input, *env);
-        free(input);
+        safe_free((void **)&input);
         return;
     }
     
-    char *cleaned_input = clean_input(input);
-    free(input);
+    cleaned_input = clean_input(input);
+    safe_free((void **)&input);
     
-    char **args = ft_split(cleaned_input, ' ');
-    free(cleaned_input);  // Liberar después de usar
+    if (!cleaned_input)
+        return;
+    
+    args = ft_split(cleaned_input, ' ');
+    safe_free((void **)&cleaned_input);
     
     if (!args)
-        return;  // Evitar seguir si no se pudo crear args
+        return;
     
-    int cont = 0;
+    // Contar argumentos y expandir variables
     while (args[cont])
     {
         // Expandir variables, incluyendo $?
         char *expanded = expand_variable(args[cont], *env, last_exit_status);
-        free(args[cont]);
+        safe_free((void **)&args[cont]);
         args[cont] = expanded;
         
-        // Quitar comillas
-        args[cont] = remove_quotes(args[cont]);
+        if (args[cont])
+        {
+            // Quitar comillas
+            args[cont] = remove_quotes(args[cont]);
+        }
         cont++;
     }
     
     // Expandir wildcards (*)
-    int num_args = cont;
-    char **expanded_args = expand_wildcards_in_args(args, &num_args);
+    num_args = cont;
+    expanded_args = expand_wildcards_in_args(args, &num_args);
     
-    // Si expand_wildcards_in_args no libera args, deberíamos hacerlo aquí
-    if (expanded_args != args) {
-        cont = 0;
-        while (args[cont]) {
-            free(args[cont]);
-            cont++;
-        }
-        free(args);
+    // Si expand_wildcards_in_args devuelve un nuevo array, liberar el original
+    if (expanded_args != args)
+    {
+        free_string_array(&args);
         args = expanded_args;
     }
     
@@ -170,26 +169,32 @@ void process_input(char *input, char ***env)
     }
     
     // Liberar todos los args
-    cont = 0;
-    while (args && args[cont])
-        free(args[cont++]);
-    free(args);
+    free_string_array(&args);
 }
 
 // Función principal (Inicia, muestra el mensaje y entra al bucle)
 int main(int argc, char **argv, char **envp)
 {
     char *input = NULL;
-    char **env = copy_env(envp);
+    char *prompt = NULL;
+    char **env = NULL;
 
     (void)argc;
     (void)argv;
 
+    env = safe_copy_env(envp);
+    if (!env)
+    {
+        fprintf(stderr, "Error: No se pudo copiar el entorno.\n");
+        return 1;
+    }
+
     printf("Minishell builtins test mode. Ctrl+C to get new prompt, Ctrl+D to exit.\n");
     while (1)
     {
-        
-        input = readline(get_prompt(env));
+        prompt = get_prompt(env);
+        input = readline(prompt);
+        safe_free((void **)&prompt);
         
         // Manejar Ctrl+D (EOF)
         if (!input)
@@ -202,17 +207,17 @@ int main(int argc, char **argv, char **envp)
         {
             add_history(input);
             process_input(input, &env);
+            // No hacer free de input aquí, ya lo hace process_input
         }
         else
         {
-            free(input);
+            safe_free((void **)&input);
         }
     }
 
-    int cont = 0;
-    while (env[cont])
-        free(env[cont++]);
-    free(env);
+    // Liberar el entorno
+    free_string_array(&env);
     clear_history();
+    
     return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/12 17:15:44 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/13 12:37:41 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,14 @@ int process_env_variable(char *str, char *result, int *j, char **env);
 
 //utils > find_user
 char	*find_user(char **env);
+
+//utils > memory_utils
+void safe_free(void **ptr);
+void free_string_array(char ***array);
+void free_command(t_command **cmd);
+void *safe_malloc(size_t size);
+char *safe_strdup(const char *str);
+char **safe_copy_env(char **envp);
 
 // Wildcards
 int contains_wildcard(const char *str);

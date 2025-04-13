@@ -6,7 +6,7 @@
 #    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/04/12 17:11:50 by alejandro        ###   ########.fr        #
+#    Updated: 2025/04/13 12:42:46 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRC =	builtins/cd.c\
       redirections/redirections.c\
       utils/expand_variable.c\
       utils/find_user.c\
+      utils/memory_utils.c\
       wildcards/wildcards.c\
       main.c
 
