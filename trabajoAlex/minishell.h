@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/13 12:37:41 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/13 13:31:40 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int heredoc(char *delimiter, char **env);
 void handle_redirections(char ***args, char **env);
 
 //utils > expand_variable
-char *expand_variable(char *str, char **env, int last_exit_status);
+char *expand_variable(char *str, char **env);
 int process_env_variable(char *str, char *result, int *j, char **env);
 
 //utils > find_user

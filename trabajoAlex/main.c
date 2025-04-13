@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/13 12:39:45 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/13 13:31:25 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,9 @@ char *get_prompt(char **env)
     return text;
 }
 
-//limpia, tokeniza, ejecuta y libera memoria
 // Limpia, tokeniza, ejecuta y libera memoria de forma segura
 void process_input(char *input, char ***env)
 {
-    static int last_exit_status = 0;
     char *cleaned_input = NULL;
     char **args = NULL;
     char **expanded_args = NULL;
@@ -110,7 +108,7 @@ void process_input(char *input, char ***env)
     // Verificar si la entrada contiene pipes
     if (strchr(input, '|') != NULL)
     {
-        last_exit_status = execute_pipeline(input, *env);
+        execute_pipeline(input, *env);
         safe_free((void **)&input);
         return;
     }
@@ -130,8 +128,8 @@ void process_input(char *input, char ***env)
     // Contar argumentos y expandir variables
     while (args[cont])
     {
-        // Expandir variables, incluyendo $?
-        char *expanded = expand_variable(args[cont], *env, last_exit_status);
+        // Expandir variables sin last_exit_status
+        char *expanded = expand_variable(args[cont], *env);
         safe_free((void **)&args[cont]);
         args[cont] = expanded;
         
@@ -160,12 +158,9 @@ void process_input(char *input, char ***env)
     if (args && args[0])
     {
         if (is_builtin(args[0]))
-            last_exit_status = execute_builtin(args, env);
+            execute_builtin(args, env);
         else
-        {
             execute_external(args, *env);
-            last_exit_status = 0;
-        }
     }
     
     // Liberar todos los args
