@@ -1,37 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin_s1_free.c                               :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/25 01:39:32 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/03/25 22:58:14 by dgasco-g         ###   ########.fr       */
+/*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
+/*   Updated: 2025/04/07 20:38:17 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-char	*ft_strjoin_s1_free(char *s1, char *s2)
+char	*find_user(char **env)
 {
-	char	*ptr;
-	size_t	i;
-	int		j;
 
-	j = 0;
-	i = -1;
-	if (!s1)
-		s1 = ft_strdup("");
-	ptr = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!ptr)
-		return (free(ptr), NULL);
-	while (s1[++i])
-		ptr[i] = s1[i];
-	while (s2[j])
+	char	*user;
+	int		i;
+
+	user = NULL;
+	i = 0;
+	while (env[i] != NULL)
 	{
-		ptr[i] = s2[j++];
+		if (ft_strncmp(env[i], "USER=", 5) == 0)
+		{
+			user = env[i] + 5;
+			break ;
+		}
 		i++;
 	}
-	ptr[i] = '\0';
-	return (free(s1), ptr);
+	if (!user)
+		return (ft_strjoin("unknown", "@Minishell~"));
+	user = ft_strjoin(user, "@Minishell~");
+	return (user);
 }

@@ -1,39 +1,20 @@
 #include "../minishell.h"
+#include "../libft/libft.h"
 
 // Función para verificar si el comando es un builtin (puedes agregar más)
-int is_builtin_command(const char *cmd)
-{
+int is_builtin_command(const char *cmd) {
     return (strcmp(cmd, "echo") == 0 || strcmp(cmd, "cd") == 0 || strcmp(cmd, "pwd") == 0);
 }
 
 // Función que procesa la entrada y genera la estructura t_command
-t_command *parse_input(const char *input)
-{
+t_command *parse_input(const char *input) {
     t_command *cmd = malloc(sizeof(t_command));
     if (!cmd)
         return NULL;
-    
-    // Inicializar todos los campos para evitar problemas
-    cmd->argv = NULL;
-    cmd->argc = 0;
-    cmd->is_builtin = 0;
 
-    // Primero limpiamos el input de comillas innecesarias
-    char *cleaned_input = clean_input(strdup(input));
-    if (!cleaned_input) {
-        free(cmd);
-        return NULL;
-    }
-    
     // Separar el input en tokens usando ft_split de libft
-    cmd->argv = ft_split(cleaned_input, ' ');
-    free(cleaned_input);
-    
-    if (!cmd->argv) {
-        free(cmd);
-        return NULL;
-    }
-    
+    cmd->argv = ft_split(input, ' ');
+
     // Calcular el número de argumentos (argc)
     int i = 0;
     while (cmd->argv[i] != NULL) {
@@ -42,7 +23,7 @@ t_command *parse_input(const char *input)
     cmd->argc = i;
 
     // Verificar si el comando es un builtin
-    cmd->is_builtin = cmd->argv && cmd->argv[0] ? is_builtin(cmd->argv[0]) : 0;
+    cmd->is_builtin = is_builtin_command(cmd->argv[0]);
 
     return cmd;
 }

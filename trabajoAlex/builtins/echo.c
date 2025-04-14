@@ -8,40 +8,29 @@ no imprime el salto de línea final.
 
 int builtin_echo(char **args, char **env)
 {
-    int cont = 1;
+    int i = 1;
     int print_newline = 1;
-    
-    // Verificar argumentos
-    if (!args || !env) {
-        fprintf(stderr, "echo: error - argumentos inválidos\n");
-        return 1;
-    }
-
     
     // Comprobar si hay opción -n
     if (args[1] && strcmp(args[1], "-n") == 0)
     {
         print_newline = 0;
-        cont = 2;  // Comenzar desde el siguiente argumento
+        i = 2;  // Comenzar desde el siguiente argumento
     }
 
-    while (args[cont])
+    while (args[i])
     {
-        // Expandir variables
-        char *expanded_str = expand_variable(args[cont], env);
-        if (expanded_str)
-        {
-            printf("%s", expanded_str);
-            free(expanded_str);
-        }
-        
-        if (args[cont + 1])  // Si hay más argumentos, poner un espacio
+        char *expanded_str = expand_variable(args[i], env);
+        printf("%s", expanded_str);
+        free(expanded_str);
+
+        if (args[i + 1])  // Si hay más argumentos, poner un espacio
             printf(" ");
-        cont++;
+        i++;
     }
 
     if (print_newline)
         printf("\n");
         
-    return 0;
+    return (0);
 }

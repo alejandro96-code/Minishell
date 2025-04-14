@@ -1,83 +1,85 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "../minishell.h"
 
 // Función para obtener el valor de una variable de entorno
 char *get_env_var(char *name, char **env)
 {
-    int cont = 0;
-    size_t name_len;
+    int i = 0;
+    size_t name_len = strlen(name);
     
-    if (!name || !env)
-        return NULL;
-        
-    name_len = strlen(name);
-    
-    while (env[cont])
+    while (env[i])
     {
-        if (ft_strncmp(env[cont], name, name_len) == 0 && env[cont][name_len] == '=')
-            return &env[cont][name_len + 1];
-        cont++;
+        if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len] == '=')
+            return &env[i][name_len + 1];
+        i++;
     }
     return NULL;
 }
 
-// Implementación del builtin cd con mejor gestión de memoria
+// Implementación del builtin cd
 int builtin_cd(char **args, char **env)
 {
-    char *path = NULL;
-    char *home = NULL;
+    char *path = args[1];
 
-    // Verificar argumentos con más detalle
-    if (!args || !env) {
-        fprintf(stderr, "cd: error - argumentos inválidos\n");
-        return 1;
-    }
-
-    path = args[1];
-
-    // Si no se pasa ningún argumento, ir al HOME
+    // Si no se pasa ningún argumento, se va al directorio HOME
     if (!path)
     {
-        home = get_env_var("HOME", env);
-        if (!home)
+        path = get_env_var("HOME", env);
+        if (!path)
         {
-            fprintf(stderr, "cd: HOME not set\n");
+            perror("cd: HOME not set\n");
             return 1;
         }
-        return chdir(home); // Simplificado, no necesita copiar home
     }
 
-    // Si la ruta empieza con ~, es relativa al HOME
-    if (path[0] == '~')
+    // Si la ruta es relativa, se resuelve en relación al directorio actual
+    if (path[0] != '/' && path[0] != '~')
     {
-        home = get_env_var("HOME", env);
-        if (!home)
+        char cwd[1024];
+        if (getcwd(cwd, sizeof(cwd)) != NULL)
         {
-            fprintf(stderr, "cd: HOME not set\n");
-            return 1;
+            // Concatenar la ruta relativa al directorio actual
+            ft_strcat(cwd, "/");
+            ft_strcat(cwd, path);
+            path = cwd;  // Ahora 'path' es la ruta absoluta
         }
-        
-        // Crear la ruta completa - FIX: añadido +1 para el null terminator
-        char *full_path = malloc(strlen(home) + strlen(path) + 1);
-        if (!full_path)
-            return 1;
-        
-        strcpy(full_path, home);
-        strcat(full_path, path + 1);
-        
-        int result = chdir(full_path);
-        free(full_path);
-        
-        if (result != 0)
+        else
         {
             perror("cd");
             return 1;
         }
-        return 0;
+    }
+    // Si la ruta empieza con '~', es una ruta relativa al directorio HOME
+    else if (path[0] == '~')
+    {
+        char *home = get_env_var("HOME", env);
+        if (home)
+        {
+            // Reemplazar el '~' por el directorio HOME
+            char *new_path = malloc(strlen(home) + strlen(path));
+            if (!new_path)
+            {
+                perror("malloc");
+                return 1;
+            }
+            strcpy(new_path, home);
+            ft_strcat(new_path, path + 1);  // Eliminar '~' al concatenar
+            path = new_path;
+        }
+        else
+        {
+            fprintf(stderr, "cd: HOME not set\n");
+            return 1;
+        }
     }
 
-    // Caso directo con path absoluto o relativo simple
+    // Intentar cambiar al directorio
     if (chdir(path) != 0)
     {
+        // En caso de error, mostrar el error específico
         perror("cd");
         return 1;
     }

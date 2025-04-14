@@ -5,7 +5,7 @@ Finaliza el programa con un código de salida.
 Si se le pasa un número, lo usa como código.
 */
 
-static int is_numeric(char *str)
+int is_numeric(char *str)
 {
     if (!str)
         return 0;

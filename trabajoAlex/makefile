@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
+#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/04/13 12:42:46 by alejandro        ###   ########.fr        #
+#    Updated: 2025/04/07 20:32:34 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,17 +20,12 @@ SRC =	builtins/cd.c\
       builtins/env.c\
       builtins/exit.c\
       builtins/export.c\
-      builtins/general_build.c\
       builtins/pwd.c\
       builtins/unset.c\
       executors/exec_cmd.c\
       parser/parser.c\
-      pipes/pipes.c\
-      redirections/redirections.c\
       utils/expand_variable.c\
-      utils/find_user.c\
-      utils/memory_utils.c\
-      wildcards/wildcards.c\
+      utils/utils.c\
       main.c
 
 OBJS = $(SRC:.c=.o)

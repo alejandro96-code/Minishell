@@ -1,6 +1,8 @@
 #include "../minishell.h"
 
-//Muestra el directorio actual de trabajo usando getcwd.
+/*
+    Muestra el directorio actual de trabajo usando getcwd.
+*/
 
 int builtin_pwd(char **env)
 {
