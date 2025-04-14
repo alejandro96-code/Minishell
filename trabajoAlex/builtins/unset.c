@@ -10,7 +10,7 @@ int builtin_unset(char **args, char ***env)
     
     // Verificar argumentos
     if (!args || !env || !*env) {
-        fprintf(stderr, "export: error - argumentos inválidos\n");
+        fprintf(stderr, "unset: error - argumentos inválidos\n");
         return 1;
     }
 
