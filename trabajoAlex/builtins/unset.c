@@ -9,8 +9,11 @@ int builtin_unset(char **args, char ***env)
     int cont = 1;
     
     // Verificar argumentos
-    if (!args || !env || !*env)
+    if (!args || !env || !*env) {
+        fprintf(stderr, "export: error - argumentos inválidos\n");
         return 1;
+    }
+
 
     // Si no hay argumentos, mostrar un error
     if (!args[1])

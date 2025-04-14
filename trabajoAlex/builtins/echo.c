@@ -12,8 +12,11 @@ int builtin_echo(char **args, char **env)
     int print_newline = 1;
     
     // Verificar argumentos
-    if (!args || !env)
+    if (!args || !env) {
+        fprintf(stderr, "echo: error - argumentos inválidos\n");
         return 1;
+    }
+
     
     // Comprobar si hay opción -n
     if (args[1] && strcmp(args[1], "-n") == 0)

@@ -12,17 +12,31 @@ t_command *parse_input(const char *input)
     t_command *cmd = malloc(sizeof(t_command));
     if (!cmd)
         return NULL;
+    
+    // Inicializar todos los campos para evitar problemas
+    cmd->argv = NULL;
+    cmd->argc = 0;
+    cmd->is_builtin = 0;
 
     // Primero limpiamos el input de comillas innecesarias
     char *cleaned_input = clean_input(strdup(input));
+    if (!cleaned_input) {
+        free(cmd);
+        return NULL;
+    }
     
     // Separar el input en tokens usando ft_split de libft
     cmd->argv = ft_split(cleaned_input, ' ');
     free(cleaned_input);
     
+    if (!cmd->argv) {
+        free(cmd);
+        return NULL;
+    }
+    
     // Calcular el número de argumentos (argc)
     int i = 0;
-    while (cmd->argv && cmd->argv[i] != NULL) {
+    while (cmd->argv[i] != NULL) {
         i++;
     }
     cmd->argc = i;

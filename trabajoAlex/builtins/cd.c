@@ -26,9 +26,11 @@ int builtin_cd(char **args, char **env)
     char *path = NULL;
     char *home = NULL;
 
-    // Verificar argumentos
-    if (!args || !env)
+    // Verificar argumentos con más detalle
+    if (!args || !env) {
+        fprintf(stderr, "cd: error - argumentos inválidos\n");
         return 1;
+    }
 
     path = args[1];
 

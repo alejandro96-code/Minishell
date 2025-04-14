@@ -31,8 +31,10 @@ int builtin_export(char **args, char ***env)
     int cont_args = 1;
 
     // Verificar argumentos
-    if (!args || !env || !*env)
+    if (!args || !env || !*env) {
+        fprintf(stderr, "export: error - argumentos inválidos\n");
         return 1;
+    }
 
     // Si no hay argumentos, mostrar el entorno (como en Bash)
     if (!args[1])

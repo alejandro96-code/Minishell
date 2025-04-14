@@ -17,9 +17,14 @@ int is_builtin(char *cmd)
 // Ejecuta el builtin correspondiente
 int execute_builtin(char **args, char ***env)
 {
-    if (!args || !*args || !env || !*env)
+    if (!args || !*args || !env || !*env) {
+        fprintf(stderr, "Error: argumentos inválidos para execute_builtin\n");
         return 1;
-        
+    }
+    
+    // Imprimir para debug
+    printf("DEBUG: Ejecutando builtin '%s'\n", args[0]);
+    
     if (!strcmp(args[0], "cd"))
         return builtin_cd(args, *env);
     if (!strcmp(args[0], "echo"))
