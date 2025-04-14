@@ -1,3 +1,5 @@
+#include "../minishell.h"
+
 // Divide el input por '|', guarda el resultado en commands y retorna el número de comandos
 int count_commands_and_split(char *input, char ***commands)
 {
@@ -39,7 +41,7 @@ void setup_pipes_and_fork(int i, int cmd_count, int pipefd[2], int *prev_pipe)
 }
 
 // Divide un comando en argumentos, elimina comillas y maneja redirecciones
-char **parse_args_and_handle(char *command)
+char **parse_args_and_handle(char *command, char **env)
 {
     char **args = ft_split(command, ' ');
     int i = 0;
@@ -48,7 +50,7 @@ char **parse_args_and_handle(char *command)
         args[i] = remove_quotes(args[i]);
         i++;
     }
-    handle_redirections(&args);
+    handle_redirections(&args, env);
     return (args);
 }
 

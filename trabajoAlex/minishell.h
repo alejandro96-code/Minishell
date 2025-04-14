@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/14 13:52:05 by alejandro        ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -20,7 +8,7 @@
 # include <sys/wait.h>
 # include <ctype.h>
 # include <fcntl.h>
-# include <dirent.h>  // Para funciones de directorio (opendir, readdir, etc.)
+# include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"

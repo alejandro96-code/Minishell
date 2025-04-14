@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/07 20:38:17 by dgasco-g         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 char	*find_user(char **env)
@@ -30,7 +18,7 @@ char	*find_user(char **env)
 		cont++;
 	}
 	if (!user)
-		return (ft_strjoin("unknown", "@Minishell~"));
-	user = ft_strjoin(user, "@Minishell~");
-	return (user);
+        return (ft_strdup("unknown"));
+    
+    return (ft_strjoin(user, "@Minishell~"));
 }

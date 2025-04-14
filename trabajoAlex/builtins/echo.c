@@ -8,25 +8,25 @@ no imprime el salto de línea final.
 
 int builtin_echo(char **args, char **env)
 {
-    int i = 1;
+    int cont = 1;
     int print_newline = 1;
     
     // Comprobar si hay opción -n
     if (args[1] && strcmp(args[1], "-n") == 0)
     {
         print_newline = 0;
-        i = 2;  // Comenzar desde el siguiente argumento
+        cont = 2;  // Comenzar desde el siguiente argumento
     }
 
-    while (args[i])
+    while (args[cont])
     {
-        char *expanded_str = expand_variable(args[i], env);
+        char *expanded_str = expand_variable(args[cont], env, 2);
         printf("%s", expanded_str);
         free(expanded_str);
 
-        if (args[i + 1])  // Si hay más argumentos, poner un espacio
+        if (args[cont + 1])  // Si hay más argumentos, poner un espacio
             printf(" ");
-        i++;
+        cont++;
     }
 
     if (print_newline)
