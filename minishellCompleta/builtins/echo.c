@@ -20,7 +20,7 @@ int builtin_echo(char **args, char **env)
 
     while (args[cont])
     {
-        char *expanded_str = expand_variable(args[cont], env);
+        char *expanded_str = expand_variable(args[cont], env, 2);
         printf("%s", expanded_str);
         free(expanded_str);
 
