@@ -4,8 +4,8 @@
 //Funcion que mantiene el bucle y delega la expansión
 char *expand_variable(char *str, char **env)
 {
-    if (!str)
-        return NULL;
+    if (!str || !env)
+        return strdup("");
 
     char *result = malloc(4096);
     if (!result)
@@ -17,10 +17,9 @@ char *expand_variable(char *str, char **env)
     {
         if (str[i] == '$')
         {
-            // Ignorar $? completamente o reemplazarlo con un valor fijo como "0"
+            // Ignorar $? o reemplazarlo con "0"
             if (str[i + 1] == '?')
             {
-                // Simplemente poner "0" en lugar del estado de salida
                 result[j++] = '0';
                 i += 2; // Saltar '$?'
             }
@@ -46,12 +45,18 @@ char *expand_variable(char *str, char **env)
 //Funcion que process_env_variable: se encarga de procesar la expansión de $VAR
 int process_env_variable(char *str, char *result, int *j, char **env)
 {
+    if (!str || !result || !j || !env)
+        return 0;
+        
     char var_name[256] = {0};
     int name_len = 0;
 
+    // Extraer el nombre de la variable
     while (str[name_len] && (isalnum(str[name_len]) || str[name_len] == '_') && name_len < 255)
-        var_name[name_len] = str[name_len], name_len++;
-
+    {
+        var_name[name_len] = str[name_len];
+        name_len++;
+    }
     var_name[name_len] = '\0';
 
     if (name_len > 0)
@@ -72,7 +77,6 @@ int process_env_variable(char *str, char *result, int *j, char **env)
             }
             k++;
         }
-        fprintf(stderr, "Warning: Variable %s not found in environment\n", var_name);
     }
     return name_len;
 }

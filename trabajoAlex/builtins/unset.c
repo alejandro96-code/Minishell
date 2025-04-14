@@ -8,17 +8,26 @@ int builtin_unset(char **args, char ***env)
 {
     int cont = 1;
     
-    // Verificar que se pase al menos un argumento a unset
+    // Verificar argumentos
+    if (!args || !env || !*env)
+        return 1;
+
+    // Si no hay argumentos, mostrar un error
     if (!args[1])
     {
         fprintf(stderr, "unset: not enough arguments\n");
-        return (1);
+        return 1;
     }
 
     // Recorrer las variables a eliminar
     while (args[cont])
     {
         char *var_to_remove = args[cont];
+        if (!var_to_remove) {
+            cont++;
+            continue;
+        }
+        
         size_t var_len = strlen(var_to_remove);
         
         // Buscar la variable en el entorno y eliminarla
@@ -31,7 +40,7 @@ int builtin_unset(char **args, char ***env)
             {
                 free((*env)[j]); // Liberar la memoria de la variable
 
-                // Desplazar el array de entorno hacia atrás para llenar el hueco
+                // Desplazar el array de entorno hacia atrás
                 int k = j;
                 while ((*env)[k + 1])
                 {
@@ -48,5 +57,5 @@ int builtin_unset(char **args, char ***env)
         cont++;
     }
 
-    return (0);
+    return 0;
 }

@@ -30,26 +30,47 @@ int builtin_export(char **args, char ***env)
 {
     int cont_args = 1;
 
+    // Verificar argumentos
+    if (!args || !env || !*env)
+        return 1;
+
+    // Si no hay argumentos, mostrar el entorno (como en Bash)
+    if (!args[1])
+    {
+        return builtin_env(*env);
+    }
+
     while (args[cont_args])
     {
         if (is_valid_export(args[cont_args]))
         {
             // Obtener la clave sin modificar el argumento original
             char *arg_copy = strdup(args[cont_args]);
+            if (!arg_copy)
+                return 1;
+                
             char *equal_sign = strchr(arg_copy, '=');
+            if (!equal_sign) {
+                free(arg_copy);
+                cont_args++;
+                continue;
+            }
+            
             *equal_sign = '\0';  // Temporalmente dividir la cadena
             char *key = arg_copy;
             
             int cont_env = 0;
             int replaced = 0;
 
-            // Buscamos si la clave ya existe en el entorno
+            // Buscamos si la clave ya existe
             while ((*env)[cont_env])
             {
                 char *env_equal = strchr((*env)[cont_env], '=');
-                if (env_equal && (env_equal - (*env)[cont_env]) == (long)strlen(key) &&  // Conversión explícita de tamaño
+                if (env_equal && 
+                    (size_t)(env_equal - (*env)[cont_env]) == strlen(key) &&
                     strncmp((*env)[cont_env], key, strlen(key)) == 0)
                 {
+                    // Reemplazar la variable existente
                     free((*env)[cont_env]);
                     (*env)[cont_env] = strdup(args[cont_args]);
                     replaced = 1;
@@ -66,7 +87,7 @@ int builtin_export(char **args, char ***env)
                     len++;
                 }
 
-                // Reasignamos espacio para agregar la nueva variable
+                // Reasignar espacio para agregar la nueva variable
                 char **new_env = realloc(*env, sizeof(char *) * (len + 2));
                 if (!new_env) {
                     perror("realloc");
@@ -76,10 +97,14 @@ int builtin_export(char **args, char ***env)
                 *env = new_env;
 
                 (*env)[len] = strdup(args[cont_args]);
+                if (!(*env)[len]) {
+                    perror("strdup");
+                    free(arg_copy);
+                    return 1;
+                }
                 (*env)[len + 1] = NULL;
             }
 
-            // Liberamos la memoria de la copia
             free(arg_copy);
         }
         else
@@ -89,5 +114,5 @@ int builtin_export(char **args, char ***env)
         cont_args++;
     }
 
-    return (0);
+    return 0;
 }

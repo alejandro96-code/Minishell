@@ -11,6 +11,10 @@ int builtin_echo(char **args, char **env)
     int cont = 1;
     int print_newline = 1;
     
+    // Verificar argumentos
+    if (!args || !env)
+        return 1;
+    
     // Comprobar si hay opción -n
     if (args[1] && strcmp(args[1], "-n") == 0)
     {
@@ -20,11 +24,14 @@ int builtin_echo(char **args, char **env)
 
     while (args[cont])
     {
-        // Actualizar para usar la nueva firma de expand_variable
+        // Expandir variables
         char *expanded_str = expand_variable(args[cont], env);
-        printf("%s", expanded_str);
-        free(expanded_str);
-
+        if (expanded_str)
+        {
+            printf("%s", expanded_str);
+            free(expanded_str);
+        }
+        
         if (args[cont + 1])  // Si hay más argumentos, poner un espacio
             printf(" ");
         cont++;
@@ -33,5 +40,5 @@ int builtin_echo(char **args, char **env)
     if (print_newline)
         printf("\n");
         
-    return (0);
+    return 0;
 }

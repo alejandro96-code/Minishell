@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/13 13:31:25 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/14 13:07:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,20 +75,35 @@ char *get_prompt(char **env)
     char *text = NULL;
     char cwd[1024];
 
-    if (getcwd(cwd, sizeof(cwd)) == NULL)
+    if (!username || getcwd(cwd, sizeof(cwd)) == NULL)
     {
-        perror("getcwd");
-        free(username);
-        return NULL;
+        perror("getcwd or find_user failed");
+        safe_free((void **)&username);
+        return strdup("minishell> ");  // Prompt de fallback
     }
     
     text = ft_strjoin(YELLOW, username);
-    free(username);  // Liberar la memoria del username después de usarlo
+    free(username);
     
-    text = ft_strjoin_s1_free(text, RED);
-    text = ft_strjoin_s1_free(text, cwd);
-    text = ft_strjoin_s1_free(text, RESET);
-    text = ft_strjoin_s1_free(text, ": ");
+    if (!text)
+        return strdup("minishell> ");
+        
+    // Verificar cada operación de concatenación
+    char *tmp = ft_strjoin_s1_free(text, RED);
+    if (!tmp) return strdup("minishell> ");
+    text = tmp;
+    
+    tmp = ft_strjoin_s1_free(text, cwd);
+    if (!tmp) return strdup("minishell> ");
+    text = tmp;
+    
+    tmp = ft_strjoin_s1_free(text, RESET);
+    if (!tmp) return strdup("minishell> ");
+    text = tmp;
+    
+    tmp = ft_strjoin_s1_free(text, ": ");
+    if (!tmp) return strdup("minishell> ");
+    text = tmp;
     
     return text;
 }
@@ -102,8 +117,10 @@ void process_input(char *input, char ***env)
     int cont = 0;
     int num_args = 0;
     
-    if (!input || !env || !*env)
+    if (!input || !*input) {
+        safe_free((void **)&input);
         return;
+    }
     
     // Verificar si la entrada contiene pipes
     if (strchr(input, '|') != NULL)
