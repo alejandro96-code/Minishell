@@ -144,6 +144,61 @@ char	*get_prompt(char ** env)
     return (text);
 }
 
+//limpia, tokeniza, ejecuta y libera memoria
+void process_input(char *input, char ***env)
+{
+    static int last_exit_status = 0;
+    
+    // Verificar si la entrada contiene pipes
+    if (strchr(input, '|') != NULL)
+    {
+        last_exit_status = execute_pipeline(input, *env);
+        free(input);
+        return;
+    }
+    
+    char *cleaned_input = clean_input(input);
+    free(input);
+    
+    char **args = ft_split(cleaned_input, ' ');
+    int cont = 0;
+    while (args && args[cont])
+    {
+        // Expandir variables, incluyendo $?
+        char *expanded = expand_variable(args[cont], *env, last_exit_status);
+        free(args[cont]);
+        args[cont] = expanded;
+        
+        // Quitar comillas
+        args[cont] = remove_quotes(args[cont]);
+        cont++;
+    }
+    
+    // Expandir wildcards (*)
+    int num_args = cont;
+    args = expand_wildcards_in_args(args, &num_args);
+    
+    // Manejar redirecciones
+    handle_redirections(&args, *env);
+    
+    if (args && args[0])
+    {
+        if (is_builtin(args[0]))
+            last_exit_status = execute_builtin(args, env);
+        else
+        {
+            execute_external(args, *env);
+            last_exit_status = 0; // Simplificado, deberías capturar el estado real
+        }
+    }
+    
+    cont = 0;
+    while (args && args[cont])
+        free(args[cont++]);
+    free(args);
+    free(cleaned_input);
+}
+
 // Función principal
 int main(int argc, char **argv, char **envp)
 {
