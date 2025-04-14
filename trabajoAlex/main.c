@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/14 13:07:35 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/14 13:15:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,26 +83,38 @@ char *get_prompt(char **env)
     }
     
     text = ft_strjoin(YELLOW, username);
-    free(username);
+    free(username); // Liberar username después de usarlo
     
     if (!text)
         return strdup("minishell> ");
         
     // Verificar cada operación de concatenación
     char *tmp = ft_strjoin_s1_free(text, RED);
-    if (!tmp) return strdup("minishell> ");
+    if (!tmp) {
+        free(text); // Asegurar que se libere text si la operación falla
+        return strdup("minishell> ");
+    }
     text = tmp;
     
     tmp = ft_strjoin_s1_free(text, cwd);
-    if (!tmp) return strdup("minishell> ");
+    if (!tmp) {
+        free(text);
+        return strdup("minishell> ");
+    }
     text = tmp;
     
     tmp = ft_strjoin_s1_free(text, RESET);
-    if (!tmp) return strdup("minishell> ");
+    if (!tmp) {
+        free(text);
+        return strdup("minishell> ");
+    }
     text = tmp;
     
     tmp = ft_strjoin_s1_free(text, ": ");
-    if (!tmp) return strdup("minishell> ");
+    if (!tmp) {
+        free(text);
+        return strdup("minishell> ");
+    }
     text = tmp;
     
     return text;

@@ -4,7 +4,12 @@
 char *get_env_var(char *name, char **env)
 {
     int cont = 0;
-    size_t name_len = strlen(name);
+    size_t name_len;
+    
+    if (!name || !env)
+        return NULL;
+        
+    name_len = strlen(name);
     
     while (env[cont])
     {
@@ -49,8 +54,8 @@ int builtin_cd(char **args, char **env)
             return 1;
         }
         
-        // Crear la ruta completa
-        char *full_path = malloc(strlen(home) + strlen(path));
+        // Crear la ruta completa - FIX: añadido +1 para el null terminator
+        char *full_path = malloc(strlen(home) + strlen(path) + 1);
         if (!full_path)
             return 1;
         

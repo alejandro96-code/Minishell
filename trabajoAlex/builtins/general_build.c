@@ -17,6 +17,9 @@ int is_builtin(char *cmd)
 // Ejecuta el builtin correspondiente
 int execute_builtin(char **args, char ***env)
 {
+    if (!args || !*args || !env || !*env)
+        return 1;
+        
     if (!strcmp(args[0], "cd"))
         return builtin_cd(args, *env);
     if (!strcmp(args[0], "echo"))
