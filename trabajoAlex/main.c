@@ -69,23 +69,28 @@ char *clean_input(char *input)
 }
 
 // Función para imprimir el prompt
-char	*get_prompt(char ** env)
+char *get_prompt(char **env)
 {
-	char *text;
-	char cwd[1024];
-
-	text = find_user(env);
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd");
-		return (free (text), NULL);
-	}
-    text = ft_strjoin(YELLOW, find_user(env));
-    text = ft_strjoin_s1_free(text, RED);
-    text = ft_strjoin_s1_free(text, cwd);
-    text = ft_strjoin_s1_free(text, RESET);
-    text = ft_strjoin_s1_free(text, ": ");
-    return (text);
+    char *username = find_user(env);
+    char cwd[1024];
+    char *prompt = NULL;
+    
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
+    {
+        perror("getcwd");
+        free(username);
+        return NULL;
+    }
+    
+    prompt = ft_strjoin(YELLOW, username);
+    free(username); // Liberar memoria después de usar username
+    
+    prompt = ft_strjoin_s1_free(prompt, RED);
+    prompt = ft_strjoin_s1_free(prompt, cwd);
+    prompt = ft_strjoin_s1_free(prompt, RESET);
+    prompt = ft_strjoin_s1_free(prompt, ": ");
+    
+    return prompt;
 }
 
 //limpia, tokeniza, ejecuta y libera memoria
@@ -101,46 +106,45 @@ void process_input(char *input, char ***env)
         return;
     }
     
-    char *cleaned_input = clean_input(input);
-    free(input);
+    // Usar la función parse_input para obtener la estructura t_command
+    t_command *cmd = parse_input(input);
+    if (!cmd)
+    {
+        free(input);
+        return;
+    }
     
-    char **args = ft_split(cleaned_input, ' ');
-    int cont = 0;
-    while (args && args[cont])
+    // Expandir variables y wildcards en los argumentos
+    int i = 0;
+    while (i < cmd->argc)
     {
         // Expandir variables, incluyendo $?
-        char *expanded = expand_variable(args[cont], *env, last_exit_status);
-        free(args[cont]);
-        args[cont] = expanded;
+        char *expanded = expand_variable(cmd->argv[i], *env, last_exit_status);
+        free(cmd->argv[i]);
+        cmd->argv[i] = expanded;
         
         // Quitar comillas
-        args[cont] = remove_quotes(args[cont]);
-        cont++;
+        cmd->argv[i] = remove_quotes(cmd->argv[i]);
+        i++;
     }
     
     // Expandir wildcards (*)
-    int num_args = cont;
-    args = expand_wildcards_in_args(args, &num_args);
+    cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
     
     // Manejar redirecciones
-    handle_redirections(&args, *env);
+    handle_redirections(&cmd->argv, *env);
     
-    if (args && args[0])
+    if (cmd->argv && cmd->argv[0])
     {
-        if (is_builtin(args[0]))
-            last_exit_status = execute_builtin(args, env);
+        if (cmd->is_builtin)
+            last_exit_status = execute_builtin(cmd->argv, env);
         else
-        {
-            execute_external(args, *env);
-            last_exit_status = 0; // Simplificado, deberías capturar el estado real
-        }
+            execute_external(cmd->argv, *env);
     }
     
-    cont = 0;
-    while (args && args[cont])
-        free(args[cont++]);
-    free(args);
-    free(cleaned_input);
+    // Liberar memoria
+    free(input);
+    free(cmd);
 }
 
 // Función principal (Inicia, muestra el mensaje y entra al bucle)
