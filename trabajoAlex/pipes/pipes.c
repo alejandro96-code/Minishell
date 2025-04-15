@@ -110,9 +110,11 @@ int execute_pipeline(char *input, char **env)
         }
     }
     i = 0;
-    int status, last_status = 0;
-    while (i++ < cmd_count && wait(&status) != -1)
-        if (WIFEXITED(status)) last_status = WEXITSTATUS(status);
+    int status;
+    
+    while (i++ < cmd_count && wait(&status) != -1);
     ft_free_split(commands);
-    return (last_status);
-}
+
+    return (0);
+    }
+    

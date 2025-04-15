@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 //Funcion que mantiene el bucle y delega la expansión
-char *expand_variable(char *str, char **env, int last_exit_status)
+char *expand_variable(char *str, char **env)
 {
     if (!str)
         return NULL;
@@ -16,18 +16,9 @@ char *expand_variable(char *str, char **env, int last_exit_status)
     {
         if (str[i] == '$')
         {
-            // Expandir $?
             if (str[i + 1] == '?')
             {
-                char status_str[12];
-                sprintf(status_str, "%d", last_exit_status);
-                int status_len = strlen(status_str);
-                
-                if (j + status_len < 4095)
-                {
-                    strcpy(result + j, status_str);
-                    j += status_len;
-                }
+                result[j++] = '0';
                 i += 2; // Saltar '$?'
             }
             else if (str[i + 1] != '\0' && str[i + 1] != ' ')

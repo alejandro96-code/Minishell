@@ -57,7 +57,6 @@ static void read_heredoc_input(int write_fd, char *delimiter, char **env)
     char *expanded_line;
     size_t bufsize = 0;
     ssize_t bytes_written;
-    int last_exit_status = 0; // Valor por defecto
 
     printf("> ");
     while (getline(&line, &bufsize, stdin) != -1)
@@ -71,7 +70,7 @@ static void read_heredoc_input(int write_fd, char *delimiter, char **env)
             break;
             
         // Expandir variables en la línea
-        expanded_line = expand_variable(line, env, last_exit_status);
+        expanded_line = expand_variable(line, env);
             
         // Escribir la línea expandida en el pipe
         bytes_written = write(write_fd, expanded_line, strlen(expanded_line));
@@ -123,7 +122,7 @@ static void process_redirection(char **args, int *i, char **env)
         return;
 
     // Expandir variables en el argumento de redirección y quitar comillas
-    char *expanded_filename = expand_variable(args[*i + 1], env, 0);
+    char *expanded_filename = expand_variable(args[*i + 1], env);
     char *cleaned_filename = remove_quotes(expanded_filename);
 
     if (strcmp(args[*i], "<") == 0)

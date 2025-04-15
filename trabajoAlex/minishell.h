@@ -68,7 +68,7 @@ int heredoc(char *delimiter, char **env);
 void handle_redirections(char ***args, char **env);
 
 //utils > expand_variable
-char *expand_variable(char *str, char **env, int last_exit_status);
+char *expand_variable(char *str, char **env);
 int process_env_variable(char *str, char *result, int *j, char **env);
 
 //utils > find_user

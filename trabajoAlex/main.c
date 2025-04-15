@@ -95,13 +95,11 @@ char *get_prompt(char **env)
 
 //limpia, tokeniza, ejecuta y libera memoria
 void process_input(char *input, char ***env)
-{
-    static int last_exit_status = 0;
-    
+{ 
     // Verificar si la entrada contiene pipes
     if (strchr(input, '|') != NULL)
     {
-        last_exit_status = execute_pipeline(input, *env);
+        execute_pipeline(input, *env);
         free(input);
         return;
     }
@@ -118,8 +116,8 @@ void process_input(char *input, char ***env)
     int i = 0;
     while (i < cmd->argc)
     {
-        // Expandir variables, incluyendo $?
-        char *expanded = expand_variable(cmd->argv[i], *env, last_exit_status);
+        // Expandir variables
+        char *expanded = expand_variable(cmd->argv[i], *env);
         free(cmd->argv[i]);
         cmd->argv[i] = expanded;
         
@@ -137,7 +135,7 @@ void process_input(char *input, char ***env)
     if (cmd->argv && cmd->argv[0])
     {
         if (cmd->is_builtin)
-            last_exit_status = execute_builtin(cmd->argv, env);
+            execute_builtin(cmd->argv, env);
         else
             execute_external(cmd->argv, *env);
     }
