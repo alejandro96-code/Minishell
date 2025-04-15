@@ -6,7 +6,7 @@
 #    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/04/14 14:16:55 by alejandro        ###   ########.fr        #
+#    Updated: 2025/04/15 20:00:30 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC =	builtins/cd.c\
       parser/parser.c\
       pipes/pipes.c\
       redirections/redirections.c\
+      utils/autocomplete.c\
       utils/expand_variable.c\
       utils/find_user.c\
       wildcards/wildcards.c\

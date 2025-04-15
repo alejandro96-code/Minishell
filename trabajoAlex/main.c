@@ -154,7 +154,9 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
 
-    printf("Minishell builtins test mode. Ctrl+C to get new prompt, Ctrl+D to exit.\n");
+    setup_autocomplete(env);
+
+    printf("Ctrl+C to get new prompt, Ctrl+D to exit.\n");
     while (1)
     {
         
@@ -177,7 +179,7 @@ int main(int argc, char **argv, char **envp)
             free(input);
         }
     }
-
+    free_command_names();
     int cont = 0;
     while (env[cont])
         free(env[cont++]);

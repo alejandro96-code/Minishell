@@ -74,6 +74,14 @@ int process_env_variable(char *str, char *result, int *j, char **env);
 //utils > find_user
 char	*find_user(char **env);
 
+//utils > autocomplete
+void free_command_names(void);
+void initialize_command_names(char **env);
+char *command_generator(const char *text, int state);
+char **command_completion(const char *text, int start, int end);
+void setup_autocomplete(char **env);
+char *get_env_var(char *name, char **env);
+
 // Wildcards
 int contains_wildcard(const char *str);
 int match_pattern(const char *pattern, const char *filename);
