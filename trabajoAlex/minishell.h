@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
+/*   Updated: 2025/04/15 20:54:52 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -18,9 +30,9 @@
 
 typedef struct s_command
 {
-	char **argv;    // Array de tokens (argumentos)
-	int argc;       // Número de argumentos
-	int is_builtin; // Indica si es un comando builtin (1 si lo es, 0 si no)
+	char	**argv;
+	int		argc;
+	int		is_builtin;
 }			t_command;
 
 // builtin del CD
