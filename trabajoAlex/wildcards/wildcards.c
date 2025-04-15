@@ -184,50 +184,52 @@ char **expand_wildcards_in_args(char **args, int *num_args)
 {
     if (!args || !*args)
         return args;
-    
+
     int total_expanded = 0;
     char **new_args = malloc(1024 * sizeof(char *)); // Tamaño inicial grande
-    
     if (!new_args)
         return args;
-    
-    for (int i = 0; args[i] != NULL; i++)
+
+    int i = 0;
+    while (args[i] != NULL)
     {
-        // Verificar si el argumento contiene un wildcard
         if (contains_wildcard(args[i]))
         {
             int num_expanded = 0;
             char **expanded = expand_wildcards(args[i], &num_expanded);
-            
+
             if (expanded)
             {
-                // Agregar los resultados expandidos a los nuevos argumentos
-                for (int j = 0; j < num_expanded; j++)
+                int j = 0;
+                while (j < num_expanded)
                 {
                     new_args[total_expanded++] = expanded[j];
+                    j++;
                 }
                 free(expanded); // Liberar el array, pero no su contenido
             }
             else
             {
-                // Si la expansión falla, usar el argumento original
                 new_args[total_expanded++] = strdup(args[i]);
             }
         }
         else
         {
-            // Si no hay wildcard, copiar el argumento
             new_args[total_expanded++] = strdup(args[i]);
         }
+        i++;
     }
-    
+
     new_args[total_expanded] = NULL;
     *num_args = total_expanded;
-    
-    // Liberar la memoria de los argumentos originales
-    for (int i = 0; args[i] != NULL; i++)
+
+    i = 0;
+    while (args[i] != NULL)
+    {
         free(args[i]);
+        i++;
+    }
     free(args);
-    
+
     return new_args;
 }
