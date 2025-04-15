@@ -21,17 +21,22 @@ void free_command_names(void)
 // Inicializa la lista de comandos para autocompletar
 void initialize_command_names(char **env)
 {
-    // Liberar memoria previa si existe
+    int i = 0;
+    int j = 0;
+    int k;
+    int exists;
+    DIR *dir;
+    struct dirent *entry;
+    char *path_env;
+    char **paths;
+    char full_path[1024];
+
     free_command_names();
-    
-    // Crear lista con los builtins primero
-    command_names = malloc(sizeof(char *) * 100);  // Espacio para hasta 100 comandos
+
+    command_names = malloc(sizeof(char *) * 100);
     if (!command_names)
         return;
-    
-    int i = 0;
-    
-    // Agregar los builtins
+
     command_names[i++] = ft_strdup("cd");
     command_names[i++] = ft_strdup("echo");
     command_names[i++] = ft_strdup("pwd");
@@ -39,44 +44,39 @@ void initialize_command_names(char **env)
     command_names[i++] = ft_strdup("unset");
     command_names[i++] = ft_strdup("env");
     command_names[i++] = ft_strdup("exit");
-    
-    // Agregar comandos del PATH
-    char *path_env = get_env_var("PATH", env);
+
+    path_env = get_env_var("PATH", env);
     if (path_env)
     {
-        char **paths = ft_split(path_env, ':');
+        paths = ft_split(path_env, ':');
         if (paths)
         {
-            int j = 0;
             while (paths[j])
             {
-                DIR *dir = opendir(paths[j]);
+                dir = opendir(paths[j]);
                 if (dir)
                 {
-                    struct dirent *entry;
-                    while ((entry = readdir(dir)) != NULL && i < 99)
+                    entry = readdir(dir);
+                    while (entry && i < 99)
                     {
-                        // Solo agregamos archivos ejecutables
-                        char full_path[1024];
                         snprintf(full_path, sizeof(full_path), "%s/%s", paths[j], entry->d_name);
-                        
-                        // Verificar si es un archivo ejecutable
                         if (access(full_path, X_OK) == 0)
                         {
-                            // Verificar si ya existe en la lista
-                            int exists = 0;
-                            for (int k = 0; k < i; k++)
+                            exists = 0;
+                            k = 0;
+                            while (k < i)
                             {
                                 if (strcmp(command_names[k], entry->d_name) == 0)
                                 {
                                     exists = 1;
                                     break;
                                 }
+                                k++;
                             }
-                            
                             if (!exists)
                                 command_names[i++] = ft_strdup(entry->d_name);
                         }
+                        entry = readdir(dir);
                     }
                     closedir(dir);
                 }
@@ -85,9 +85,9 @@ void initialize_command_names(char **env)
             ft_free_split(paths);
         }
     }
-    
-    command_names[i] = NULL;  // Terminar la lista con NULL
+    command_names[i] = NULL;
 }
+
 
 // Función de generador para readline
 char *command_generator(const char *text, int state)

@@ -1,17 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
+/*   Updated: 2025/04/15 20:41:55 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-/*
-    Imprime todas las variables del entorno en formato KEY=VALUE.
-*/
-
-int builtin_env(char **env)
+int	builtin_env(char **env)
 {
-    int cont = 0;
+	int	cont;
 
-    while (env[cont])
-    {
-        printf("%s\n", env[cont]);
-        cont++;
-    }
-    return (0);
+	cont = 0;
+	while (env[cont])
+	{
+		printf("%s\n", env[cont]);
+		cont++;
+	}
+	return (0);
 }

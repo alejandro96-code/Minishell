@@ -23,14 +23,29 @@ typedef struct s_command {
     int is_builtin;  // Indica si es un comando builtin (1 si lo es, 0 si no)
 } t_command;
 
-// builtins
+// builtin del CD
+char *get_env_var(char *name, char **env);
 int builtin_cd(char **args, char **env);
+char *resolve_home_path(char *path, char **env);
+char *resolve_relative_path(char *path);
+int try_change_directory(char *path);
+
+// builtin del echo, env, exit y pwd
 int builtin_echo(char **args, char **env);
 int builtin_env(char **env);
 int builtin_exit(char **args);
-int builtin_export(char **args, char ***env);
 int builtin_pwd(char **env);
+
+// builtin del export
+int builtin_export(char **args, char ***env);
+int	handle_export(char *arg, char ***env);
+int	replace_env_value(char *key, char *new_value, char ***env);
+int	add_env_value(char *new_value, char ***env);
+
+// builtin del unset
 int builtin_unset(char **args, char ***env);
+void unset_variable(char *var, char ***env);
+void remove_env_entry(int index, char ***env);
 
 //general_build.c
 int is_builtin(char *cmd);
@@ -80,7 +95,7 @@ void initialize_command_names(char **env);
 char *command_generator(const char *text, int state);
 char **command_completion(const char *text, int start, int end);
 void setup_autocomplete(char **env);
-char *get_env_var(char *name, char **env);
+
 
 // Wildcards
 int contains_wildcard(const char *str);
