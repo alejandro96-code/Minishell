@@ -17,7 +17,7 @@ Expansiones avanzadas: Aunque hay expansión básica de variables, podrían falt
 
 Gestión de jobs: No hay implementación para el control de trabajos en segundo plano (&, jobs, bg, fg).
 
-Autocompletado: No hay funcionalidad de autocompletado al presionar TAB.
+Autocompletado: No hay funcionalidad de autocompletado al presionar TAB para archivos y directorios.
 
 History avanzado: Aunque usas readline para el historial básico, faltan características como búsqueda en el historial o comandos de navegación específicos.
 
