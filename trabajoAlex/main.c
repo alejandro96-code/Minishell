@@ -155,11 +155,11 @@ int main(int argc, char **argv, char **envp)
     (void)argv;
 
     setup_autocomplete(env);
+    setup_signal_handlers(); // Configurar los manejadores de señales
 
     printf("Ctrl+C to get new prompt, Ctrl+D to exit.\n");
     while (1)
     {
-        
         input = readline(get_prompt(env));
         
         // Manejar Ctrl+D (EOF)
@@ -179,6 +179,8 @@ int main(int argc, char **argv, char **envp)
             free(input);
         }
     }
+    
+    reset_signal_handlers(); // Restaurar el comportamiento por defecto
     free_command_names();
     int cont = 0;
     while (env[cont])

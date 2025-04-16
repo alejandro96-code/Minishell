@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/16 13:54:47 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/16 14:21:28 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include <signal.h>
 # include <ctype.h>
 # include <dirent.h>
 # include <fcntl.h>
@@ -98,6 +99,13 @@ int			redirect_input(char *filename);
 int			redirect_output(char *filename, int append);
 int			heredoc(char *delimiter, char **env);
 void		handle_redirections(char ***args, char **env);
+
+// signals.c
+void		sigint_handler(int sig);
+void		sigquit_handler(int sig);
+void		setup_signal_handlers(void);
+void		setup_child_signals(void);
+void		reset_signal_handlers(void);
 
 // utils > expand_variable
 char		*expand_variable(char *str, char **env);
