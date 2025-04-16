@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/15 20:54:52 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/16 13:54:47 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <sys/stat.h>    // Para stat() y S_ISDIR
+# include <limits.h>      // Para PATH_MAX
 # define RED "\033[31m"    // Rojo
 # define YELLOW "\033[33m" // Amarillo
 # define RESET "\033[0m"   // Reset
@@ -108,6 +110,7 @@ char		*find_user(char **env);
 void		free_command_names(void);
 void		initialize_command_names(char **env);
 char		*command_generator(const char *text, int state);
+char		*file_generator(const char *text, int state);
 char		**command_completion(const char *text, int start, int end);
 void		setup_autocomplete(char **env);
 
