@@ -20,16 +20,9 @@ void signal_handler(int signum)
 // Configurar los manejadores de señales
 void setup_signals(void)
 {
-    struct sigaction sa;
-    
-    // Inicializar la estructura sigaction a 0
-    memset(&sa, 0, sizeof(sa));
-    
-    // Configurar el manejador
-    sa.sa_handler = signal_handler;
     
     // Instalar el manejador para SIGINT (ctrl-C)
-    sigaction(SIGINT, &sa, NULL);
+    signal(SIGINT, SIG_IGN); 
     
     // Ignorar SIGQUIT (ctrl-\)
     signal(SIGQUIT, SIG_IGN);

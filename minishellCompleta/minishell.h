@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/10 01:29:34 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/11 18:25:49 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <ctype.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 # include "libft/libft.h"
 # define red = "\033[31m";    // Rojo
 # define yellow = "\033[33m"; // Amarillo
@@ -74,11 +76,22 @@ void handle_redirections(char ***args);
 
 // Pipes
 int execute_pipeline(char *input, char **env);
+int count_commands_and_split(char *input, char ***commands);
+void setup_pipes_and_fork(int i, int cmd_count, int pipefd[2], int *prev_pipe);
+char **parse_args_and_handle(char *command);
+void child_exec_or_builtin(char *command, char ***env);
 
 // Señales
 extern int g_signal_received;
 void signal_handler(int signum);
 void setup_signals(void);
+
+//general
+int is_builtin(char *cmd);
+int execute_builtin(char **args, char ***env);
+void execute_external(char **args, char **env);
+
+
 
 
 #endif

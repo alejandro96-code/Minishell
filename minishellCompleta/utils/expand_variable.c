@@ -4,6 +4,7 @@
 //Funcion que mantiene el bucle y delega la expansión
 char *expand_variable(char *str, char **env, int last_exit_status)
 {
+    (void)last_exit_status;
     if (!str)
         return NULL;
 

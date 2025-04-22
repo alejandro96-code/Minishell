@@ -44,16 +44,22 @@ void execute_external(char **args, char **env)
 {
     pid_t pid = fork();
     (void)env; // usar en el execve 
-    if (pid == 0) {
+    if (pid == 0)
+    {
         // Proceso hijo: intenta ejecutar el comando
-        if (execvp(args[0], args) == -1) {
+        if (execvp(args[0], args) == -1)
+        {
             perror("Error ejecutando el comando");
             exit(EXIT_FAILURE);
         }
-    } else if (pid > 0) {
+    }
+    else if (pid > 0)
+    {
         // Proceso padre: espera que termine el hijo
         wait(NULL);
-    } else {
+    }
+    else
+    {
         // Error al hacer fork
         perror("Error en fork");
     }
@@ -65,7 +71,6 @@ char **copy_env(char **envp)
     int cont = 0;
     while (envp[cont])
         cont++;
-    
     char **copy = malloc((cont + 1) * sizeof(char *));
     cont = 0;
     while (envp[cont])
@@ -150,6 +155,7 @@ int main(int argc, char **argv, char **envp)
     char *input = NULL;                     
     char **args;
     char **env = copy_env(envp);
+    char *promt;
 
     (void)argc;
     (void)argv;
@@ -157,7 +163,9 @@ int main(int argc, char **argv, char **envp)
     printf("Minishell builtins test mode. Ctrl+C to exit.\n");
     while (1)
     {
-		input = readline(get_prompt(env));
+        promt = get_prompt(env);
+		input = readline(promt);
+        free(promt);
 		if (input && *input)
 			add_history(input);
         char *cleaned_input = clean_input(input);

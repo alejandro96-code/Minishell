@@ -8,7 +8,7 @@
 char *get_env_var(char *name, char **env)
 {
     int i = 0;
-    size_t name_len = strlen(name);
+    size_t name_len = ft_strlen(name);
     
     while (env[i])
     {
@@ -83,6 +83,5 @@ int builtin_cd(char **args, char **env)
         perror("cd");
         return 1;
     }
-
     return 0;
 }

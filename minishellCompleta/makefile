@@ -6,7 +6,7 @@
 #    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/04/07 20:32:34 by dgasco-g         ###   ########.fr        #
+#    Updated: 2025/04/11 18:23:52 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,15 @@ SRC =	builtins/cd.c\
       builtins/export.c\
       builtins/pwd.c\
       builtins/unset.c\
+      builtins/general_build.c\
       executors/exec_cmd.c\
       parser/parser.c\
       utils/expand_variable.c\
       utils/find_user.c\
-      main.c
+      main.c \
+      signals/signals.c \
+      pipes/pipes.c \
+      redirections/redirections.c
 
 OBJS = $(SRC:.c=.o)
 
