@@ -36,20 +36,27 @@ int execute_builtin(char **args, char ***env)
 
 // Ejecuta un comando externo
 void execute_external(char **args, char **env)
-{
-    pid_t pid = fork();
-    (void)env; // usar en el execve 
-    if (pid == 0) {
+{    
+    pid_t pid; 
+    char *path;
+
+    path = get_path(args[0], env);
+    pid = fork();
+    if (pid == 0)
+    {
+        if (!path)
+        {
+            execve(args[0], args, env);
+            exit(128);
+        }
         // Proceso hijo: intenta ejecutar el comando
-        if (execvp(args[0], args) == -1) {
+        if (execve(path, args, env) == -1) {
             perror("Error ejecutando el comando");
             exit(EXIT_FAILURE);
         }
-    } else if (pid > 0) {
-        // Proceso padre: espera que termine el hijo
-        wait(NULL);
-    } else {
-        // Error al hacer fork
-        perror("Error en fork");
     }
+    else if (pid > 0)
+        wait(NULL);
+    else
+        perror("Error en fork");
 }

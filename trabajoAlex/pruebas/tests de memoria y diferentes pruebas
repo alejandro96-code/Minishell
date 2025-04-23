@@ -1,0 +1,18 @@
+//si, he intentado liberar memoria y me he cargado los builtin, sorry
+
+valgrind --leak-check=full ls -la                                                       332 allocs, 309 frees
+valgrind --leak-check=full echo hola mundo                                              228 allocs, 228 frees //BIEN
+valgrind --leak-check=full ls > output.txt                                              254 allocs, 234 frees
+valgrind --leak-check=full cat < input.txt                                              228 allocs, 228 frees //BIEN
+valgrind --leak-check=full echo hola > file1 >> file2                                   228 allocs, 228 frees //BIEN
+valgrind --leak-check=full ls -la | grep .c                                             344 allocs, 315 frees
+valgrind --leak-check=full cat archivo.txt | wc -l                                      227 allocs, 227 frees //BIEN
+valgrind --leak-check=full ls | grep a | wc -l                                          259 allocs, 234 frees
+valgrind --leak-check=full ls > file.txt | wc -l                                        260 allocs, 234 frees
+valgrind --leak-check=full cat < input.txt | grep palabra > output.txt                  228 allocs, 228 frees //BIEN
+valgrind --leak-check=full env                                                          229 allocs, 228 frees
+valgrind --leak-check=full cat inexistente                                              227 allocs, 227 frees //BIEN
+valgrind --leak-check=full echo \"texto con espacios\"                                  228 allocs, 228 frees //BIEN
+valgrind --leak-check=full echo $HOME                                                   228 allocs, 228 frees //BIEN
+valgrind --leak-check=full echo '$HOME'                                                 228 allocs, 228 frees //BIEN
+valgrind --leak-check=full ls |                                                         261 allocs, 234 frees

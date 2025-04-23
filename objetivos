@@ -1,54 +1,30 @@
-Tu shell deberá:
+Manejo de señales: No veo implementación para el manejo de señales como SIGINT (Ctrl+C), SIGQUIT (Ctrl+) y SIGTERM. Un shell debe manejar estas señales apropiadamente tanto para sí mismo como para los procesos hijos.
 
-• Mostrar una entrada mientras espera un comando nuevo. //COMPLETADO
+Ampliación del control de errores: Aunque hay manejo básico de errores, falta una gestión más robusta con códigos de retorno adecuados para diferentes situaciones de error.
 
-• Tener un historial funcional.
+Manejo de comillas mejorado: La función remove_quotes es básica y podría no manejar correctamente casos complejos como comillas anidadas o escapadas.
 
-• Buscar y ejecutar el ejecutable correcto (basado en la variable PATH o mediante el
-uso de rutas relativas o absolutas). //COMPLETADO
+Variables locales: No parece haber una distinción entre variables de entorno (exportadas) y variables locales del shell.
 
-• Evita utilizar más de una variable global para indicar la recepción de una señal.
-Piensa en lo que implica: Esta aproximación evita que tu gestor de señales acceda
-a tus estructuras de datos principales.
+Comandos de control (if, for, while): No hay implementación de estructuras de control condicionales o bucles como se encuentra en shells más avanzados.
 
-No interpretar comillas sin cerrar o caracteres especiales no especificados en el
-enunciado como \ (barra invertida) o ; (punto y coma).
 
-• Gestionar que la ’ evite que el shell interprete los metacaracteres en la secuencia
-entrecomillada.
+Expansiones avanzadas: Aunque hay expansión básica de variables, podrían faltar expansiones como:
+    Expansión de parámetros con modificadores (${var:-default}, etc.)
+    Expansión aritmética ($(( )))
+    Expansión de comandos ($( ))
 
-• Gestionar que las (comillas) evite que el shell interprete los metacaracteres en la secuencia
-entrecomillada exceptuando $ (signo de dólar).
 
-• Implementar redirecciones:
-    ◦ < debe redirigir input.
-    ◦ > debe redirigir output.
-    ◦ “<<” debe recibir un delimitador, después leer del input de la fuente actual
-    hasta que una línea que contenga solo el delimitador aparezca. Sin embargo,
-    no necesita actualizar el historial.
-    ◦ “>>” debe redirigir el output en modo append.
+Gestión de jobs: No hay implementación para el control de trabajos en segundo plano (&, jobs, bg, fg).
 
-• Implementar pipes (carácter |). El output de cada comando en la pipeline se
-conecta a través de un pipe al input del siguiente comando.
+Autocompletado: No hay funcionalidad de autocompletado al presionar TAB para archivos y directorios. //completado pero seguramente tengamos que quitarlo por funciones no autorizadas
 
-• Gestionar las variables de entorno ($ seguidos de caracteres) que deberán expandirsea sus valores.
+History avanzado: Aunque usas readline para el historial básico, faltan características como búsqueda en el historial o comandos de navegación específicos.
 
-• Gestionar $?, que deberá expandirse al estado de salida del comando más reciente ejecutado en la pipeline.
+Alias: No veo implementación para definir y usar alias de comandos.
 
-• Gestionar ctrl-C ctrl-D ctrl-\, que deberán funcionar como en bash.
-Cuando sea interactivo:
-    ◦ ctrl-C imprime una nueva entrada en una línea nueva.
-    ◦ ctrl-D termina el shell. //COMPLETADO
-    ◦ ctrl-\ no hace nada. //COMPLETADO
+Configuración del entorno: No hay manera de cargar configuraciones desde archivos (.bashrc, .profile).
 
-• Deberá implementar los built-ins:
-    ◦ echo con la opción -n. //COMPLETADO
-    ◦ cd solo con una ruta relativa o absoluta.
-    ◦ pwd sin opciones. //COMPLETADO
-    ◦ export sin opciones. //COMPLETADO
-    ◦ unset sin opciones. //COMPLETADO
-    ◦ env sin opciones o argumentos.
-    ◦ exit sin opciones. //COMPLETADO
+Pruebas exhaustivas: Aunque hay código, podría ser útil implementar casos de prueba automatizados para verificar el comportamiento correcto en situaciones diversas.
 
-La función readline puede producir algunos leaks que no necesitas arreglar. Eso no
-significa que tu código, sí, el código que has escrito, pueda producir leaks
+Documentación: Podría ser útil añadir más comentarios y documentación sobre cómo funciona cada parte del shell.

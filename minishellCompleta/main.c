@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/11 18:31:21 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/23 04:17:29 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char *clean_input(char *input)
     if (!input)
         return NULL;
 
-    size_t len = strlen(input);
+    size_t len = ft_strlen(input);
     char *cleaned_input = malloc(len + 1);
     size_t cont_input_1 = 0;
     size_t cont_input_2 = 0;
@@ -75,26 +75,33 @@ char *clean_input(char *input)
             cleaned_input[cont_input_2++] = input[cont_input_1];
         cont_input_1++;
     }
-
     cleaned_input[cont_input_2] = '\0';
     return cleaned_input;
 }
 
 // Función para imprimir el prompt
-char	*get_prompt(char ** env)
+char *get_prompt(char **env)
 {
-	char *text;
-	char cwd[1024];
+    char *username = find_user(env);
+    char cwd[1024];
+    char *prompt = NULL;
+    
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
+    {
+        perror("getcwd");
+        free(username);
+        return NULL;
+    }
 
-	text = find_user(env);
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd");
-		return (free (text), NULL);
-	}
-	text = ft_strjoin_s1_free(text, cwd);
-    text = ft_strjoin_s1_free(text, ": ");
-    return (text);
+    prompt = ft_strjoin(username, cwd);
+    free(username); // Liberar memoria después de usar username
+    
+  //  prompt = ft_strjoin_s1_free(prompt, RED);
+    
+   // prompt = ft_strjoin_s1_free(prompt, RESET);
+    prompt = ft_strjoin_s1_free(prompt, ": ");
+    
+    return prompt;
 }
 
 //limpia, tokeniza, ejecuta y libera memoria
@@ -110,42 +117,45 @@ void process_input(char *input, char ***env)
         return;
     }
     
-    char *cleaned_input = clean_input(input);
-    free(input);
+    // Usar la función parse_input para obtener la estructura t_command
+    t_command *cmd = parse_input(input);
+    if (!cmd)
+    {
+        free(input);
+        return;
+    }
     
-    char **args = ft_split(cleaned_input, ' ');
-    int cont = 0;
-    while (args && args[cont])
+    // Expandir variables y wildcards en los argumentos
+    int i = 0;
+    while (i < cmd->argc)
     {
         // Expandir variables, incluyendo $?
-        char *expanded = expand_variable(args[cont], *env, last_exit_status);
-        free(args[cont]);
-        args[cont] = expanded;
+        char *expanded = expand_variable(cmd->argv[i], *env, last_exit_status);
+        free(cmd->argv[i]);
+        cmd->argv[i] = expanded;
         
         // Quitar comillas
-        args[cont] = remove_quotes(args[cont]);
-        cont++;
+        cmd->argv[i] = remove_quotes(cmd->argv[i]);
+        i++;
     }
+    
+    // Expandir wildcards (*)
+    cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
     
     // Manejar redirecciones
-    handle_redirections(&args);
+    handle_redirections(&cmd->argv, *env);
     
-    if (args && args[0])
+    if (cmd->argv && cmd->argv[0])
     {
-        if (is_builtin(args[0]))
-            last_exit_status = execute_builtin(args, env);
+        if (cmd->is_builtin)
+            last_exit_status = execute_builtin(cmd->argv, env);
         else
-        {
-            execute_external(args, *env);
-            last_exit_status = 0; // Simplificado, deberías capturar el estado real
-        }
+            execute_external(cmd->argv, *env);
     }
     
-    cont = 0;
-    while (args && args[cont])
-        free(args[cont++]);
-    free(args);
-    free(cleaned_input);
+    // Liberar memoria
+    free(input);
+    free(cmd);
 }
 
 // Función principal (Inicia, muestra el mensaje y entra al bucle)
@@ -157,14 +167,12 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
 
-    // Configurar manejo de señales
-    setup_signals();
-
     printf("Minishell builtins test mode. Ctrl+C to get new prompt, Ctrl+D to exit.\n");
+   // reset_signal_handlers();
+    
     while (1)
     {
-        // Reiniciar la variable global de señal
-        g_signal_received = 0;
+        setup_signal_handlers();
         
         input = readline(get_prompt(env));
         
@@ -185,7 +193,6 @@ int main(int argc, char **argv, char **envp)
             free(input);
         }
     }
-
     int cont = 0;
     while (env[cont])
         free(env[cont++]);

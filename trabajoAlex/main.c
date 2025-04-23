@@ -1,63 +1,4 @@
 #include "minishell.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdlib.h>
-#include "libft/libft.h"
-
-// Detecta si es un builtin
-int is_builtin(char *cmd)
-{
-    return (
-        !strcmp(cmd, "cd") ||
-        !strcmp(cmd, "echo") ||
-        !strcmp(cmd, "pwd") ||
-        !strcmp(cmd, "export") ||
-        !strcmp(cmd, "unset") || 
-        !strcmp(cmd, "env") ||
-        !strcmp(cmd, "exit")
-    );
-}
-
-// Ejecuta el builtin correspondiente
-int execute_builtin(char **args, char ***env)
-{
-    if (!strcmp(args[0], "cd"))
-        return builtin_cd(args, *env);
-    if (!strcmp(args[0], "echo"))
-        return builtin_echo(args, *env);
-    if (!strcmp(args[0], "pwd"))
-        return builtin_pwd(*env);
-    if (!strcmp(args[0], "export"))
-        return builtin_export(args, env);
-    if (!strcmp(args[0], "unset"))
-        return builtin_unset(args, env);
-    if (!strcmp(args[0], "env"))
-        return builtin_env(*env);
-    if (!strcmp(args[0], "exit"))
-        return builtin_exit(args);
-    return (1);
-}
-
-// Ejecuta un comando externo
-void execute_external(char **args, char **env)
-{
-    pid_t pid = fork();
-    (void)env; // usar en el execve 
-    if (pid == 0) {
-        // Proceso hijo: intenta ejecutar el comando
-        if (execvp(args[0], args) == -1) {
-            perror("Error ejecutando el comando");
-            exit(EXIT_FAILURE);
-        }
-    } else if (pid > 0) {
-        // Proceso padre: espera que termine el hijo
-        wait(NULL);
-    } else {
-        // Error al hacer fork
-        perror("Error en fork");
-    }
-}
 
 // Copia el envp al entorno local
 char **copy_env(char **envp)
@@ -112,65 +53,99 @@ char *clean_input(char *input)
         return NULL;
 
     size_t len = strlen(input);
-    char *cleaned_input = malloc(len + 1);  // Almacenamos el resultado final
-    size_t j = 0;
+    char *cleaned_input = malloc(len + 1);
+    size_t cont_input_1 = 0;
+    size_t cont_input_2 = 0;
 
-    for (size_t i = 0; i < len; i++) {
-        if (input[i] == '"' || input[i] == '\'') {
-            // Ignoramos las comillas
-            continue;
-        }
-        cleaned_input[j++] = input[i];  // Copiamos el carácter sin comillas
+    while (cont_input_1 < len)
+    {
+        if (input[cont_input_1] != '"' && input[cont_input_1] != '\'')
+            cleaned_input[cont_input_2++] = input[cont_input_1];
+        cont_input_1++;
     }
 
-    cleaned_input[j] = '\0';  // Finalizamos la cadena
-    return (cleaned_input);
+    cleaned_input[cont_input_2] = '\0';
+    return cleaned_input;
 }
 
-// Función para imprimir el prompt con colores
-char	*get_prompt(char ** env)
+// Función para imprimir el prompt
+char *get_prompt(char **env)
 {
-	char *text;
-	char cwd[1024];
-
-	text = find_user(env);
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd");
-		return (free (text), NULL);
-	}
-	text = ft_strjoin_s1_free(text, cwd);
-    text = ft_strjoin_s1_free(text, ": ");
-    return (text);
-}
-
-
-void process_input(char *input, char ***env)
-{
-    char *cleaned_input = clean_input(input);
-    free(input);
-    char **args = ft_split(cleaned_input, ' ');
-    int i = 0;
-    while (args && args[i])
+    char *username = find_user(env);
+    char cwd[1024];
+    char *prompt = NULL;
+    
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
     {
-        args[i] = remove_quotes(args[i]);
+        perror("getcwd");
+        free(username);
+        return NULL;
+    }
+    
+    prompt = ft_strjoin(YELLOW, username);
+    free(username); // Liberar memoria después de usar username
+    
+    prompt = ft_strjoin_s1_free(prompt, RED);
+    prompt = ft_strjoin_s1_free(prompt, cwd);
+    prompt = ft_strjoin_s1_free(prompt, RESET);
+    prompt = ft_strjoin_s1_free(prompt, ": ");
+    
+    return prompt;
+}
+
+//limpia, tokeniza, ejecuta y libera memoria
+void process_input(char *input, char ***env)
+{ 
+    // Verificar si la entrada contiene pipes
+    if (strchr(input, '|') != NULL)
+    {
+        execute_pipeline(input, *env);
+        free(input);
+        return;
+    }
+    
+    // Usar la función parse_input para obtener la estructura t_command
+    t_command *cmd = parse_input(input);
+    if (!cmd)
+    {
+        free(input);
+        return;
+    }
+    
+    // Expandir variables y wildcards en los argumentos
+    int i = 0;
+    while (i < cmd->argc)
+    {
+        // Expandir variables
+        char *expanded = expand_variable(cmd->argv[i], *env);
+        free(cmd->argv[i]);
+        cmd->argv[i] = expanded;
+        
+        // Quitar comillas
+        cmd->argv[i] = remove_quotes(cmd->argv[i]);
         i++;
     }
-    if (args && args[0])
+    
+    // Expandir wildcards (*)
+    cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
+    
+    // Manejar redirecciones
+    handle_redirections(&cmd->argv, *env);
+    
+    if (cmd->argv && cmd->argv[0])
     {
-        if (is_builtin(args[0]))
-            execute_builtin(args, env);
+        if (cmd->is_builtin)
+            execute_builtin(cmd->argv, env);
         else
-            execute_external(args, *env);
+            execute_external(cmd->argv, *env);
     }
-    i = 0;
-    while (args && args[i])
-        free(args[i++]);
-    free(args);
-    free(cleaned_input);
+    
+    // Liberar memoria
+    free(input);
+    free(cmd);
 }
 
-// Función principal
+// Función principal (Inicia, muestra el mensaje y entra al bucle)
 int main(int argc, char **argv, char **envp)
 {
     char *input = NULL;
@@ -179,16 +154,34 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
 
-    printf("Minishell builtins test mode. Ctrl+C to exit.\n");
+    setup_autocomplete(env);
+    setup_signal_handlers(); // Configurar los manejadores de señales
+
+    printf("Ctrl+C to get new prompt, Ctrl+D to exit.\n");
     while (1)
     {
         input = readline(get_prompt(env));
+        
+        // Manejar Ctrl+D (EOF)
+        if (!input)
+        {
+            printf("exit\n");
+            break;
+        }
+        
         if (input && *input)
+        {
             add_history(input);
-        process_input(input, &env);
+            process_input(input, &env);
+        }
+        else
+        {
+            free(input);
+        }
     }
-
-    free(input);
+    
+    reset_signal_handlers(); // Restaurar el comportamiento por defecto
+    free_command_names();
     int cont = 0;
     while (env[cont])
         free(env[cont++]);

@@ -1,7 +1,6 @@
 #include "../minishell.h"
 
 // Divide el input por '|', guarda el resultado en commands y retorna el número de comandos
-#include "../minishell.h"
 int count_commands_and_split(char *input, char ***commands)
 {
     *commands = ft_split(input, '|');
@@ -111,9 +110,11 @@ int execute_pipeline(char *input, char **env)
         }
     }
     i = 0;
-    int status, last_status = 0;
-    while (i++ < cmd_count && wait(&status) != -1)
-        if (WIFEXITED(status)) last_status = WEXITSTATUS(status);
+    int status;
+    
+    while (i++ < cmd_count && wait(&status) != -1);
     ft_free_split(commands);
-    return (last_status);
-}
+
+    return (0);
+    }
+    
