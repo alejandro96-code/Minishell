@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 20:11:20 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/22 20:14:13 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/23 04:28:00 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void sigquit_handler(int sig)
 }
 
 // Configura los manejadores de señales
-void setup_signal_handlers(void)
+/* void setup_signal_handlers(void)
 {
     struct sigaction sa_int;
     struct sigaction sa_quit;
@@ -48,7 +48,7 @@ void setup_signal_handlers(void)
     sigemptyset(&sa_quit.sa_mask);
     sa_quit.sa_flags = 0;
     sigaction(SIGQUIT, &sa_quit, NULL);
-}
+} */
 
 // Configuración de señales para procesos hijo
 void setup_child_signals(void)
