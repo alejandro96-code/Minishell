@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 20:11:20 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/23 04:28:00 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/25 01:31:58 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,17 @@ void sigquit_handler(int sig)
     sa_quit.sa_flags = 0;
     sigaction(SIGQUIT, &sa_quit, NULL);
 } */
+void manejar_ctrl_c(int sign)
+{
+    (void)sign;
+    printf("\n");
+    fflush(stdout); // Asegura que el salto de línea se imprima inmediatamente
+}
+
+void setup_signals(void)
+{
+    signal(SIGINT, manejar_ctrl_c);
+}
 
 // Configuración de señales para procesos hijo
 void setup_child_signals(void)

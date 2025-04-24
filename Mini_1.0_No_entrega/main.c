@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:53:35 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/23 21:44:26 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/25 01:30:14 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,8 +168,8 @@ int main(int argc, char **argv, char **envp)
     (void)argv;
 
     printf("Minishell builtins test mode. Ctrl+C to get new prompt, Ctrl+D to exit.\n");
-   // reset_signal_handlers();
-    
+    setup_signals();
+    //setup_signal_handlers();
     while (1)
     {
         //setup_signal_handlers();

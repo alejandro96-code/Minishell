@@ -1,0 +1,20 @@
+#Errores
+
+la pipe revienta todo Ejemplo ls | wc -l
+
+las señales si habres una minishell dentro de otra revientan (prueba con el control c)
+
+cambiar las comillas simples
+
+ls |
+
+(las señales no funcionan, en la 1.0 mas menos, tiene fallos con el << que no te permite salir)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Cosas que implementar
+
+las comillas solas no hacen nada 
+
+hay que cambiar el pid de los procesos para que cuando ejecutes echo $? te imprima el pid del comando anterior
+
+cuando ejecutes export tiene que mostrar las variables de entorno ordenadas alfaveticamente
