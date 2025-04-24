@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/24 18:21:10 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/24 18:22:54 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,3 +61,31 @@ void	execute_external(char **args, char **env)
 		perror("Error en fork");
 	}
 }
+
+/*
+void execute_external(char **args, char **env)
+{    
+    pid_t pid; 
+    char *path;
+
+    path = get_path(args[0], env);
+    pid = fork();
+    if (pid == 0)
+    {
+        if (!path)
+        {
+            execve(args[0], args, env);
+            exit(128);
+        }
+        // Proceso hijo: intenta ejecutar el comando
+        if (execve(path, args, env) == -1) {
+            perror("Error ejecutando el comando");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else if (pid > 0)
+        wait(NULL);
+    else
+        perror("Error en fork");
+}
+*/
