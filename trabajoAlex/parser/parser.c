@@ -29,6 +29,6 @@ t_command *parse_input(const char *input)
 
     // Verificar si el comando es un builtin
     cmd->is_builtin = cmd->argv && cmd->argv[0] ? is_builtin(cmd->argv[0]) : 0;
-
+    //cmd->is_builtin = (cmd->argv && cmd->argv[0]) * is_builtin(cmd->argv[0]);
     return cmd;
 }

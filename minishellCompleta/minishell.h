@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:16:04 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/22 20:16:52 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/23 21:40:34 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,6 @@ char	**expand_wildcards_in_args(char **args, int *num_args);
 // Signals
 void	reset_signal_handlers(void);
 void	setup_signal_handlers(void);
+
 
 #endif
