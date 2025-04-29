@@ -157,7 +157,7 @@ int main(int argc, char **argv, char **envp)
     setup_autocomplete(env);
     setup_signal_handlers(); // Configurar los manejadores de señales
 
-    printf("Ctrl+C to get new prompt, Ctrl+D to exit.\n");
+    
     while (1)
     {
         input = readline(get_prompt(env));
