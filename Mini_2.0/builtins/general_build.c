@@ -89,10 +89,12 @@ void execute_external(char **args, char **env)
 			exit(EXIT_FAILURE);
 		}
     }
-	free(path);
     else if (pid > 0)
         wait(NULL);
     else
-        perror("Error en fork");
+	{
+		perror("Error en fork");
+	}        
+	free(path);
 }
 

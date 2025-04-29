@@ -11,8 +11,6 @@ ls |
 
 #Cosas que implementar
 
-las comillas solas no hacen nada 
-
 cambiar las comillas simples
 
 hay que cambiar el pid de los procesos para que cuando ejecutes echo $? te imprima el pid del comando anterior
