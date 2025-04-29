@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include <sys/ioctl.h>
 # include <signal.h>
 # include <ctype.h>
 # include <dirent.h>

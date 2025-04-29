@@ -37,7 +37,7 @@ int	execute_builtin(char **args, char ***env)
 		return (builtin_exit(args));
 	return (1);
 }
-
+/* 
 void	execute_external(char **args, char **env)
 {
 	pid_t	pid;
@@ -46,6 +46,7 @@ void	execute_external(char **args, char **env)
 	pid = fork();
 	if (pid == 0)
 	{
+		reset_signal_handlers();
 		if (execvp(args[0], args) == -1)
 		{
 			perror("Error ejecutando el comando");
@@ -54,15 +55,16 @@ void	execute_external(char **args, char **env)
 	}
 	else if (pid > 0)
 	{
+		reset_signal_handlers();
 		wait(NULL);
 	}
 	else
 	{
 		perror("Error en fork");
 	}
-}
+} */
 
-/*
+
 void execute_external(char **args, char **env)
 {    
     pid_t pid; 
@@ -72,20 +74,25 @@ void execute_external(char **args, char **env)
     pid = fork();
     if (pid == 0)
     {
+		reset_signal_handlers();
         if (!path)
         {
             execve(args[0], args, env);
-            exit(128);
-        }
-        // Proceso hijo: intenta ejecutar el comando
-        if (execve(path, args, env) == -1) {
-            perror("Error ejecutando el comando");
+			perror("Error ejecutando el comando");
             exit(EXIT_FAILURE);
         }
+		else
+		{
+			// Proceso hijo: intenta ejecutar el comando
+     		execve(path, args, env);
+			perror("Error ejecutando el comando");
+			exit(EXIT_FAILURE);
+		}
     }
+	free(path);
     else if (pid > 0)
         wait(NULL);
     else
         perror("Error en fork");
 }
-*/
+

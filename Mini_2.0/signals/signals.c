@@ -7,8 +7,8 @@ void sigint_handler(int sig)
     int ret;
     ret = write(STDOUT_FILENO, "\n", 1);
     (void)ret; // Para evitar warning de variable no utilizada
-    rl_on_new_line();
     rl_replace_line("", 0);
+    rl_on_new_line();
     rl_redisplay();
 }
 
@@ -29,8 +29,7 @@ void setup_signal_handlers(void)
     sa_int.sa_handler = sigint_handler;
     sigemptyset(&sa_int.sa_mask);
     sa_int.sa_flags = 0;
-    sigaction(SIGINT, &sa_int, NULL);
-    
+    signal(SIGINT, sigint_handler);
     // Configurar SIGQUIT (Ctrl+\)
     sa_quit.sa_handler = sigquit_handler;
     sigemptyset(&sa_quit.sa_mask);
