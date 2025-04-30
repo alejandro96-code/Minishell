@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_build.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/24 18:22:54 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/04/30 18:32:18 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,64 +37,38 @@ int	execute_builtin(char **args, char ***env)
 		return (builtin_exit(args));
 	return (1);
 }
-/* 
-void	execute_external(char **args, char **env)
-{
-	pid_t	pid;
 
-	(void)env;
-	pid = fork();
-	if (pid == 0)
+//Se encarga de ejecutar el comando desde el proceso hijo
+static void	child_process(char *path, char **args, char **env)
+{
+	reset_signal_handlers();
+	if (!path)
 	{
-		reset_signal_handlers();
-		if (execvp(args[0], args) == -1)
-		{
-			perror("Error ejecutando el comando");
-			exit(EXIT_FAILURE);
-		}
-	}
-	else if (pid > 0)
-	{
-		reset_signal_handlers();
-		wait(NULL);
+		execve(args[0], args, env);
+		perror("Error ejecutando el comando");
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
-		perror("Error en fork");
+		execve(path, args, env);
+		perror("Error ejecutando el comando");
+		exit(EXIT_FAILURE);
 	}
-} */
-
-
-void execute_external(char **args, char **env)
-{    
-    pid_t pid; 
-    char *path;
-
-    path = get_path(args[0], env);
-    pid = fork();
-    if (pid == 0)
-    {
-		reset_signal_handlers();
-        if (!path)
-        {
-            execve(args[0], args, env);
-			perror("Error ejecutando el comando");
-            exit(EXIT_FAILURE);
-        }
-		else
-		{
-			// Proceso hijo: intenta ejecutar el comando
-     		execve(path, args, env);
-			perror("Error ejecutando el comando");
-			exit(EXIT_FAILURE);
-		}
-    }
-    else if (pid > 0)
-        wait(NULL);
-    else
-	{
-		perror("Error en fork");
-	}        
-	free(path);
 }
 
+//ejecuta el coando externo
+void	execute_external(char **args, char **env)
+{
+	pid_t	pid;
+	char	*path;
+
+	path = get_path(args[0], env);
+	pid = fork();
+	if (pid == 0)
+		child_process(path, args, env);
+	else if (pid > 0)
+		wait(NULL);
+	else
+		perror("Error en fork");
+	free(path);
+}

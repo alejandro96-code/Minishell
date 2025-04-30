@@ -60,11 +60,9 @@ void child_exec_or_builtin(char *command, char ***env)
     char **args = parse_args_and_handle(command, *env);
     int num_args = 0;
     
-    // Contar el número de argumentos
     while (args && args[num_args])
         num_args++;
     
-    // Expandir wildcards
     args = expand_wildcards_in_args(args, &num_args);
     
     if (args[0])
