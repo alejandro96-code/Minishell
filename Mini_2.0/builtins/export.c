@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/30 18:32:59 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/04/30 20:01:45 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,11 @@ int	replace_env_value(char *key, char *new_value, char ***env)
 int	add_env_value(char *new_value, char ***env)
 {
 	int		len;
-	char	**new_env;
 
 	len = 0;
 	while ((*env)[len])
 		len++;
-	**new_env = realloc(*env, sizeof(char *) * (len + 2));
+	char **new_env = realloc(*env, sizeof(char *) * (len + 2));
 	if (!new_env)
 	{
 		perror("realloc");
