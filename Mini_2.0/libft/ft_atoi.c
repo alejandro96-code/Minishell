@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/10 19:49:03 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:24:36 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,13 @@ int	ft_atoi(const char *nptr)
 	return (ft_result(x, result, sign));
 }
 /* #include <stdlib.h>
-int main(void)
+int	main(void)
 {
-	int	b = ft_atoi("&");
-	int a = atoi("&");
+	int	b;
+	int	a;
 
+	b = ft_atoi("&");
+	a = atoi("&");
 	printf("%i\n", b);
 	printf("%i\n", a);
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 01:28:06 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/14 18:39:42 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:25:16 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_list	*ft_lstnew(void *content)
 	new = malloc(sizeof(t_list));
 	if (!new)
 		return (NULL);
-	new ->content = content;
-	new ->next = NULL;
+	new->content = content;
+	new->next = NULL;
 	return (new);
 }
 // #include <stdio.h>

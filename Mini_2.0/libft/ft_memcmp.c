@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 19:49:16 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/11 18:14:12 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:25:24 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 
 /* #include <stdio.h>
 
-int main(void)
+int	main(void)
 {
 	int a = 0;
 	printf("%i",ft_memcmp(NULL,"aaaaaaaaaaaaaaaaaaab",a));

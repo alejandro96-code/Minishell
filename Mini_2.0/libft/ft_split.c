@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 20:14:19 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/20 14:40:10 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:25:49 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	**ft_split(char const *s, char c)
 	i = words_num((char *)s, c);
 	x = 0;
 	j = 0;
-	result = malloc (sizeof(char *) * (i + 1));
+	result = malloc(sizeof(char *) * (i + 1));
 	if (!result)
 		return (NULL);
 	while (x < i)

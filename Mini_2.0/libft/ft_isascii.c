@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:04:08 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/10 19:22:05 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:24:53 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_isascii(int n)
 
 /* #include <stdio.h>
 
-int main(void)
+int	main(void)
 {
 	printf("%i\n",ft_isascii());
 }

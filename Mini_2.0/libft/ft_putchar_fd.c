@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 20:57:34 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/13 02:01:13 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:25:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int main (void)
 {
 	int fd;
 	fd = open ("prueba.txt", O_RDWR);
- 	char *s = "Hola dios";
+	char *s = "Hola dios";
 	ft_putendl_fd(s, fd);
 	return (0);
 } */

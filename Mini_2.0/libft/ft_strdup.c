@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 11:35:38 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/10 13:55:07 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:25:57 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,14 @@ char	*ft_strdup(const char *s)
 
 /* #include <string.h>
 #include <stdio.h>
-int main(void)
+
+int	main(void)
 {
-	char *str = ft_strdup(NULL);
-	char *str2 = strdup(NULL);
-	
+	char	*str;
+	char	*str2;
+
+	str = ft_strdup(NULL);
+	str2 = strdup(NULL);
 	printf("%s\n", str);
 	printf("%s\n", str2);
 	free(str);

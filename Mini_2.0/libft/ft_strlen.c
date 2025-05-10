@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 19:22:43 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/11 10:50:10 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:26:14 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@ size_t	ft_strlen(const char *n)
 	}
 	return (i);
 }
-/* 
+/*
 #include <stdio.h>
-int main(void)
+
+int	main(void)
 {
 	printf("%i\n",(int)ft_strlen("hola que tal ?"));
 }

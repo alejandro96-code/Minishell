@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 21:44:02 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/11 19:25:11 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:25:39 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int main (void)
 {
 	int fd;
 	fd = open ("prueba.txt", O_RDWR);
- 	int s = 0;
+	int s = 0;
 	ft_putnbr_fd(s, fd);
 	return (0);
 } */

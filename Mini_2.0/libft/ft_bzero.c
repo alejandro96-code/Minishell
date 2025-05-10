@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:28:41 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/09 20:51:50 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:24:39 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ void	ft_bzero(void *s, size_t n)
 }
 
 /* #include <stdio.h>
-int main(void)
+int	main(void)
 {
-	char str[] = "hola ^_^";
+	char	str[] = "hola ^_^";
 
 	ft_bzero((void *)str, ft_strlen(str));
 	printf("%s\n", str);

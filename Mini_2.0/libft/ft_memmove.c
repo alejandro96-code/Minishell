@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 20:24:01 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/05 13:49:30 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:25:30 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 	}
 	else
 	{
-		dest2 += n -1;
-		src2 += n -1;
+		dest2 += n - 1;
+		src2 += n - 1;
 		while (n--)
 		{
 			*dest2-- = *src2--;

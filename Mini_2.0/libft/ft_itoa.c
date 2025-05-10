@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 13:31:45 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/09 19:18:34 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:25:01 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ char	*ft_itoa(int n)
 	resultado = ft_itoa(i);
 	printf("%s\n",resultado);
 } */
-/* 
-int main(void)
+/*
+int	main(void)
 {
 	char *resultado;
 	char *str = ft_strdup(NULL);

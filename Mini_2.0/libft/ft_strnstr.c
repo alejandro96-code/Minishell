@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 22:41:57 by dgasco-g          #+#    #+#             */
-/*   Updated: 2024/12/15 00:56:20 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:26:22 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 #include <stdio.h>
 #include <string.h>
 
-int main(void)
+int	main(void)
 {
 	//char *prueba = NULL;
 	printf("%s\n", ft_strnstr("hola", "", 17));
