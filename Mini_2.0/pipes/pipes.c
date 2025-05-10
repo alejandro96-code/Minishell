@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/10 13:11:17 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/05/10 13:22:47 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,32 +112,40 @@ void	child_exec_or_builtin(char *command, char ***env)
 
 // Ejecuta una línea de comandos en pipeline:
 // fork,pipes y espera de procesos hijos
+static void	handle_pipeline_iteration(int i, int cmd_count, char **commands,
+		char ***env)
+{
+	int			pipefd[2];
+	static int	prev_pipe = STDIN_FILENO;
+
+	setup_pipes_and_fork(i, cmd_count, pipefd, &prev_pipe);
+	if (fork() == 0)
+	{
+		setup_pipes_and_fork(i, cmd_count, pipefd, &prev_pipe);
+		child_exec_or_builtin(commands[i], env);
+	}
+	if (i > 0)
+		close(prev_pipe);
+	if (i < cmd_count - 1)
+	{
+		prev_pipe = pipefd[0];
+		close(pipefd[1]);
+	}
+}
+
 int	execute_pipeline(char *input, char **env)
 {
 	char	**commands;
 	int		cmd_count;
 	int		status;
+	int		i;
 
+	i = -1;
 	cmd_count = count_commands_and_split(input, &commands);
 	if (cmd_count == 1)
 		return (process_input(commands[0], &env), ft_free_split(commands), 0);
-	int pipefd[2], prev_pipe = STDIN_FILENO, i = -1;
 	while (++i < cmd_count)
-	{
-		setup_pipes_and_fork(i, cmd_count, pipefd, &prev_pipe);
-		if (fork() == 0)
-		{
-			setup_pipes_and_fork(i, cmd_count, pipefd, &prev_pipe);
-			child_exec_or_builtin(commands[i], &env);
-		}
-		if (i > 0)
-			close(prev_pipe);
-		if (i < cmd_count - 1)
-		{
-			prev_pipe = pipefd[0];
-			close(pipefd[1]);
-		}
-	}
+		handle_pipeline_iteration(i, cmd_count, commands, &env);
 	i = 0;
 	while (i++ < cmd_count && wait(&status) != -1)
 		;
