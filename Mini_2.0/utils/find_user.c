@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   find_user.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
+/*   Updated: 2025/05/11 13:35:32 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*find_user(char **env)
 {
-
 	char	*user;
 	int		cont;
 
@@ -18,7 +29,6 @@ char	*find_user(char **env)
 		cont++;
 	}
 	if (!user)
-        return (ft_strdup("unknown"));
-    
-    return (ft_strjoin(user, "@Minishell~"));
+		return (ft_strdup("unknown"));
+	return (ft_strjoin(user, "@Minishell~"));
 }
