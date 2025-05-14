@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 18:36:05 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/10 13:26:40 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/05/14 18:55:34 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,5 @@ void				ft_lstdelone(t_list *lst, void (*del)(void *));
 void				ft_lstclear(t_list **lst, void (*del)(void *));
 char				*ft_strjoin_s1_free(char *s1, char *s2);
 char				*ft_strcat(char *dst, const char *orig);
+char				*ft_strjoin_char(char *s1, char s2);
 #endif
