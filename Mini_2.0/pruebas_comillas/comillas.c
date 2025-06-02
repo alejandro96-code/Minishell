@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 09:50:58 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/01 14:06:31 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:16:21 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,13 @@ char	*quotes_clean(char *text, char quote)
 	}
 	else
 	{
-		printf("tiene comillas simples %s",text);
+		while (text[i])
+		{
+			text_clean = ft_strjoin_char(text_clean, text[i]);
+			i++;
+		}
 	}
+	return (text_clean);
 }
 
 char	*input_quotes(char *input)
