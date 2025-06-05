@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/11 13:38:47 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/05 19:36:07 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*expand_variable(char *str, char **env)
 		return (NULL);
 	result = malloc(4096);
 	if (!result)
-		return (strdup(str));
+		return (ft_strdup(str));
 	expand_loop(str, result, env);
 	return (result);
 }
@@ -80,16 +80,18 @@ static int	extract_var_name(char *str, char *var_name)
 	return (name_len);
 }
 
-static char	*find_env_value(char *var_name, int name_len, char **env)
+char	*get_env_value(char *var_name, char **env)
 {
-	int	k;
+	int		i;
+	size_t	name_len;
 
-	k = 0;
-	while (env[k])
+	i = 0;
+	name_len = ft_strlen(var_name);
+	while (env[i])
 	{
-		if (strncmp(env[k], var_name, name_len) == 0 && env[k][name_len] == '=')
-			return (env[k] + name_len + 1);
-		k++;
+		if (ft_strncmp(env[i], var_name, name_len) == 0 && env[i][name_len] == '=')
+			return (&env[i][name_len + 1]);
+		i++;
 	}
 	return (NULL);
 }
@@ -104,13 +106,13 @@ int	process_env_variable(char *str, char *result, int *j, char **env)
 	name_len = extract_var_name(str, var_name);
 	if (name_len > 0)
 	{
-		value = find_env_value(var_name, name_len, env);
+		value = get_env_value(var_name, env);
 		if (value)
 		{
-			value_len = strlen(value);
+			value_len = ft_strlen(value);
 			if (*j + value_len < 4095)
 			{
-				strcpy(result + *j, value);
+				ft_strlcpy(result + *j, value, value_len + 1);
 				*j += value_len;
 			}
 		}

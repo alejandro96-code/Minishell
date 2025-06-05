@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/11 13:51:35 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/05 19:35:17 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,27 +55,51 @@ char	*remove_quotes(char *str)
 	return (str);
 }
 
-// Función para limpiar las comillas del input completo
+static void	process_quote_char(char input_char, int *in_quotes, char *quote_char)
+{
+	if (!*in_quotes && (input_char == '"' || input_char == '\''))
+	{
+		*in_quotes = 1;
+		*quote_char = input_char;
+	}
+	else if (*in_quotes && input_char == *quote_char)
+	{
+		*in_quotes = 0;
+		*quote_char = 0;
+	}
+}
+
+// Función para limpiar las comillas del input completo preservando espacios
 char	*clean_input(char *input)
 {
 	size_t	len;
 	char	*cleaned_input;
-	size_t	cont_input_1;
-	size_t	cont_input_2;
+	size_t	i;
+	size_t	j;
+	int		in_quotes;
+	char	quote_char;
 
 	if (!input)
 		return (NULL);
-	len = strlen(input);
+	len = ft_strlen(input);
 	cleaned_input = malloc(len + 1);
-	cont_input_1 = 0;
-	cont_input_2 = 0;
-	while (cont_input_1 < len)
+	if (!cleaned_input)
+		return (NULL);
+	i = 0;
+	j = 0;
+	in_quotes = 0;
+	quote_char = 0;
+	while (i < len)
 	{
-		if (input[cont_input_1] != '"' && input[cont_input_1] != '\'')
-			cleaned_input[cont_input_2++] = input[cont_input_1];
-		cont_input_1++;
+		if (!in_quotes && (input[i] == '"' || input[i] == '\''))
+			process_quote_char(input[i], &in_quotes, &quote_char);
+		else if (in_quotes && input[i] == quote_char)
+			process_quote_char(input[i], &in_quotes, &quote_char);
+		else
+			cleaned_input[j++] = input[i];
+		i++;
 	}
-	cleaned_input[cont_input_2] = '\0';
+	cleaned_input[j] = '\0';
 	return (cleaned_input);
 }
 
@@ -131,20 +155,37 @@ static void	process_single_command(t_command *cmd, char ***env)
 void	process_input(char *input, char ***env)
 {
 	t_command	*cmd;
-
-	if (strchr(input, '|') != NULL)
+	
+	// Reset signal flag before processing command
+	g_signal_received = 0;
+	
+	cmd = parse_input(input);
+	if (ft_strchr(input, '|') != NULL)
 	{
 		execute_pipeline(input, *env);
 		free(input);
 		return ;
 	}
-	cmd = parse_input(input);
 	if (!cmd)
 	{
 		free(input);
 		return ;
 	}
 	process_single_command(cmd, env);
+	
+	// Check if signal was received during command execution
+	if (g_signal_received == SIGINT)
+	{
+		// Set exit status to 130 like bash does for SIGINT
+		// You might want to store this in a global variable
+		g_signal_received = 0;
+	}
+	else if (g_signal_received == SIGQUIT)
+	{
+		// Set exit status to 131 like bash does for SIGQUIT
+		g_signal_received = 0;
+	}
+	
 	free(input);
 	free(cmd);
 }
@@ -185,6 +226,7 @@ int	main(int argc, char **argv, char **envp)
 	setup_signal_handlers();
 	while (1)
 	{
+		g_signal_received = 0;
 		input = readline(get_prompt(env));
 		if (!input)
 		{

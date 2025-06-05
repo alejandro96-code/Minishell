@@ -41,7 +41,8 @@ static int	command_exists(char *name, int count)
 	k = 0;
 	while (k < count)
 	{
-		if (strcmp(command_names[k], name) == 0)
+		if (ft_strncmp(command_names[k], name, ft_strlen(name)) == 0 
+			&& ft_strlen(command_names[k]) == ft_strlen(name))
 			return (1);
 		k++;
 	}
@@ -107,13 +108,13 @@ char	*command_generator(const char *text, int state)
 	if (!state)
 	{
 		list_index = 0;
-		len = strlen(text);
+		len = ft_strlen(text);
 	}
 	while (command_names && command_names[list_index])
 	{
 		name = command_names[list_index];
 		list_index++;
-		if (strncmp(name, text, len) == 0)
+		if (ft_strncmp(name, text, len) == 0)
 			return (ft_strdup(name));
 	}
 	return (NULL);
@@ -128,8 +129,8 @@ char	*safe_path_join(const char *dir, const char *file)
 	int		need_separator;
 	size_t	total_len;
 
-	dir_len = strlen(dir);
-	file_len = strlen(file);
+	dir_len = ft_strlen(dir);
+	file_len = ft_strlen(file);
 	need_separator = 0;
 	if (dir_len > 0 && dir[dir_len - 1] != '/' && file_len > 0
 		&& file[0] != '/')
@@ -138,10 +139,10 @@ char	*safe_path_join(const char *dir, const char *file)
 	result = malloc(total_len);
 	if (!result)
 		return (NULL);
-	strcpy(result, dir);
+	ft_strlcpy(result, (char *)dir, total_len);
 	if (need_separator)
-		strcat(result, "/");
-	strcat(result, file);
+		ft_strcat(result, "/");
+	ft_strcat(result, file);
 	return (result);
 }
 
@@ -157,10 +158,10 @@ char	*file_generator(const char *text, int state)
 	char			*result;
 	char			*last_slash;
 	int				dir_len;
-			struct stat st;
+	struct stat		st;
 	int				is_dir;
-				char cwd[PATH_MAX];
-				char *check_path;
+	char			cwd[PATH_MAX];
+	char			*check_path;
 	size_t			path_len;
 
 	if (!state)
@@ -175,15 +176,14 @@ char	*file_generator(const char *text, int state)
 			free(directory);
 			directory = NULL;
 		}
-		last_slash = strrchr(text, '/');
+		last_slash = ft_strrchr(text, '/');
 		if (last_slash)
 		{
 			dir_len = last_slash - text + 1;
 			directory = malloc(dir_len + 1);
 			if (!directory)
 				return (NULL);
-			strncpy(directory, text, dir_len);
-			directory[dir_len] = '\0';
+			ft_strlcpy(directory, (char *)text, dir_len + 1);
 			filename = last_slash + 1;
 			if (directory[0] == '\0')
 			{
@@ -203,20 +203,22 @@ char	*file_generator(const char *text, int state)
 			directory = NULL;
 			return (NULL);
 		}
-		len = strlen(filename);
+		len = ft_strlen(filename);
 	}
 	if (!dir)
 		return (NULL);
 	while ((entry = readdir(dir)) != NULL)
 	{
-		if ((strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name,
-					"..") == 0) && (len == 0 || (filename[0] != '.' && len == 1)
-				|| (filename[0] == '.' && filename[1] != '.' && len == 1)))
-			continue ;
-		if (strncmp(entry->d_name, filename, len) == 0)
+		if ((ft_strncmp(entry->d_name, ".", ft_strlen(entry->d_name)) == 0 && ft_strlen(entry->d_name) == 1) 
+			|| (ft_strncmp(entry->d_name, "..", ft_strlen(entry->d_name)) == 0 && ft_strlen(entry->d_name) == 2))
 		{
-			if (strcmp(directory, "./") == 0 && strcmp(text, "./") != 0
-				&& strncmp(text, "./", 2) != 0)
+			if (len == 0 || (filename[0] != '.' && len == 1) || (filename[0] == '.' && filename[1] != '.' && len == 1))
+				continue;
+		}
+		if (ft_strncmp(entry->d_name, filename, len) == 0)
+		{
+			if ((ft_strncmp(directory, "./", 2) == 0 && ft_strlen(directory) == 2) 
+				&& (ft_strncmp(text, "./", 2) != 0) && ft_strncmp(text, "./", 2) != 0)
 			{
 				full_path = ft_strdup(entry->d_name);
 			}
@@ -239,7 +241,7 @@ char	*file_generator(const char *text, int state)
 					free(full_path);
 					continue ;
 				}
-				if (strncmp(full_path, "./", 2) == 0)
+				if (ft_strncmp(full_path, "./", 2) == 0)
 					check_path = safe_path_join(cwd, full_path + 2);
 				else
 					check_path = safe_path_join(cwd, full_path);
@@ -252,16 +254,16 @@ char	*file_generator(const char *text, int state)
 			}
 			if (is_dir)
 			{
-				path_len = strlen(full_path);
+				path_len = ft_strlen(full_path);
 				result = malloc(path_len + 2);
 				if (!result)
 				{
 					free(full_path);
 					continue ;
 				}
-				strcpy(result, full_path);
+				ft_strlcpy(result, full_path, path_len + 1);
 				if (result[path_len - 1] != '/')
-					strcat(result, "/");
+					ft_strcat(result, "/");
 				free(full_path);
 				return (result);
 			}

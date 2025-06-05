@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_build.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/30 18:32:18 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/05 19:35:19 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,61 +14,30 @@
 
 int	is_builtin(char *cmd)
 {
-	return (!strcmp(cmd, "cd") || !strcmp(cmd, "echo") || !strcmp(cmd, "pwd")
-		|| !strcmp(cmd, "export") || !strcmp(cmd, "unset") || !strcmp(cmd,
-			"env") || !strcmp(cmd, "exit"));
+	return (!ft_strncmp(cmd, "cd", 2) && cmd[2] == '\0') 
+		|| (!ft_strncmp(cmd, "echo", 4) && cmd[4] == '\0') 
+		|| (!ft_strncmp(cmd, "pwd", 3) && cmd[3] == '\0')
+		|| (!ft_strncmp(cmd, "export", 6) && cmd[6] == '\0') 
+		|| (!ft_strncmp(cmd, "unset", 5) && cmd[5] == '\0') 
+		|| (!ft_strncmp(cmd, "env", 3) && cmd[3] == '\0')
+		|| (!ft_strncmp(cmd, "exit", 4) && cmd[4] == '\0');
 }
 
 int	execute_builtin(char **args, char ***env)
 {
-	if (!strcmp(args[0], "cd"))
+	if (!ft_strncmp(args[0], "cd", 2) && args[0][2] == '\0')
 		return (builtin_cd(args, *env));
-	if (!strcmp(args[0], "echo"))
+	if (!ft_strncmp(args[0], "echo", 4) && args[0][4] == '\0')
 		return (builtin_echo(args, *env));
-	if (!strcmp(args[0], "pwd"))
+	if (!ft_strncmp(args[0], "pwd", 3) && args[0][3] == '\0')
 		return (builtin_pwd(*env));
-	if (!strcmp(args[0], "export"))
+	if (!ft_strncmp(args[0], "export", 6) && args[0][6] == '\0')
 		return (builtin_export(args, env));
-	if (!strcmp(args[0], "unset"))
+	if (!ft_strncmp(args[0], "unset", 5) && args[0][5] == '\0')
 		return (builtin_unset(args, env));
-	if (!strcmp(args[0], "env"))
+	if (!ft_strncmp(args[0], "env", 3) && args[0][3] == '\0')
 		return (builtin_env(*env));
-	if (!strcmp(args[0], "exit"))
+	if (!ft_strncmp(args[0], "exit", 4) && args[0][4] == '\0')
 		return (builtin_exit(args));
 	return (1);
-}
-
-//Se encarga de ejecutar el comando desde el proceso hijo
-static void	child_process(char *path, char **args, char **env)
-{
-	reset_signal_handlers();
-	if (!path)
-	{
-		execve(args[0], args, env);
-		perror("Error ejecutando el comando");
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		execve(path, args, env);
-		perror("Error ejecutando el comando");
-		exit(EXIT_FAILURE);
-	}
-}
-
-//ejecuta el coando externo
-void	execute_external(char **args, char **env)
-{
-	pid_t	pid;
-	char	*path;
-
-	path = get_path(args[0], env);
-	pid = fork();
-	if (pid == 0)
-		child_process(path, args, env);
-	else if (pid > 0)
-		wait(NULL);
-	else
-		perror("Error en fork");
-	free(path);
 }

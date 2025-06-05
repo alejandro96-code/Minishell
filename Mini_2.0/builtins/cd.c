@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/15 20:23:35 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/05 19:35:19 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*get_env_var(char *name, char **env)
 	size_t	name_len;
 
 	cont = 0;
-	name_len = strlen(name);
+	name_len = ft_strlen(name);
 	while (env[cont])
 	{
 		if (ft_strncmp(env[cont], name, name_len) == 0
@@ -65,13 +65,13 @@ char	*resolve_home_path(char *path, char **env)
 		fprintf(stderr, "cd: HOME not set\n");
 		return (NULL);
 	}
-	new_path = malloc(strlen(home) + strlen(path));
+	new_path = malloc(ft_strlen(home) + ft_strlen(path));
 	if (!new_path)
 	{
 		perror("malloc");
 		return (NULL);
 	}
-	strcpy(new_path, home);
+	ft_strlcpy(new_path, home, ft_strlen(home) + 1);
 	ft_strcat(new_path, path + 1);
 	return (new_path);
 }
@@ -82,7 +82,7 @@ char	*resolve_relative_path(char *path)
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		perror("cd");
+		perror("getcwd");
 		return (NULL);
 	}
 	ft_strcat(cwd, "/");

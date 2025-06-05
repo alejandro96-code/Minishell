@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/30 20:01:45 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/05 19:35:26 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ int	handle_export(char *arg, char ***env)
 	char	*key;
 	int		result;
 
-	arg_copy = strdup(arg);
+	arg_copy = ft_strdup(arg);
 	if (!arg_copy)
 		return (0);
-	equal = strchr(arg_copy, '=');
+	equal = ft_strchr(arg_copy, '=');
 	*equal = '\0';
 	key = arg_copy;
 	if (replace_env_value(key, arg, env))
@@ -79,15 +79,15 @@ int	replace_env_value(char *key, char *new_value, char ***env)
 	char	*env_equal;
 
 	i = 0;
-	key_len = strlen(key);
+	key_len = ft_strlen(key);
 	while ((*env)[i])
 	{
-		env_equal = strchr((*env)[i], '=');
+		env_equal = ft_strchr((*env)[i], '=');
 		if (env_equal && (size_t)(env_equal - (*env)[i]) == key_len
-			&& strncmp((*env)[i], key, key_len) == 0)
+			&& ft_strncmp((*env)[i], key, key_len) == 0)
 		{
 			free((*env)[i]);
-			(*env)[i] = strdup(new_value);
+			(*env)[i] = ft_strdup(new_value);
 			return (1);
 		}
 		i++;
@@ -109,7 +109,7 @@ int	add_env_value(char *new_value, char ***env)
 		return (0);
 	}
 	*env = new_env;
-	(*env)[len] = strdup(new_value);
+	(*env)[len] = ft_strdup(new_value);
 	(*env)[len + 1] = NULL;
 	return (1);
 }

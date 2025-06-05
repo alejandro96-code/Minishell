@@ -32,6 +32,9 @@
 # define YELLOW "\033[33m" // Amarillo
 # define RESET "\033[0m"   // Reset
 
+// Variable global para el manejo de señales
+extern volatile sig_atomic_t	g_signal_received;
+
 typedef struct s_command
 {
 	char	**argv;

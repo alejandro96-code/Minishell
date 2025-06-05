@@ -6,7 +6,7 @@ int contains_wildcard(const char *str)
     if (!str)
         return 0;
     
-    return (strchr(str, '*') != NULL);
+    return (ft_strchr(str, '*') != NULL);
 }
 
 // Función para verificar si un nombre de archivo coincide con un patrón con wildcard
@@ -17,7 +17,7 @@ int match_pattern(const char *pattern, const char *filename)
     
     // Si no hay wildcard, comparar directamente
     if (!contains_wildcard(pattern))
-        return (strcmp(pattern, filename) == 0);
+        return (ft_strncmp(pattern, filename, ft_strlen(pattern)) == 0 && ft_strlen(pattern) == ft_strlen(filename));
     
     // Dividir el patrón por el wildcard
     char **parts = ft_split(pattern, '*');
@@ -25,17 +25,17 @@ int match_pattern(const char *pattern, const char *filename)
         return 0;
     
     int match = 1;
-    size_t filename_len = strlen(filename);
+    size_t filename_len = ft_strlen(filename);
     size_t pos = 0;
     int i = 0;
     
     // Si el patrón comienza con asterisco, no necesitamos verificar el inicio
-    if (pattern[0] != '*' && parts[0] && strlen(parts[0]) > 0)
+    if (pattern[0] != '*' && parts[0] && ft_strlen(parts[0]) > 0)
     {
         // Verificar si el archivo comienza con la primera parte
-        if (strncmp(filename, parts[0], strlen(parts[0])) != 0)
+        if (ft_strncmp(filename, parts[0], ft_strlen(parts[0])) != 0)
             match = 0;
-        pos = strlen(parts[0]);
+        pos = ft_strlen(parts[0]);
     }
     
     // Verificar partes intermedias
@@ -49,14 +49,14 @@ int match_pattern(const char *pattern, const char *filename)
         }
         
         // Si es una parte vacía, continuar
-        if (strlen(parts[i]) == 0)
+        if (ft_strlen(parts[i]) == 0)
         {
             i++;
             continue;
         }
         
         // Buscar la siguiente parte en el resto del nombre de archivo
-        char *found = strstr(filename + pos, parts[i]);
+        char *found = ft_strnstr(filename + pos, parts[i], ft_strlen(filename) - pos);
         if (!found)
         {
             match = 0;
@@ -64,12 +64,12 @@ int match_pattern(const char *pattern, const char *filename)
         }
         
         // Actualizar la posición
-        pos = (found - filename) + strlen(parts[i]);
+        pos = (found - filename) + ft_strlen(parts[i]);
         i++;
     }
     
     // Si el patrón no termina con asterisco, verificar que el archivo termine con la última parte
-    if (match && pattern[strlen(pattern) - 1] != '*' && parts[i - 1] && strlen(parts[i - 1]) > 0)
+    if (match && pattern[ft_strlen(pattern) - 1] != '*' && parts[i - 1] && ft_strlen(parts[i - 1]) > 0)
     {
         if (pos != filename_len)
             match = 0;
@@ -125,7 +125,7 @@ char **expand_wildcards(const char *arg, int *num_expanded)
         if (!result)
             return NULL;
         
-        result[0] = strdup(arg);
+        result[0] = ft_strdup(arg);
         result[1] = NULL;
         *num_expanded = 1;
         return result;
@@ -140,7 +140,7 @@ char **expand_wildcards(const char *arg, int *num_expanded)
         if (!result)
             return NULL;
         
-        result[0] = strdup(arg);
+        result[0] = ft_strdup(arg);
         result[1] = NULL;
         *num_expanded = 1;
         return result;
@@ -167,7 +167,7 @@ char **expand_wildcards(const char *arg, int *num_expanded)
         
         if (match_pattern(arg, entry->d_name))
         {
-            result[count] = strdup(entry->d_name);
+            result[count] = ft_strdup(entry->d_name);
             count++;
         }
     }
@@ -210,12 +210,12 @@ char **expand_wildcards_in_args(char **args, int *num_args)
             }
             else
             {
-                new_args[total_expanded++] = strdup(args[i]);
+                new_args[total_expanded++] = ft_strdup(args[i]);
             }
         }
         else
         {
-            new_args[total_expanded++] = strdup(args[i]);
+            new_args[total_expanded++] = ft_strdup(args[i]);
         }
         i++;
     }

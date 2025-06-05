@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/10 13:20:12 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/05 19:35:14 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	write_expanded_line(int write_fd, char *line, char **env)
 	ssize_t	bytes_written;
 
 	expanded_line = expand_variable(line, env);
-	bytes_written = write(write_fd, expanded_line, strlen(expanded_line));
+	bytes_written = write(write_fd, expanded_line, ft_strlen(expanded_line));
 	if (bytes_written == -1)
 		perror("write");
 	bytes_written = write(write_fd, "\n", 1);
@@ -87,10 +87,11 @@ static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
 	printf("> ");
 	while (getline(&line, &bufsize, stdin) != -1)
 	{
-		len = strlen(line);
+		len = ft_strlen(line);
 		if (len > 0 && line[len - 1] == '\n')
 			line[len - 1] = '\0';
-		if (strcmp(line, delimiter) == 0)
+		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 
+			&& ft_strlen(line) == ft_strlen(delimiter))
 			break ;
 		write_expanded_line(write_fd, line, env);
 		printf("> ");
@@ -127,18 +128,18 @@ static void	handle_redirection_type(char **args, int *i, char *cleaned_filename,
 {
 	char	*cleaned_delimiter;
 
-	if (strcmp(args[*i], "<") == 0)
+	if (ft_strncmp(args[*i], "<", 1) == 0 && ft_strlen(args[*i]) == 1)
 		redirect_input(cleaned_filename);
-	else if (strcmp(args[*i], "<<") == 0)
+	else if (ft_strncmp(args[*i], "<<", 2) == 0 && ft_strlen(args[*i]) == 2)
 	{
 		cleaned_delimiter = remove_quotes(args[*i + 1]);
 		heredoc(cleaned_delimiter, env);
 		if (cleaned_delimiter != args[*i + 1])
 			free(cleaned_delimiter);
 	}
-	else if (strcmp(args[*i], ">") == 0)
+	else if (ft_strncmp(args[*i], ">", 1) == 0 && ft_strlen(args[*i]) == 1)
 		redirect_output(cleaned_filename, 0);
-	else if (strcmp(args[*i], ">>") == 0)
+	else if (ft_strncmp(args[*i], ">>", 2) == 0 && ft_strlen(args[*i]) == 2)
 		redirect_output(cleaned_filename, 1);
 	(*i)++;
 }
@@ -172,8 +173,10 @@ void	handle_redirections(char ***args, char **env)
 	j = 0;
 	while ((*args)[i])
 	{
-		if (strcmp((*args)[i], "<") == 0 || strcmp((*args)[i], "<<") == 0
-			|| strcmp((*args)[i], ">") == 0 || strcmp((*args)[i], ">>") == 0)
+		if ((ft_strncmp((*args)[i], "<", 1) == 0 && ft_strlen((*args)[i]) == 1) 
+			|| (ft_strncmp((*args)[i], "<<", 2) == 0 && ft_strlen((*args)[i]) == 2)
+			|| (ft_strncmp((*args)[i], ">", 1) == 0 && ft_strlen((*args)[i]) == 1) 
+			|| (ft_strncmp((*args)[i], ">>", 2) == 0 && ft_strlen((*args)[i]) == 2))
 		{
 			process_redirection(*args, &i, env);
 			continue ;

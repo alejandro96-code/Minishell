@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/04/15 20:42:54 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/05 19:36:06 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static int	find_env_var_index(char **env, char *name)
+{
+	int		i;
+	size_t	name_len;
+
+	i = 0;
+	name_len = ft_strlen(name);
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
+}
 
 int	builtin_unset(char **args, char ***env)
 {
@@ -32,20 +48,11 @@ int	builtin_unset(char **args, char ***env)
 
 void	unset_variable(char *var, char ***env)
 {
-	size_t	len;
 	int		i;
 
-	len = strlen(var);
-	i = 0;
-	while ((*env)[i])
-	{
-		if (strncmp((*env)[i], var, len) == 0 && (*env)[i][len] == '=')
-		{
-			remove_env_entry(i, env);
-			continue ;
-		}
-		i++;
-	}
+	i = find_env_var_index(*env, var);
+	if (i != -1)
+		remove_env_entry(i, env);
 }
 
 void	remove_env_entry(int index, char ***env)
