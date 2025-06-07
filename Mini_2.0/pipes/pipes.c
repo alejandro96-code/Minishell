@@ -43,25 +43,26 @@ void	handle_child_process(int i, int cmd_count, int pipefd[2],
 	}
 }
 
-void	setup_pipes_and_fork(int i, int cmd_count, int pipefd[2],
-		int *prev_pipe)
-{
-	pid_t	pid;
-
-	if (i < cmd_count - 1 && pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	if (pid == 0)
-		handle_child_process(i, cmd_count, pipefd, prev_pipe);
-}
+// Esta función ya no se usa - la lógica se movió a handle_pipeline_iteration
+// void	setup_pipes_and_fork(int i, int cmd_count, int pipefd[2],
+// 		int *prev_pipe)
+// {
+// 	pid_t	pid;
+// 
+// 	if (i < cmd_count - 1 && pipe(pipefd) == -1)
+// 	{
+// 		perror("pipe");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	pid = fork();
+// 	if (pid == -1)
+// 	{
+// 		perror("fork");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	if (pid == 0)
+// 		handle_child_process(i, cmd_count, pipefd, prev_pipe);
+// }
 
 // Divide un comando en argumentos, elimina comillas y maneja redirecciones
 char	**parse_args_and_handle(char *command, char **env)
@@ -117,11 +118,22 @@ static void	handle_pipeline_iteration(int i, int cmd_count, char **commands,
 {
 	int			pipefd[2];
 	static int	prev_pipe = STDIN_FILENO;
+	pid_t		pid;
 
-	setup_pipes_and_fork(i, cmd_count, pipefd, &prev_pipe);
-	if (fork() == 0)
+	if (i < cmd_count - 1 && pipe(pipefd) == -1)
 	{
-		setup_pipes_and_fork(i, cmd_count, pipefd, &prev_pipe);
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	if (pid == 0)
+	{
+		handle_child_process(i, cmd_count, pipefd, &prev_pipe);
 		child_exec_or_builtin(commands[i], env);
 	}
 	if (i > 0)
