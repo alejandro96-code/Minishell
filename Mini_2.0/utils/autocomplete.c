@@ -41,7 +41,7 @@ static int	command_exists(char *name, int count)
 	k = 0;
 	while (k < count)
 	{
-		if (ft_strncmp(command_names[k], name, ft_strlen(name)) == 0 
+		if (ft_strncmp(command_names[k], name, ft_strlen(name)) == 0
 			&& ft_strlen(command_names[k]) == ft_strlen(name))
 			return (1);
 		k++;
@@ -209,16 +209,20 @@ char	*file_generator(const char *text, int state)
 		return (NULL);
 	while ((entry = readdir(dir)) != NULL)
 	{
-		if ((ft_strncmp(entry->d_name, ".", ft_strlen(entry->d_name)) == 0 && ft_strlen(entry->d_name) == 1) 
-			|| (ft_strncmp(entry->d_name, "..", ft_strlen(entry->d_name)) == 0 && ft_strlen(entry->d_name) == 2))
+		if ((ft_strncmp(entry->d_name, ".", ft_strlen(entry->d_name)) == 0
+				&& ft_strlen(entry->d_name) == 1) || (ft_strncmp(entry->d_name,
+					"..", ft_strlen(entry->d_name)) == 0
+				&& ft_strlen(entry->d_name) == 2))
 		{
-			if (len == 0 || (filename[0] != '.' && len == 1) || (filename[0] == '.' && filename[1] != '.' && len == 1))
-				continue;
+			if (len == 0 || (filename[0] != '.' && len == 1)
+				|| (filename[0] == '.' && filename[1] != '.' && len == 1))
+				continue ;
 		}
 		if (ft_strncmp(entry->d_name, filename, len) == 0)
 		{
-			if ((ft_strncmp(directory, "./", 2) == 0 && ft_strlen(directory) == 2) 
-				&& (ft_strncmp(text, "./", 2) != 0) && ft_strncmp(text, "./", 2) != 0)
+			if ((ft_strncmp(directory, "./", 2) == 0
+					&& ft_strlen(directory) == 2) && (ft_strncmp(text, "./",
+						2) != 0) && ft_strncmp(text, "./", 2) != 0)
 			{
 				full_path = ft_strdup(entry->d_name);
 			}

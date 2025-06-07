@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/05 19:35:26 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/05 21:43:40 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,18 +98,27 @@ int	replace_env_value(char *key, char *new_value, char ***env)
 int	add_env_value(char *new_value, char ***env)
 {
 	int		len;
+	char	**new_env;
+	int		i;
 
 	len = 0;
 	while ((*env)[len])
 		len++;
-	char **new_env = realloc(*env, sizeof(char *) * (len + 2));
+	new_env = malloc(sizeof(char *) * (len + 2));
 	if (!new_env)
 	{
-		perror("realloc");
+		perror("malloc");
 		return (0);
 	}
+	i = 0;
+	while (i < len)
+	{
+		new_env[i] = (*env)[i];
+		i++;
+	}
+	new_env[len] = ft_strdup(new_value);
+	new_env[len + 1] = NULL;
+	free(*env);
 	*env = new_env;
-	(*env)[len] = ft_strdup(new_value);
-	(*env)[len + 1] = NULL;
 	return (1);
 }

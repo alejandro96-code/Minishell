@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/05 19:35:17 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/05 21:49:12 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,9 +156,7 @@ void	process_input(char *input, char ***env)
 {
 	t_command	*cmd;
 	
-	// Reset signal flag before processing command
 	g_signal_received = 0;
-	
 	cmd = parse_input(input);
 	if (ft_strchr(input, '|') != NULL)
 	{
@@ -172,20 +170,10 @@ void	process_input(char *input, char ***env)
 		return ;
 	}
 	process_single_command(cmd, env);
-	
-	// Check if signal was received during command execution
 	if (g_signal_received == SIGINT)
-	{
-		// Set exit status to 130 like bash does for SIGINT
-		// You might want to store this in a global variable
 		g_signal_received = 0;
-	}
 	else if (g_signal_received == SIGQUIT)
-	{
-		// Set exit status to 131 like bash does for SIGQUIT
 		g_signal_received = 0;
-	}
-	
 	free(input);
 	free(cmd);
 }
