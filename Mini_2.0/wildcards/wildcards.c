@@ -182,15 +182,38 @@ char **expand_wildcards(const char *arg, int *num_expanded)
 // Función principal para expandir wildcards en un array de argumentos
 char **expand_wildcards_in_args(char **args, int *num_args)
 {
+    char **new_args;
+    int total_expanded;
+    int i;
+    int j;
+    int has_wildcards;
+
     if (!args || !*args)
-        return args;
+        return (args);
+    
+    // Verificar si hay wildcards
+    has_wildcards = 0;
+    i = 0;
+    while (args[i] != NULL)
+    {
+        if (contains_wildcard(args[i]))
+        {
+            has_wildcards = 1;
+            break ;
+        }
+        i++;
+    }
 
-    int total_expanded = 0;
-    char **new_args = malloc(1024 * sizeof(char *)); // Tamaño inicial grande
+    // Si no hay wildcards, no hacer nada
+    if (!has_wildcards)
+        return (args);
+
+    new_args = malloc(1024 * sizeof(char *)); // Tamaño inicial grande
     if (!new_args)
-        return args;
+        return (args);
 
-    int i = 0;
+    total_expanded = 0;
+    i = 0;
     while (args[i] != NULL)
     {
         if (contains_wildcard(args[i]))
@@ -200,7 +223,7 @@ char **expand_wildcards_in_args(char **args, int *num_args)
 
             if (expanded)
             {
-                int j = 0;
+                j = 0;
                 while (j < num_expanded)
                 {
                     new_args[total_expanded++] = expanded[j];
@@ -231,5 +254,5 @@ char **expand_wildcards_in_args(char **args, int *num_args)
     }
     free(args);
 
-    return new_args;
+    return (new_args);
 }

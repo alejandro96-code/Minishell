@@ -154,11 +154,10 @@ static void	process_redirection(char **args, int *i, char **env)
 	expanded_filename = expand_variable(args[*i + 1], env);
 	cleaned_filename = remove_quotes(expanded_filename);
 	handle_redirection_type(args, i, cleaned_filename, env);
-	if (expanded_filename != args[*i])
+	if (expanded_filename != args[*i + 1])
 		free(expanded_filename);
 	if (cleaned_filename != expanded_filename)
 		free(cleaned_filename);
-	(*i)++;
 }
 
 // Filtra los argumentos quitando las redirecciones y aplicándolas
@@ -167,8 +166,35 @@ void	handle_redirections(char ***args, char **env)
 	char	**new_args;
 	int		i;
 	int		j;
+	int		count;
+	int		has_redirections;
 
-	new_args = malloc(sizeof(char *) * 100);
+	// Primero verificar si hay redirecciones
+	has_redirections = 0;
+	i = 0;
+	while ((*args)[i])
+	{
+		if ((ft_strncmp((*args)[i], "<", 1) == 0 && ft_strlen((*args)[i]) == 1) 
+			|| (ft_strncmp((*args)[i], "<<", 2) == 0 && ft_strlen((*args)[i]) == 2)
+			|| (ft_strncmp((*args)[i], ">", 1) == 0 && ft_strlen((*args)[i]) == 1) 
+			|| (ft_strncmp((*args)[i], ">>", 2) == 0 && ft_strlen((*args)[i]) == 2))
+		{
+			has_redirections = 1;
+			break ;
+		}
+		i++;
+	}
+
+	// Si no hay redirecciones, no hacer nada
+	if (!has_redirections)
+		return ;
+
+	count = 0;
+	while ((*args)[count])
+		count++;
+	new_args = malloc(sizeof(char *) * (count + 1));
+	if (!new_args)
+		return ;
 	i = 0;
 	j = 0;
 	while ((*args)[i])
@@ -179,6 +205,7 @@ void	handle_redirections(char ***args, char **env)
 			|| (ft_strncmp((*args)[i], ">>", 2) == 0 && ft_strlen((*args)[i]) == 2))
 		{
 			process_redirection(*args, &i, env);
+			i++;
 			continue ;
 		}
 		new_args[j++] = (*args)[i++];

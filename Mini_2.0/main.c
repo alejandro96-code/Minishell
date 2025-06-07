@@ -109,9 +109,9 @@ char	*get_prompt(char **env)
 	char	*username;
 	char	cwd[1024];
 	char	*prompt;
+	char	*temp;
 
 	username = find_user(env);
-	prompt = NULL;
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("getcwd");
@@ -120,10 +120,18 @@ char	*get_prompt(char **env)
 	}
 	prompt = ft_strjoin(YELLOW, username);
 	free(username);
-	prompt = ft_strjoin_s1_free(prompt, RED);
-	prompt = ft_strjoin_s1_free(prompt, cwd);
-	prompt = ft_strjoin_s1_free(prompt, RESET);
-	prompt = ft_strjoin_s1_free(prompt, ": ");
+	temp = prompt;
+	prompt = ft_strjoin(temp, RED);
+	free(temp);
+	temp = prompt;
+	prompt = ft_strjoin(temp, cwd);
+	free(temp);
+	temp = prompt;
+	prompt = ft_strjoin(temp, RESET);
+	free(temp);
+	temp = prompt;
+	prompt = ft_strjoin(temp, ": ");
+	free(temp);
 	return (prompt);
 }
 
@@ -138,6 +146,12 @@ static void	process_single_command(t_command *cmd, char ***env)
 		expanded = expand_variable(cmd->argv[i], *env);
 		free(cmd->argv[i]);
 		cmd->argv[i] = remove_quotes(expanded);
+		if (cmd->argv[i] == expanded)
+		{
+			// Si remove_quotes no modificó la cadena, duplicamos para evitar double-free
+			cmd->argv[i] = ft_strdup(expanded);
+			free(expanded);
+		}
 		i++;
 	}
 	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
@@ -175,7 +189,7 @@ void	process_input(char *input, char ***env)
 	else if (g_signal_received == SIGQUIT)
 		g_signal_received = 0;
 	free(input);
-	free(cmd);
+	free_command(cmd);
 }
 
 static void	handle_input(char *input, char ***env)
@@ -205,6 +219,7 @@ static void	cleanup_and_exit(char **env)
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
+	char	*prompt;
 	char	**env;
 
 	(void)argc;
@@ -215,7 +230,9 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		g_signal_received = 0;
-		input = readline(get_prompt(env));
+		prompt = get_prompt(env);
+		input = readline(prompt);
+		free(prompt);
 		if (!input)
 		{
 			printf("exit\n");

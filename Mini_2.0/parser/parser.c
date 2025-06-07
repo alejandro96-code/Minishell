@@ -26,7 +26,7 @@ int	is_builtin_command(const char *cmd)
 			(ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4));
 }
 
-static void	free_command(t_command *cmd)
+void	free_command(t_command *cmd)
 {
 	int	i;
 

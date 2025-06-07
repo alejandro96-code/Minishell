@@ -81,6 +81,7 @@ void		execute_command(char *cmd_line, char **envp);
 // parser.c
 int			is_builtin_command(const char *cmd);
 t_command	*parse_input(const char *input);
+void		free_command(t_command *cmd);
 
 // funciones del main
 char		**copy_env(char **envp);
