@@ -16,9 +16,7 @@ char	*ft_strjoin_char(char *s1, char s2)
 {
 	char	*ptr;
 	size_t	i;
-	int		j;
 
-	j = 0;
 	i = -1;
 	if (!s1)
 		s1 = ft_strdup("");

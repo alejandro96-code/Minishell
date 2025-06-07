@@ -12,6 +12,14 @@
 
 #include "../minishell.h"
 
+static void	safe_write(int fd, const void *buf, size_t count)
+{
+	ssize_t	result;
+
+	result = write(fd, buf, count);
+	(void)result;
+}
+
 static int	is_valid_n_option(char *arg)
 {
 	int	i;
@@ -31,27 +39,27 @@ static int	is_valid_n_option(char *arg)
 static void	print_basic_escapes(char c)
 {
 	if (c == 'n')
-		write(1, "\n", 1);
+		safe_write(1, "\n", 1);
 	else if (c == 't')
-		write(1, "\t", 1);
+		safe_write(1, "\t", 1);
 	else if (c == 'r')
-		write(1, "\r", 1);
+		safe_write(1, "\r", 1);
 	else if (c == 'b')
-		write(1, "\b", 1);
+		safe_write(1, "\b", 1);
 	else if (c == 'a')
-		write(1, "\a", 1);
+		safe_write(1, "\a", 1);
 	else if (c == 'v')
-		write(1, "\v", 1);
+		safe_write(1, "\v", 1);
 	else if (c == 'f')
-		write(1, "\f", 1);
+		safe_write(1, "\f", 1);
 	else if (c == '\\')
-		write(1, "\\", 1);
+		safe_write(1, "\\", 1);
 	else if (c == '0')
-		write(1, "\0", 1);
+		safe_write(1, "\0", 1);
 	else
 	{
-		write(1, "\\", 1);
-		write(1, &c, 1);
+		safe_write(1, "\\", 1);
+		safe_write(1, &c, 1);
 	}
 }
 
@@ -72,7 +80,7 @@ static void	print_with_escapes(char *str)
 		if (*str == '\\' && *(str + 1))
 			print_escape_sequence(&str);
 		else
-			write(1, str, 1);
+			safe_write(1, str, 1);
 		str++;
 	}
 }
@@ -94,10 +102,10 @@ int	builtin_echo(char **args, char **env)
 	{
 		print_with_escapes(args[i]);
 		if (args[i + 1])
-			write(1, " ", 1);
+			safe_write(1, " ", 1);
 		i++;
 	}
 	if (newline)
-		write(1, "\n", 1);
+		safe_write(1, "\n", 1);
 	return (0);
 }

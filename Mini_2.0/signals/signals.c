@@ -14,11 +14,19 @@
 
 volatile sig_atomic_t g_signal_received = 0;
 
+static void	safe_write(int fd, const void *buf, size_t count)
+{
+	ssize_t	result;
+
+	result = write(fd, buf, count);
+	(void)result;
+}
+
 void	sigint_handler(int sig)
 {
 	(void)sig;
 	g_signal_received = SIGINT;
-	write(1, "\n", 1);
+	safe_write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
