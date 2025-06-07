@@ -171,13 +171,13 @@ void	process_input(char *input, char ***env)
 	t_command	*cmd;
 	
 	g_signal_received = 0;
-	cmd = parse_input(input);
 	if (ft_strchr(input, '|') != NULL)
 	{
 		execute_pipeline(input, *env);
 		free(input);
 		return ;
 	}
+	cmd = parse_input(input);
 	if (!cmd)
 	{
 		free(input);
