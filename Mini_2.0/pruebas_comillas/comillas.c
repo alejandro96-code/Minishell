@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 09:50:58 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/04 18:42:15 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:34:53 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ char	*quotes_clean(char *text, char quote, char **env)
 			if (text[i] == '$')
 			{
 				var_env = ft_calloc(1, sizeof(char));
-				while (text[i] && (isalnum(text[i]) || text[i] == '_'))
+				while (text[i] && (isalnum(text[i]) || text[i] == ' '))
 				{
 					var_env = ft_strjoin_char(var_env, text[i++]);
 				}

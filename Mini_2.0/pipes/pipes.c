@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/10 13:22:47 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/09 18:49:02 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,27 +42,6 @@ void	handle_child_process(int i, int cmd_count, int pipefd[2],
 		close(pipefd[1]);
 	}
 }
-
-// Esta función ya no se usa - la lógica se movió a handle_pipeline_iteration
-// void	setup_pipes_and_fork(int i, int cmd_count, int pipefd[2],
-// 		int *prev_pipe)
-// {
-// 	pid_t	pid;
-// 
-// 	if (i < cmd_count - 1 && pipe(pipefd) == -1)
-// 	{
-// 		perror("pipe");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	pid = fork();
-// 	if (pid == -1)
-// 	{
-// 		perror("fork");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	if (pid == 0)
-// 		handle_child_process(i, cmd_count, pipefd, prev_pipe);
-// }
 
 // Divide un comando en argumentos, elimina comillas y maneja redirecciones
 char	**parse_args_and_handle(char *command, char **env)
@@ -114,7 +93,7 @@ void	child_exec_or_builtin(char *command, char ***env)
 // Ejecuta una línea de comandos en pipeline:
 // fork,pipes y espera de procesos hijos
 static void	handle_pipeline_iteration(int i, int cmd_count, char **commands,
-		char ***env)
+		char **env)
 {
 	int			pipefd[2];
 	static int	prev_pipe = STDIN_FILENO;
@@ -134,7 +113,7 @@ static void	handle_pipeline_iteration(int i, int cmd_count, char **commands,
 	if (pid == 0)
 	{
 		handle_child_process(i, cmd_count, pipefd, &prev_pipe);
-		child_exec_or_builtin(commands[i], env);
+		child_exec_or_builtin(commands[i], &env);
 	}
 	if (i > 0)
 		close(prev_pipe);
@@ -157,7 +136,7 @@ int	execute_pipeline(char *input, char **env)
 	if (cmd_count == 1)
 		return (process_input(commands[0], &env), ft_free_split(commands), 0);
 	while (++i < cmd_count)
-		handle_pipeline_iteration(i, cmd_count, commands, &env);
+		handle_pipeline_iteration(i, cmd_count, commands, env);
 	i = 0;
 	while (i++ < cmd_count && wait(&status) != -1)
 		;
