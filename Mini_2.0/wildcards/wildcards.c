@@ -253,6 +253,5 @@ char **expand_wildcards_in_args(char **args, int *num_args)
         i++;
     }
     free(args);
-
     return (new_args);
 }
