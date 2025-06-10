@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 00:43:20 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 03:48:26 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 18:56:01 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ char	*extract_next_arg(char **str)
 	char	*result;
 	int		len;
 	int		in_quotes;
-	char	quote_type;
 
 	skip_spaces(str);
 	start = *str;
@@ -56,11 +55,8 @@ char	*extract_next_arg(char **str)
 	while (**str && (in_quotes || !ft_isspace(**str)))
 	{
 		if (!in_quotes && (**str == '\'' || **str == '"'))
-		{
-			in_quotes = 1;
-			quote_type = **str;
-		}
-		else if (in_quotes && **str == quote_type)
+			in_quotes = **str;
+		else if (in_quotes && **str == in_quotes)
 			in_quotes = 0;
 		(*str)++;
 		len++;
