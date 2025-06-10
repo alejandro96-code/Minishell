@@ -60,6 +60,11 @@ int	handle_export(char *arg, char ***env)
 	if (!arg_copy)
 		return (0);
 	equal = ft_strchr(arg_copy, '=');
+	if (!equal)
+	{
+		free(arg_copy);
+		return (0);
+	}
 	*equal = '\0';
 	key = arg_copy;
 	if (replace_env_value(key, arg, env))

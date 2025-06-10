@@ -17,9 +17,25 @@ static int	execute_single_command(t_command *cmd, char ***env)
 	int		exit_status;
 	pid_t	pid;
 	int		status;
+	int		i;
+	char	*processed;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (1);
+	
+	// Expandir variables de entorno en todos los argumentos
+	i = 0;
+	while (i < cmd->argc && cmd->argv[i])
+	{
+		processed = process_quotes_and_variables(cmd->argv[i], *env);
+		if (processed)
+		{
+			free(cmd->argv[i]);
+			cmd->argv[i] = processed;
+		}
+		i++;
+	}
+	
 	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
 	handle_redirections(&cmd->argv, *env);
 	if (cmd->is_builtin)
@@ -46,6 +62,7 @@ static int	execute_single_command(t_command *cmd, char ***env)
 			exit_status = 1;
 		}
 	}
+	g_exit_status = exit_status;
 	return (exit_status);
 }
 

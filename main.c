@@ -26,14 +26,15 @@ static void	handle_input(char *input, char ***env)
 		free(input);
 }
 
-static void	main_loop(char **env)
+static void	main_loop(char ***env)
 {
 	char	*input;
 	char	*prompt;
 
 	while (1)
 	{
-		prompt = get_prompt(env);
+		g_signal_received = 0;
+		prompt = get_prompt(*env);
 		input = readline(prompt);
 		free(prompt);
 		if (!input)
@@ -41,7 +42,7 @@ static void	main_loop(char **env)
 			printf("exit\n");
 			break ;
 		}
-		handle_input(input, &env);
+		handle_input(input, env);
 	}
 }
 
@@ -56,7 +57,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	setup_autocomplete(env);
 	setup_signal_handlers();
-	main_loop(env);
+	main_loop(&env);
 	cleanup_and_exit(env);
 	return (0);
 }
