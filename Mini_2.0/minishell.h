@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/11 13:34:37 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/10 03:49:56 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,21 @@
 // Variable global para el manejo de señales
 extern volatile sig_atomic_t	g_signal_received;
 
+typedef struct s_redirect
+{
+    char				*file;
+    int					type;
+    struct s_redirect	*next;
+}	t_redirect;
+
 typedef struct s_command
 {
-	char	**argv;
-	int		argc;
-	int		is_builtin;
-}			t_command;
+    char				**argv;
+    int					argc;
+    int					is_builtin;
+    t_redirect			*redirections;
+    struct s_command	*next;
+}	t_command;
 
 // builtin del CD
 char		*get_env_var(char *name, char **env);
@@ -89,7 +98,7 @@ char		*remove_quotes(char *str);
 char		*clean_input(char *input);
 char		*get_prompt(char **env);
 void		process_input(char *input, char ***env);
-int			main(int argc, char **argv, char **envp);
+//int			main(int argc, char **argv, char **envp);
 
 // Pipes
 int			count_commands_and_split(char *input, char ***commands);
@@ -133,5 +142,12 @@ int			match_pattern(const char *pattern, const char *filename);
 int			count_matching_files(const char *pattern);
 char		**expand_wildcards(const char *arg, int *num_expanded);
 char		**expand_wildcards_in_args(char **args, int *num_args);
+
+// Parser args
+char		**ft_split_args(char *str);
+int			count_args(char *str);
+char		*extract_next_arg(char **str);
+void		skip_spaces(char **str);
+char		**free_args(char **args);
 
 #endif

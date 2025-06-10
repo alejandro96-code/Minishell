@@ -6,7 +6,7 @@
 #    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/28 23:36:25 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/05/14 18:53:13 by dgasco-g         ###   ########.fr        #
+#    Updated: 2025/06/10 03:32:55 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC	= ft_isascii.c \
 	ft_strchr.c		\
 	ft_strrchr.c	\
 	ft_isalpha.c	\
+	ft_isspace.c    \
 	ft_memcpy.c		\
 	ft_strlcat.c	\
 	ft_tolower.c	\
@@ -45,9 +46,9 @@ SRC	= ft_isascii.c \
 	ft_putchar_fd.c \
 	ft_putstr_fd.c	\
 	ft_putendl_fd.c \
-	ft_putnbr_fd.c \
+	ft_putnbr_fd.c  \
 	ft_strjoin_s1_free.c \
-	ft_strcat.c \
+	ft_strcat.c     \
 	ft_strjoin_char.c
 
 BONUS = ft_lstnew_bonus.c \

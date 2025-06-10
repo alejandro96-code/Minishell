@@ -1,18 +1,18 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    makefile                                           :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
+#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/04/16 14:21:00 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/10 03:54:27 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g -O3 
+CFLAGS =  -g -O3 
 RM = rm -f
 
 SRC =	builtins/cd.c\
@@ -25,6 +25,7 @@ SRC =	builtins/cd.c\
       builtins/unset.c\
       executors/exec_cmd.c\
       parser/parser.c\
+      parser/args.c\
       pipes/pipes.c\
       redirections/redirections.c\
       signals/signals.c\
