@@ -6,21 +6,18 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 18:47:51 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 19:30:30 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Variable global para el exit status
-int	g_exit_status = 0;
-
-static void	handle_input(char *input, char ***env)
+static void	handle_input(char *input, char ***env, int *exit_status)
 {
 	if (*input)
 	{
 		add_history(input);
-		process_input(input, env);
+		process_input(input, env, exit_status);
 	}
 	else
 		free(input);
@@ -30,7 +27,9 @@ static void	main_loop(char ***env)
 {
 	char	*input;
 	char	*prompt;
+	int		exit_status;
 
+	exit_status = 0;
 	while (1)
 	{
 		g_signal_received = 0;
@@ -42,7 +41,7 @@ static void	main_loop(char ***env)
 			printf("exit\n");
 			break ;
 		}
-		handle_input(input, env);
+		handle_input(input, env, &exit_status);
 	}
 }
 

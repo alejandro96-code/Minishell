@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 18:46:33 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 19:24:43 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@
 
 // Variable global para el manejo de señales
 extern volatile sig_atomic_t	g_signal_received;
-
-// Variable global para el exit status
-extern int	g_exit_status;
 
 typedef enum e_operator_type
 {
@@ -81,7 +78,7 @@ int			try_change_directory(char *path);
 // builtin del echo, env, exit y pwd
 int			builtin_echo(char **args, char **env);
 int			builtin_env(char **env);
-int			builtin_exit(char **args);
+int			builtin_exit(char **args, int exit_status);
 int			builtin_pwd(char **env);
 
 // builtin del export
@@ -97,7 +94,7 @@ void		remove_env_entry(int index, char ***env);
 
 // general_build.c
 int			is_builtin(char *cmd);
-int			execute_builtin(char **args, char ***env);
+int			execute_builtin(char **args, char ***env, int *exit_status);
 void		execute_external(char **args, char **env);
 
 // exec_cmd.c
@@ -109,7 +106,7 @@ void		execute_command(char *cmd_line, char **envp);
 
 // parser.c
 int			is_builtin_command(const char *cmd);
-t_command	*parse_input(const char *input);
+t_command	*parse_input(const char *input, int *exit_status);
 void		free_command(t_command *cmd);
 
 // Logical operators parsing
@@ -128,7 +125,7 @@ char		**copy_env(char **envp);
 char		*remove_quotes(char *str);
 char		*clean_input(char *input);
 char		*get_prompt(char **env);
-void		process_input(char *input, char ***env);
+void		process_input(char *input, char ***env, int *exit_status);
 
 // env_utils.c
 void		free_env(char **env);
@@ -172,8 +169,8 @@ void		setup_child_signals(void);
 void		reset_signal_handlers(void);
 
 // utils > expand_variable
-char		*expand_variable(char *str, char **env);
-char		*process_quotes_and_variables(char *input, char **env);
+char		*expand_variable(char *str, char **env, int exit_status);
+char		*process_quotes_and_variables(char *input, char **env, int exit_status);
 char		*get_env_value(char *var_name, char **env);
 int			process_env_variable(char *str, char *result, int *j, char **env);
 

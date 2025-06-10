@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static void	expand_command_args(t_command *cmd, char **env)
+static void	expand_command_args(t_command *cmd, char **env, int exit_status)
 {
 	int		i;
 	char	*expanded;
@@ -20,22 +20,22 @@ static void	expand_command_args(t_command *cmd, char **env)
 	i = 0;
 	while (i < cmd->argc)
 	{
-		expanded = expand_variable(cmd->argv[i], env);
+		expanded = expand_variable(cmd->argv[i], env, exit_status);
 		free(cmd->argv[i]);
 		cmd->argv[i] = remove_quotes(expanded);
 		i++;
 	}
 }
 
-static void	process_single_command(t_command *cmd, char ***env)
+static void	process_single_command(t_command *cmd, char ***env, int *exit_status)
 {
-	expand_command_args(cmd, *env);
+	expand_command_args(cmd, *env, *exit_status);
 	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
 	handle_redirections(&cmd->argv, *env);
 	if (cmd->argv && cmd->argv[0])
 	{
 		if (cmd->is_builtin)
-			execute_builtin(cmd->argv, env);
+			execute_builtin(cmd->argv, env, exit_status);
 		else
 			execute_external(cmd->argv, *env);
 	}
@@ -74,11 +74,10 @@ static int	has_logical_operators(char *input)
 	return (0);
 }
 
-void	process_input(char *input, char ***env)
+void	process_input(char *input, char ***env, int *exit_status)
 {
 	t_command	*cmd;
 	t_ast_node	*ast;
-	int			exit_status;
 
 	g_signal_received = 0;
 	
@@ -88,7 +87,7 @@ void	process_input(char *input, char ***env)
 		ast = parse_logical_expression(input);
 		if (ast)
 		{
-			exit_status = execute_ast(ast, env);
+			*exit_status = execute_ast(ast, env);
 			free_ast_node(ast);
 		}
 		free(input);
@@ -104,13 +103,13 @@ void	process_input(char *input, char ***env)
 	}
 	
 	// Single command
-	cmd = parse_input(input);
+	cmd = parse_input(input, exit_status);
 	if (!cmd)
 	{
 		free(input);
 		return ;
 	}
-	process_single_command(cmd, env);
+	process_single_command(cmd, env, exit_status);
 	if (g_signal_received == SIGINT)
 		g_signal_received = 0;
 	else if (g_signal_received == SIGQUIT)

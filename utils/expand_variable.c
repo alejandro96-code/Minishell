@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 18:56:21 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/10 19:27:09 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// Variable global para el exit status
-extern int g_exit_status;
 
 // Estructura para el estado del parser de expansión
 typedef struct s_expand_state
@@ -26,6 +23,7 @@ typedef struct s_expand_state
 	int		in_single_quotes;
 	int		in_double_quotes;
 	char	**env;
+	int		exit_status;
 }	t_expand_state;
 
 // Función para redimensionar el buffer de resultado
@@ -147,7 +145,7 @@ static int	expand_variable_internal(t_expand_state *state)
 	if (state->input[state->input_pos] == '?')
 	{
 		state->input_pos++;
-		value = ft_itoa(g_exit_status);
+		value = ft_itoa(state->exit_status);
 		if (value)
 		{
 			add_string_to_result(state, value);
@@ -220,7 +218,7 @@ static int	process_escape_in_double_quotes(t_expand_state *state)
 }
 
 // Función principal de expansión
-char	*process_quotes_and_variables(char *input, char **env)
+char	*process_quotes_and_variables(char *input, char **env, int exit_status)
 {
 	t_expand_state	state;
 
@@ -238,6 +236,7 @@ char	*process_quotes_and_variables(char *input, char **env)
 	state.in_single_quotes = 0;
 	state.in_double_quotes = 0;
 	state.env = env;
+	state.exit_status = exit_status;
 	
 	while (state.input[state.input_pos])
 	{
@@ -273,9 +272,9 @@ char	*process_quotes_and_variables(char *input, char **env)
 }
 
 // Función principal de expansión de variables (interfaz pública)
-char	*expand_variable(char *str, char **env)
+char	*expand_variable(char *str, char **env, int exit_status)
 {
-	return (process_quotes_and_variables(str, env));
+	return (process_quotes_and_variables(str, env, exit_status));
 }
 
 // Funciones auxiliares mantenidas para compatibilidad
@@ -289,7 +288,7 @@ int	process_env_variable(char *str, char *result, int *j, char **env)
 	if (!temp_input)
 		return (0);
 	
-	expanded = process_quotes_and_variables(temp_input, env);
+	expanded = process_quotes_and_variables(temp_input, env, 0);
 	free(temp_input);
 	
 	if (expanded)

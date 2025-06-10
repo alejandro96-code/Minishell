@@ -199,7 +199,7 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 		return (NULL);
 	}
 	
-	cmd = parse_input(full_command);
+	cmd = parse_input(full_command, NULL);
 	free(full_command);
 	if (!cmd)
 		return (NULL);

@@ -36,7 +36,11 @@ char	**parse_command_arguments(char *command, char **env)
 
 static void	execute_builtin_child(char **args, char ***env)
 {
-	exit(execute_builtin(args, env));
+	int	exit_status;
+
+	exit_status = 0;
+	execute_builtin(args, env, &exit_status);
+	exit(exit_status);
 }
 
 static void	execute_external_child(char **args, char **env)

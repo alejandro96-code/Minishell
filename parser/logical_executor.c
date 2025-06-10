@@ -24,10 +24,11 @@ static int	execute_single_command(t_command *cmd, char ***env)
 		return (1);
 	
 	// Expandir variables de entorno en todos los argumentos
+	exit_status = 0; // Initialize with default exit status
 	i = 0;
 	while (i < cmd->argc && cmd->argv[i])
 	{
-		processed = process_quotes_and_variables(cmd->argv[i], *env);
+		processed = process_quotes_and_variables(cmd->argv[i], *env, exit_status);
 		if (processed)
 		{
 			free(cmd->argv[i]);
@@ -39,7 +40,10 @@ static int	execute_single_command(t_command *cmd, char ***env)
 	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
 	handle_redirections(&cmd->argv, *env);
 	if (cmd->is_builtin)
-		exit_status = execute_builtin(cmd->argv, env);
+	{
+		exit_status = 0;
+		execute_builtin(cmd->argv, env, &exit_status);
+	}
 	else
 	{
 		pid = fork();
@@ -62,7 +66,6 @@ static int	execute_single_command(t_command *cmd, char ***env)
 			exit_status = 1;
 		}
 	}
-	g_exit_status = exit_status;
 	return (exit_status);
 }
 

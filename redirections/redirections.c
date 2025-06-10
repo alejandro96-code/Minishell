@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/09 22:05:34 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 19:27:06 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	write_expanded_line(int write_fd, char *line, char **env)
 	char	*expanded_line;
 	ssize_t	bytes_written;
 
-	expanded_line = expand_variable(line, env);
+	expanded_line = expand_variable(line, env, 0);
 	bytes_written = write(write_fd, expanded_line, ft_strlen(expanded_line));
 	if (bytes_written == -1)
 		perror("write");
@@ -155,7 +155,7 @@ static void	process_redirection(char **args, int *i, char **env)
 	pid = fork();
 	if (pid == 0)
 	{
-		expanded_filename = expand_variable(args[*i + 1], env);
+		expanded_filename = expand_variable(args[*i + 1], env, 0);
 		cleaned_filename = remove_quotes(expanded_filename);
 		handle_redirection_type(args, i, cleaned_filename, env);
 		if (expanded_filename != args[*i + 1])

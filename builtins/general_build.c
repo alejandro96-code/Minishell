@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/05 19:35:19 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 19:23:09 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_builtin(char *cmd)
 		|| (!ft_strncmp(cmd, "exit", 4) && cmd[4] == '\0');
 }
 
-int	execute_builtin(char **args, char ***env)
+int	execute_builtin(char **args, char ***env, int *exit_status)
 {
 	int	result;
 
@@ -40,10 +40,10 @@ int	execute_builtin(char **args, char ***env)
 	else if (!ft_strncmp(args[0], "env", 3) && args[0][3] == '\0')
 		result = builtin_env(*env);
 	else if (!ft_strncmp(args[0], "exit", 4) && args[0][4] == '\0')
-		result = builtin_exit(args);
+		result = builtin_exit(args, *exit_status);
 	else
 		result = 1;
 	
-	g_exit_status = result;
+	*exit_status = result;
 	return (result);
 }

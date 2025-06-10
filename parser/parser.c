@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/05 19:35:15 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 19:23:09 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static int	quote_balance_check(const char *input)
 }
 
 // Función que procesa la entrada y genera la estructura t_command
-t_command	*parse_input(const char *input)
+t_command	*parse_input(const char *input, int *exit_status)
 {
 	t_command	*cmd;
 
@@ -88,7 +88,7 @@ t_command	*parse_input(const char *input)
 	if (quote_balance_check(input))
 	{
 		ft_putstr_fd("minishell: unclosed quote\n", 2);
-		g_exit_status = 258;
+		*exit_status = 258;
 		return (NULL);
 	}
 	
