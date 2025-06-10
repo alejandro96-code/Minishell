@@ -62,7 +62,7 @@ char	*resolve_home_path(char *path, char **env)
 	home = get_env_var("HOME", env);
 	if (!home)
 	{
-		write(STDERR_FILENO, "cd: HOME not set\n", 17);
+		write_error_msg("cd: HOME not set\n");
 		return (NULL);
 	}
 	new_path = malloc(ft_strlen(home) + ft_strlen(path));

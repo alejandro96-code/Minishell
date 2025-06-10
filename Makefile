@@ -26,6 +26,8 @@ SRC =	builtins/cd.c\
       executors/exec_cmd.c\
       parser/parser.c\
       parser/args.c\
+      parser/logical_parser.c\
+      parser/logical_executor.c\
       pipes/pipes.c\
       pipes/pipe_utils.c\
       pipes/pipe_exec.c\
@@ -36,6 +38,7 @@ SRC =	builtins/cd.c\
       utils/expand_variable.c\
       utils/find_user.c\
       utils/env_utils.c\
+      utils/error_utils.c\
       utils/quote_utils.c\
       utils/prompt_utils.c\
       utils/input_processor.c\

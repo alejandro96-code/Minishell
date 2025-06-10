@@ -35,7 +35,7 @@ int	builtin_unset(char **args, char ***env)
 	i = 1;
 	if (!args[1])
 	{
-		write(STDERR_FILENO, "unset: not enough arguments\n", 29);
+		write_error_msg("unset: not enough arguments\n");
 		return (1);
 	}
 	while (args[i])

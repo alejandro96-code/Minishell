@@ -35,6 +35,14 @@
 // Variable global para el manejo de señales
 extern volatile sig_atomic_t	g_signal_received;
 
+typedef enum e_operator_type
+{
+	OP_NONE,
+	OP_AND,
+	OP_OR,
+	OP_PIPE
+}	t_operator_type;
+
 typedef struct s_redirect
 {
     char				*file;
@@ -50,6 +58,15 @@ typedef struct s_command
     t_redirect			*redirections;
     struct s_command	*next;
 }	t_command;
+
+typedef struct s_ast_node
+{
+    t_operator_type		operator;
+    t_command			*command;
+    struct s_ast_node	*left;
+    struct s_ast_node	*right;
+    int					in_parentheses;
+}	t_ast_node;
 
 // builtin del CD
 char		*get_env_var(char *name, char **env);
@@ -91,6 +108,17 @@ void		execute_command(char *cmd_line, char **envp);
 int			is_builtin_command(const char *cmd);
 t_command	*parse_input(const char *input);
 void		free_command(t_command *cmd);
+
+// Logical operators parsing
+t_ast_node	*parse_logical_expression(const char *input);
+t_ast_node	*parse_or_expression(char **tokens, int *index);
+t_ast_node	*parse_and_expression(char **tokens, int *index);
+t_ast_node	*parse_primary_expression(char **tokens, int *index);
+t_ast_node	*create_ast_node(t_operator_type op, t_command *cmd);
+void		free_ast_node(t_ast_node *node);
+int			execute_ast(t_ast_node *node, char ***env);
+char		**tokenize_input(const char *input);
+void		free_tokens(char **tokens);
 
 // funciones del main
 char		**copy_env(char **envp);
@@ -144,8 +172,17 @@ void		reset_signal_handlers(void);
 char		*expand_variable(char *str, char **env);
 int			process_env_variable(char *str, char *result, int *j, char **env);
 
+
 // utils > find_user
 char		*find_user(char **env);
+
+// Error handling utility
+void		write_error_msg(const char *msg);
+void		write_error_parts(const char *part1, const char *part2, const char *part3);
+void		write_command_not_found_error(const char *command);
+void		write_export_error(const char *identifier);
+void		write_exit_error(const char *arg);
+void		write_variable_not_found_warning(const char *var_name);
 
 // utils > autocomplete
 void		free_command_names(void);

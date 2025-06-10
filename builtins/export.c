@@ -42,9 +42,7 @@ int	builtin_export(char **args, char ***env)
 		}
 		else
 		{
-			write(STDERR_FILENO, "export: `", 9);
-			write(STDERR_FILENO, args[i], ft_strlen(args[i]));
-			write(STDERR_FILENO, "': not a valid identifier\n", 26);
+			write_export_error(args[i]);
 		}
 		i++;
 	}

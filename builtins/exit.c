@@ -40,15 +40,13 @@ int	builtin_exit(char **args)
 	{
 		if (!is_numeric(args[1]))
 		{
-			write(STDERR_FILENO, "exit: ", 6);
-			write(STDERR_FILENO, args[1], ft_strlen(args[1]));
-			write(STDERR_FILENO, ": numeric argument required\n", 28);
+			write_exit_error(args[1]);
 			exit(255);
 		}
 		status = ft_atoi(args[1]);
 		if (args[2])
 		{
-			write(STDERR_FILENO, "exit: too many arguments\n", 25);
+			write_error_msg("exit: too many arguments\n");
 			return (1);
 		}
 	}
