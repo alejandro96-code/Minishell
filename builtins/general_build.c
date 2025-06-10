@@ -25,19 +25,25 @@ int	is_builtin(char *cmd)
 
 int	execute_builtin(char **args, char ***env)
 {
+	int	result;
+
 	if (!ft_strncmp(args[0], "cd", 2) && args[0][2] == '\0')
-		return (builtin_cd(args, *env));
-	if (!ft_strncmp(args[0], "echo", 4) && args[0][4] == '\0')
-		return (builtin_echo(args, *env));
-	if (!ft_strncmp(args[0], "pwd", 3) && args[0][3] == '\0')
-		return (builtin_pwd(*env));
-	if (!ft_strncmp(args[0], "export", 6) && args[0][6] == '\0')
-		return (builtin_export(args, env));
-	if (!ft_strncmp(args[0], "unset", 5) && args[0][5] == '\0')
-		return (builtin_unset(args, env));
-	if (!ft_strncmp(args[0], "env", 3) && args[0][3] == '\0')
-		return (builtin_env(*env));
-	if (!ft_strncmp(args[0], "exit", 4) && args[0][4] == '\0')
-		return (builtin_exit(args));
-	return (1);
+		result = builtin_cd(args, *env);
+	else if (!ft_strncmp(args[0], "echo", 4) && args[0][4] == '\0')
+		result = builtin_echo(args, *env);
+	else if (!ft_strncmp(args[0], "pwd", 3) && args[0][3] == '\0')
+		result = builtin_pwd(*env);
+	else if (!ft_strncmp(args[0], "export", 6) && args[0][6] == '\0')
+		result = builtin_export(args, env);
+	else if (!ft_strncmp(args[0], "unset", 5) && args[0][5] == '\0')
+		result = builtin_unset(args, env);
+	else if (!ft_strncmp(args[0], "env", 3) && args[0][3] == '\0')
+		result = builtin_env(*env);
+	else if (!ft_strncmp(args[0], "exit", 4) && args[0][4] == '\0')
+		result = builtin_exit(args);
+	else
+		result = 1;
+	
+	g_exit_status = result;
+	return (result);
 }

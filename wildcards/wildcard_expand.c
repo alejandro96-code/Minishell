@@ -25,19 +25,6 @@ char	**create_single_arg_result(const char *arg, int *num_expanded)
 	return (result);
 }
 
-static char	**create_single_result(const char *arg, int *num_expanded)
-{
-	char	**result;
-
-	result = malloc(2 * sizeof(char *));
-	if (!result)
-		return (NULL);
-	result[0] = ft_strdup(arg);
-	result[1] = NULL;
-	*num_expanded = 1;
-	return (result);
-}
-
 static char	**allocate_result_array(int capacity)
 {
 	char	**result;

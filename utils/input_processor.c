@@ -12,17 +12,39 @@
 
 #include "../minishell.h"
 
+static int	check_quote_balance(char *input)
+{
+	int		i;
+	int		in_single_quotes;
+	int		in_double_quotes;
+
+	i = 0;
+	in_single_quotes = 0;
+	in_double_quotes = 0;
+	
+	while (input[i])
+	{
+		if (input[i] == '\'' && !in_double_quotes)
+			in_single_quotes = !in_single_quotes;
+		else if (input[i] == '"' && !in_single_quotes)
+			in_double_quotes = !in_double_quotes;
+		i++;
+	}
+	
+	return (in_single_quotes || in_double_quotes);
+}
+
 static void	expand_command_args(t_command *cmd, char **env)
 {
 	int		i;
-	char	*expanded;
+	char	*processed;
 
 	i = 0;
 	while (i < cmd->argc)
 	{
-		expanded = expand_variable(cmd->argv[i], env);
+		processed = process_quotes_and_variables(cmd->argv[i], env);
 		free(cmd->argv[i]);
-		cmd->argv[i] = remove_quotes(expanded);
+		cmd->argv[i] = processed;
 		i++;
 	}
 }
@@ -82,6 +104,14 @@ void	process_input(char *input, char ***env)
 
 	g_signal_received = 0;
 	
+	if (check_quote_balance(input))
+	{
+		ft_putstr_fd("minishell: unclosed quote\n", 2);
+		g_exit_status = 258;
+		free(input);
+		return ;
+	}
+	
 	// Check for logical operators first
 	if (has_logical_operators(input))
 	{
@@ -117,17 +147,6 @@ void	process_input(char *input, char ***env)
 		g_signal_received = 0;
 	free(input);
 	free_command(cmd);
-}
-
-static void	handle_input(char *input, char ***env)
-{
-	if (*input)
-	{
-		add_history(input);
-		process_input(input, env);
-	}
-	else
-		free(input);
 }
 
 void	cleanup_and_exit(char **env)

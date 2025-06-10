@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
+#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/10 15:15:29 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/10 18:40:42 by alejanr2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
-CFLAGS =  -g -O3 
+CFLAGS =  -Wall -Wextra -Werror -g -O3 
 RM = rm -f
 
 SRC =	builtins/cd.c\

@@ -6,31 +6,18 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:30:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/10 14:30:00 by alejandro         ###   ########.fr       */
+/*   Updated: 2025/06/10 21:30:00 by alejandro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+// Esta función ahora simplemente retorna el string tal como está
+// ya que process_quotes_and_variables maneja todo el procesamiento
 char	*remove_quotes(char *str)
 {
-	size_t	len;
-	char	*result;
-
 	if (!str)
 		return (NULL);
-	len = ft_strlen(str);
-	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"')
-			|| (str[0] == '\'' && str[len - 1] == '\'')))
-	{
-		result = malloc(len - 1);
-		if (!result)
-			return (str);
-		ft_strlcpy(result, str + 1, len - 2);
-		result[len - 2] = '\0';
-		free(str);
-		return (result);
-	}
 	return (str);
 }
 

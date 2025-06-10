@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+// Variable global para el exit status
+int	g_exit_status = 0;
+
 static void	handle_input(char *input, char ***env)
 {
 	if (*input)
@@ -30,7 +33,6 @@ static void	main_loop(char **env)
 
 	while (1)
 	{
-		g_signal_received = 0;
 		prompt = get_prompt(env);
 		input = readline(prompt);
 		free(prompt);

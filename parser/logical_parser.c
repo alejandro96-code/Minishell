@@ -160,7 +160,6 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 {
 	t_ast_node	*node;
 	t_command	*cmd;
-	char		*command_str;
 	char		*full_command;
 	int			cmd_start;
 

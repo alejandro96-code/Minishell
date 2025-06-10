@@ -6,120 +6,281 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/05 19:36:07 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 21:30:00 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Funcion que mantiene el bucle y delega la expansión
-static int	handle_dollar_sequence(char *str, char *result, int *j, char **env)
-{
-	int	consumed;
+// Variable global para el exit status
+extern int g_exit_status;
 
-	if (str[1] == '?')
-	{
-		result[(*j)++] = '0';
-		return (2);
-	}
-	else if (str[1] != '\0' && str[1] != ' ')
-	{
-		consumed = process_env_variable(str + 1, result, j, env);
-		return (consumed + 1);
-	}
-	else
-	{
-		result[(*j)++] = str[0];
-		return (1);
-	}
-}
-
-static void	expand_loop(char *str, char *result, char **env)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (str[i] && j < 4095)
-	{
-		if (str[i] == '$')
-			i += handle_dollar_sequence(str + i, result, &j, env);
-		else
-			result[j++] = str[i++];
-	}
-	result[j] = '\0';
-}
-
-char	*expand_variable(char *str, char **env)
-{
-	char	*result;
-
-	if (!str)
-		return (NULL);
-	result = malloc(4096);
-	if (!result)
-		return (ft_strdup(str));
-	expand_loop(str, result, env);
-	return (result);
-}
-
-// Funcion que process_env_variable: se encarga de procesar la expansión de $VAR
-static int	extract_var_name(char *str, char *var_name)
-{
-	int	name_len;
-
-	name_len = 0;
-	while (str[name_len] && (ft_isalnum(str[name_len]) || str[name_len] == '_')
-		&& name_len < 255)
-	{
-		var_name[name_len] = str[name_len];
-		name_len++;
-	}
-	var_name[name_len] = '\0';
-	return (name_len);
-}
-
+// Función para encontrar el valor de una variable de entorno
 char	*get_env_value(char *var_name, char **env)
 {
 	int		i;
-	size_t	name_len;
+	size_t	len;
 
+	if (!var_name || !env)
+		return (NULL);
+	len = ft_strlen(var_name);
 	i = 0;
-	name_len = ft_strlen(var_name);
 	while (env[i])
 	{
-		if (ft_strncmp(env[i], var_name, name_len) == 0 && env[i][name_len] == '=')
-			return (&env[i][name_len + 1]);
+		if (ft_strncmp(env[i], var_name, len) == 0 && env[i][len] == '=')
+			return (env[i] + len + 1);
 		i++;
 	}
 	return (NULL);
 }
 
-int	process_env_variable(char *str, char *result, int *j, char **env)
+// Función para expandir una variable $VAR
+static char	*expand_single_variable(char *str, int *pos, char **env)
 {
-	char	var_name[256] = {0};
-	int		name_len;
+	char	var_name[256];
+	int		i;
 	char	*value;
-	int		value_len;
+	char	*result;
 
-	name_len = extract_var_name(str, var_name);
-	if (name_len > 0)
+	i = 0;
+	
+	// Casos especiales
+	if (str[*pos] == '?')
 	{
-		value = get_env_value(var_name, env);
-		if (value)
+		(*pos)++;
+		result = ft_itoa(g_exit_status);
+		return (result ? result : ft_strdup("0"));
+	}
+	if (str[*pos] == '$')
+	{
+		(*pos)++;
+		result = ft_itoa(getpid());
+		return (result ? result : ft_strdup("$$"));
+	}
+	
+	// Extraer nombre de variable
+	while (str[*pos] && (ft_isalnum(str[*pos]) || str[*pos] == '_') && i < 255)
+	{
+		var_name[i++] = str[(*pos)++];
+	}
+	var_name[i] = '\0';
+	
+	if (i == 0)
+		return (ft_strdup("$")); // $ solo, sin variable válida
+	
+	value = get_env_value(var_name, env);
+	return (value ? ft_strdup(value) : ft_strdup(""));
+}
+
+// Función para procesar contenido dentro de comillas dobles
+static char	*process_double_quotes(char *str, int *pos, char **env)
+{
+	char	*result;
+	char	*temp;
+	char	*var_expansion;
+	size_t	result_size;
+	size_t	result_len;
+	
+	result_size = 1024;
+	result = malloc(result_size);
+	if (!result)
+		return (NULL);
+	result[0] = '\0';
+	result_len = 0;
+	
+	(*pos)++; // Saltar la comilla doble inicial
+	
+	while (str[*pos] && str[*pos] != '"')
+	{
+		if (str[*pos] == '$')
 		{
-			value_len = ft_strlen(value);
-			if (*j + value_len < 4095)
+			(*pos)++; // Saltar el $
+			var_expansion = expand_single_variable(str, pos, env);
+			if (var_expansion)
 			{
-				ft_strlcpy(result + *j, value, value_len + 1);
-				*j += value_len;
+				// Redimensionar si es necesario
+				while (result_len + ft_strlen(var_expansion) + 1 >= result_size)
+				{
+					result_size *= 2;
+					temp = realloc(result, result_size);
+					if (!temp)
+					{
+						free(result);
+						free(var_expansion);
+						return (NULL);
+					}
+					result = temp;
+				}
+				ft_strlcpy(result + result_len, var_expansion, result_size - result_len);
+				result_len += ft_strlen(var_expansion);
+				free(var_expansion);
+			}
+		}
+		else if (str[*pos] == '\\' && str[*pos + 1])
+		{
+			// Manejar escapes básicos dentro de comillas dobles
+			(*pos)++; // Saltar la barra invertida
+			if (str[*pos] == '"' || str[*pos] == '$' || str[*pos] == '\\' || str[*pos] == '\n')
+			{
+				result[result_len++] = str[(*pos)++];
+			}
+			else
+			{
+				result[result_len++] = '\\';
+				result[result_len++] = str[(*pos)++];
 			}
 		}
 		else
 		{
-			write_variable_not_found_warning(var_name);
+			result[result_len++] = str[(*pos)++];
+		}
+		
+		// Redimensionar si es necesario
+		if (result_len + 1 >= result_size)
+		{
+			result_size *= 2;
+			temp = realloc(result, result_size);
+			if (!temp)
+			{
+				free(result);
+				return (NULL);
+			}
+			result = temp;
 		}
 	}
-	return (name_len);
+	
+	if (str[*pos] == '"')
+		(*pos)++; // Saltar la comilla doble final
+	
+	result[result_len] = '\0';
+	return (result);
+}
+
+// Función para procesar contenido dentro de comillas simples (literal)
+static char	*process_single_quotes(char *str, int *pos, char **env)
+{
+	char	*result;
+	int		start;
+	int		len;
+	
+	(void)env; // No se usan en comillas simples
+	
+	(*pos)++; // Saltar la comilla simple inicial
+	start = *pos;
+	
+	// Encontrar la comilla simple de cierre
+	while (str[*pos] && str[*pos] != '\'')
+		(*pos)++;
+	
+	len = *pos - start;
+	result = malloc(len + 1);
+	if (!result)
+		return (NULL);
+	
+	ft_strlcpy(result, str + start, len + 1);
+	
+	if (str[*pos] == '\'')
+		(*pos)++; // Saltar la comilla simple final
+	
+	return (result);
+}
+
+// Función principal para procesar input con comillas y expansión de variables
+char	*process_quotes_and_variables(char *input, char **env)
+{
+	char	*result;
+	char	*temp;
+	char	*segment;
+	size_t	result_size;
+	size_t	result_len;
+	int		pos;
+	
+	if (!input)
+		return (NULL);
+	
+	result_size = 1024;
+	result = malloc(result_size);
+	if (!result)
+		return (NULL);
+	result[0] = '\0';
+	result_len = 0;
+	pos = 0;
+	
+	while (input[pos])
+	{
+		if (input[pos] == '"')
+		{
+			// Procesar comillas dobles (con expansión)
+			segment = process_double_quotes(input, &pos, env);
+		}
+		else if (input[pos] == '\'')
+		{
+			// Procesar comillas simples (literal)
+			segment = process_single_quotes(input, &pos, env);
+		}
+		else if (input[pos] == '$')
+		{
+			// Expansión de variable fuera de comillas
+			pos++; // Saltar el $
+			segment = expand_single_variable(input, &pos, env);
+		}
+		else
+		{
+			// Carácter normal
+			segment = malloc(2);
+			if (!segment)
+			{
+				free(result);
+				return (NULL);
+			}
+			segment[0] = input[pos++];
+			segment[1] = '\0';
+		}
+		
+		if (segment)
+		{
+			// Redimensionar si es necesario
+			while (result_len + ft_strlen(segment) + 1 >= result_size)
+			{
+				result_size *= 2;
+				temp = realloc(result, result_size);
+				if (!temp)
+				{
+					free(result);
+					free(segment);
+					return (NULL);
+				}
+				result = temp;
+			}
+			
+			ft_strlcpy(result + result_len, segment, result_size - result_len);
+			result_len += ft_strlen(segment);
+			free(segment);
+		}
+	}
+	
+	result[result_len] = '\0';
+	return (result);
+}
+
+// Función principal de expansión de variables (interfaz pública)
+char	*expand_variable(char *str, char **env)
+{
+	return (process_quotes_and_variables(str, env));
+}
+
+// Funciones auxiliares mantenidas para compatibilidad
+int	process_env_variable(char *str, char *result, int *j, char **env)
+{
+	char	*expanded;
+	int		pos = 0;
+	
+	expanded = expand_single_variable(str, &pos, env);
+	if (expanded)
+	{
+		ft_strlcpy(result + *j, expanded, 4096 - *j);
+		*j += ft_strlen(expanded);
+		free(expanded);
+	}
+	return (pos);
 }

@@ -35,6 +35,9 @@
 // Variable global para el manejo de señales
 extern volatile sig_atomic_t	g_signal_received;
 
+// Variable global para el exit status
+extern int	g_exit_status;
+
 typedef enum e_operator_type
 {
 	OP_NONE,
@@ -170,6 +173,8 @@ void		reset_signal_handlers(void);
 
 // utils > expand_variable
 char		*expand_variable(char *str, char **env);
+char		*process_quotes_and_variables(char *input, char **env);
+char		*get_env_value(char *var_name, char **env);
 int			process_env_variable(char *str, char *result, int *j, char **env);
 
 

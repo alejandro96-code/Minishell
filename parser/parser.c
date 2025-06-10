@@ -53,44 +53,66 @@ static int	is_empty_or_whitespace(const char *str)
 	return (1);
 }
 
-static void	fill_command(t_command *cmd, char *cleaned_input)
+// Función para verificar si las comillas están balanceadas
+static int	quote_balance_check(const char *input)
 {
-	int	i;
+	int		i;
+	int		in_single_quotes;
+	int		in_double_quotes;
 
 	i = 0;
-	cmd->argv = ft_split(cleaned_input, ' ');
-	if (!cmd->argv)
+	in_single_quotes = 0;
+	in_double_quotes = 0;
+	
+	while (input[i])
 	{
-		cmd->argc = 0;
-		cmd->is_builtin = 0;
-		return ;
-	}
-	while (cmd->argv[i] != NULL)
+		if (input[i] == '\'' && !in_double_quotes)
+			in_single_quotes = !in_single_quotes;
+		else if (input[i] == '"' && !in_single_quotes)
+			in_double_quotes = !in_double_quotes;
 		i++;
-	cmd->argc = i;
-	cmd->is_builtin = (cmd->argc > 0 && cmd->argv[0]) ? is_builtin_command(cmd->argv[0]) : 0;
+	}
+	
+	return (in_single_quotes || in_double_quotes);
 }
 
 // Función que procesa la entrada y genera la estructura t_command
 t_command	*parse_input(const char *input)
 {
 	t_command	*cmd;
-	char		*cleaned_input;
 
 	if (!input || is_empty_or_whitespace(input))
 		return (NULL);
+	
+	// Verificar comillas balanceadas
+	if (quote_balance_check(input))
+	{
+		ft_putstr_fd("minishell: unclosed quote\n", 2);
+		g_exit_status = 258;
+		return (NULL);
+	}
+	
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
-	cleaned_input = clean_input((char *)input);
-	if (!cleaned_input || is_empty_or_whitespace(cleaned_input))
+	
+	// NO usar clean_input aquí - usar directamente ft_split_args que respeta comillas
+	cmd->argv = ft_split_args((char *)input);
+	if (!cmd->argv)
 	{
+		cmd->argc = 0;
+		cmd->is_builtin = 0;
 		free(cmd);
-		free(cleaned_input);
 		return (NULL);
 	}
-	fill_command(cmd, cleaned_input);
-	free(cleaned_input);
+	
+	// Contar argumentos
+	cmd->argc = 0;
+	while (cmd->argv[cmd->argc] != NULL)
+		cmd->argc++;
+	
+	cmd->is_builtin = (cmd->argc > 0 && cmd->argv[0]) ? is_builtin_command(cmd->argv[0]) : 0;
+	
 	if (cmd->argc == 0)
 	{
 		free_command(cmd);
