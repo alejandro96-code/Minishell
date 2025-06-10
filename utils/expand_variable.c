@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 21:30:00 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 18:56:21 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,71 @@
 
 // Variable global para el exit status
 extern int g_exit_status;
+
+// Estructura para el estado del parser de expansión
+typedef struct s_expand_state
+{
+	char	*input;
+	char	*result;
+	int		input_pos;
+	int		result_pos;
+	int		result_size;
+	int		in_single_quotes;
+	int		in_double_quotes;
+	char	**env;
+}	t_expand_state;
+
+// Función para redimensionar el buffer de resultado
+static int	resize_result_buffer(t_expand_state *state)
+{
+	char	*new_result;
+	int		new_size;
+
+	new_size = state->result_size * 2;
+	new_result = malloc(new_size);
+	if (!new_result)
+		return (0);
+	ft_strlcpy(new_result, state->result, state->result_pos + 1);
+	free(state->result);
+	state->result = new_result;
+	state->result_size = new_size;
+	return (1);
+}
+
+// Función para añadir un carácter al resultado
+static int	add_char_to_result(t_expand_state *state, char c)
+{
+	if (state->result_pos + 2 >= state->result_size)
+	{
+		if (!resize_result_buffer(state))
+			return (0);
+	}
+	state->result[state->result_pos++] = c;
+	return (1);
+}
+
+// Función para añadir una cadena al resultado
+static int	add_string_to_result(t_expand_state *state, const char *str)
+{
+	int	len;
+	int	i;
+
+	if (!str)
+		return (1);
+	len = ft_strlen(str);
+	while (state->result_pos + len + 1 >= state->result_size)
+	{
+		if (!resize_result_buffer(state))
+			return (0);
+	}
+	i = 0;
+	while (str[i])
+	{
+		state->result[state->result_pos++] = str[i];
+		i++;
+	}
+	return (1);
+}
 
 // Función para encontrar el valor de una variable de entorno
 char	*get_env_value(char *var_name, char **env)
@@ -34,233 +99,177 @@ char	*get_env_value(char *var_name, char **env)
 	return (NULL);
 }
 
-// Función para expandir una variable $VAR
-static char	*expand_single_variable(char *str, int *pos, char **env)
+// Función para extraer el nombre de variable con llaves ${VAR}
+static int	extract_braced_var_name(t_expand_state *state, char *var_name)
 {
-	char	var_name[256];
-	int		i;
-	char	*value;
-	char	*result;
+	int	i;
 
 	i = 0;
-	
-	// Casos especiales
-	if (str[*pos] == '?')
+	state->input_pos++; // Saltar '{'
+	while (state->input[state->input_pos] && state->input[state->input_pos] != '}' && i < 255)
 	{
-		(*pos)++;
-		result = ft_itoa(g_exit_status);
-		return (result ? result : ft_strdup("0"));
-	}
-	if (str[*pos] == '$')
-	{
-		(*pos)++;
-		result = ft_itoa(getpid());
-		return (result ? result : ft_strdup("$$"));
-	}
-	
-	// Extraer nombre de variable
-	while (str[*pos] && (ft_isalnum(str[*pos]) || str[*pos] == '_') && i < 255)
-	{
-		var_name[i++] = str[(*pos)++];
+		if (!ft_isalnum(state->input[state->input_pos]) && state->input[state->input_pos] != '_')
+			break;
+		var_name[i++] = state->input[state->input_pos++];
 	}
 	var_name[i] = '\0';
-	
-	if (i == 0)
-		return (ft_strdup("$")); // $ solo, sin variable válida
-	
-	value = get_env_value(var_name, env);
-	return (value ? ft_strdup(value) : ft_strdup(""));
+	if (state->input[state->input_pos] == '}')
+		state->input_pos++; // Saltar '}'
+	return (i);
 }
 
-// Función para procesar contenido dentro de comillas dobles
-static char	*process_double_quotes(char *str, int *pos, char **env)
+// Función para extraer el nombre de variable normal $VAR
+static int	extract_var_name(t_expand_state *state, char *var_name)
 {
-	char	*result;
-	char	*temp;
-	char	*var_expansion;
-	size_t	result_size;
-	size_t	result_len;
-	
-	result_size = 1024;
-	result = malloc(result_size);
-	if (!result)
-		return (NULL);
-	result[0] = '\0';
-	result_len = 0;
-	
-	(*pos)++; // Saltar la comilla doble inicial
-	
-	while (str[*pos] && str[*pos] != '"')
+	int	i;
+
+	i = 0;
+	while (state->input[state->input_pos] && 
+		   (ft_isalnum(state->input[state->input_pos]) || state->input[state->input_pos] == '_') && 
+		   i < 255)
 	{
-		if (str[*pos] == '$')
+		var_name[i++] = state->input[state->input_pos++];
+	}
+	var_name[i] = '\0';
+	return (i);
+}
+
+// Función para expandir una variable
+static int	expand_variable_internal(t_expand_state *state)
+{
+	char	var_name[256];
+	char	*value;
+	int		name_len;
+
+	state->input_pos++; // Saltar '$'
+	
+	// Casos especiales
+	if (state->input[state->input_pos] == '?')
+	{
+		state->input_pos++;
+		value = ft_itoa(g_exit_status);
+		if (value)
 		{
-			(*pos)++; // Saltar el $
-			var_expansion = expand_single_variable(str, pos, env);
-			if (var_expansion)
-			{
-				// Redimensionar si es necesario
-				while (result_len + ft_strlen(var_expansion) + 1 >= result_size)
-				{
-					result_size *= 2;
-					temp = realloc(result, result_size);
-					if (!temp)
-					{
-						free(result);
-						free(var_expansion);
-						return (NULL);
-					}
-					result = temp;
-				}
-				ft_strlcpy(result + result_len, var_expansion, result_size - result_len);
-				result_len += ft_strlen(var_expansion);
-				free(var_expansion);
-			}
+			add_string_to_result(state, value);
+			free(value);
 		}
-		else if (str[*pos] == '\\' && str[*pos + 1])
+		return (1);
+	}
+	if (state->input[state->input_pos] == '$')
+	{
+		state->input_pos++;
+		value = ft_itoa(getpid());
+		if (value)
 		{
-			// Manejar escapes básicos dentro de comillas dobles
-			(*pos)++; // Saltar la barra invertida
-			if (str[*pos] == '"' || str[*pos] == '$' || str[*pos] == '\\' || str[*pos] == '\n')
-			{
-				result[result_len++] = str[(*pos)++];
-			}
-			else
-			{
-				result[result_len++] = '\\';
-				result[result_len++] = str[(*pos)++];
-			}
+			add_string_to_result(state, value);
+			free(value);
 		}
-		else
-		{
-			result[result_len++] = str[(*pos)++];
-		}
-		
-		// Redimensionar si es necesario
-		if (result_len + 1 >= result_size)
-		{
-			result_size *= 2;
-			temp = realloc(result, result_size);
-			if (!temp)
-			{
-				free(result);
-				return (NULL);
-			}
-			result = temp;
-		}
+		return (1);
 	}
 	
-	if (str[*pos] == '"')
-		(*pos)++; // Saltar la comilla doble final
+	// Variable con llaves ${VAR}
+	if (state->input[state->input_pos] == '{')
+	{
+		name_len = extract_braced_var_name(state, var_name);
+	}
+	else
+	{
+		// Variable normal $VAR
+		name_len = extract_var_name(state, var_name);
+	}
 	
-	result[result_len] = '\0';
-	return (result);
+	if (name_len == 0)
+	{
+		add_char_to_result(state, '$');
+		return (1);
+	}
+	
+	value = get_env_value(var_name, state->env);
+	if (value)
+		add_string_to_result(state, value);
+	
+	return (1);
 }
 
-// Función para procesar contenido dentro de comillas simples (literal)
-static char	*process_single_quotes(char *str, int *pos, char **env)
+// Función para procesar escape sequences en comillas dobles
+static int	process_escape_in_double_quotes(t_expand_state *state)
 {
-	char	*result;
-	int		start;
-	int		len;
+	state->input_pos++; // Saltar '\'
 	
-	(void)env; // No se usan en comillas simples
+	if (!state->input[state->input_pos])
+	{
+		add_char_to_result(state, '\\');
+		return (1);
+	}
 	
-	(*pos)++; // Saltar la comilla simple inicial
-	start = *pos;
-	
-	// Encontrar la comilla simple de cierre
-	while (str[*pos] && str[*pos] != '\'')
-		(*pos)++;
-	
-	len = *pos - start;
-	result = malloc(len + 1);
-	if (!result)
-		return (NULL);
-	
-	ft_strlcpy(result, str + start, len + 1);
-	
-	if (str[*pos] == '\'')
-		(*pos)++; // Saltar la comilla simple final
-	
-	return (result);
+	// En comillas dobles, solo ciertos caracteres pueden ser escapados
+	if (state->input[state->input_pos] == '"' || 
+		state->input[state->input_pos] == '\\' || 
+		state->input[state->input_pos] == '$' || 
+		state->input[state->input_pos] == '`' ||
+		state->input[state->input_pos] == '\n')
+	{
+		add_char_to_result(state, state->input[state->input_pos++]);
+	}
+	else
+	{
+		add_char_to_result(state, '\\');
+		add_char_to_result(state, state->input[state->input_pos++]);
+	}
+	return (1);
 }
 
-// Función principal para procesar input con comillas y expansión de variables
+// Función principal de expansión
 char	*process_quotes_and_variables(char *input, char **env)
 {
-	char	*result;
-	char	*temp;
-	char	*segment;
-	size_t	result_size;
-	size_t	result_len;
-	int		pos;
-	
+	t_expand_state	state;
+
 	if (!input)
 		return (NULL);
 	
-	result_size = 1024;
-	result = malloc(result_size);
-	if (!result)
+	// Inicializar estado
+	state.input = input;
+	state.input_pos = 0;
+	state.result_size = ft_strlen(input) * 2 + 256;
+	state.result = malloc(state.result_size);
+	if (!state.result)
 		return (NULL);
-	result[0] = '\0';
-	result_len = 0;
-	pos = 0;
+	state.result_pos = 0;
+	state.in_single_quotes = 0;
+	state.in_double_quotes = 0;
+	state.env = env;
 	
-	while (input[pos])
+	while (state.input[state.input_pos])
 	{
-		if (input[pos] == '"')
+		char current = state.input[state.input_pos];
+		
+		if (current == '\'' && !state.in_double_quotes)
 		{
-			// Procesar comillas dobles (con expansión)
-			segment = process_double_quotes(input, &pos, env);
+			state.in_single_quotes = !state.in_single_quotes;
+			state.input_pos++; // Consumir la comilla pero no añadirla al resultado
 		}
-		else if (input[pos] == '\'')
+		else if (current == '"' && !state.in_single_quotes)
 		{
-			// Procesar comillas simples (literal)
-			segment = process_single_quotes(input, &pos, env);
+			state.in_double_quotes = !state.in_double_quotes;
+			state.input_pos++; // Consumir la comilla pero no añadirla al resultado
 		}
-		else if (input[pos] == '$')
+		else if (current == '$' && !state.in_single_quotes)
 		{
-			// Expansión de variable fuera de comillas
-			pos++; // Saltar el $
-			segment = expand_single_variable(input, &pos, env);
+			expand_variable_internal(&state);
+		}
+		else if (current == '\\' && state.in_double_quotes)
+		{
+			process_escape_in_double_quotes(&state);
 		}
 		else
 		{
-			// Carácter normal
-			segment = malloc(2);
-			if (!segment)
-			{
-				free(result);
-				return (NULL);
-			}
-			segment[0] = input[pos++];
-			segment[1] = '\0';
-		}
-		
-		if (segment)
-		{
-			// Redimensionar si es necesario
-			while (result_len + ft_strlen(segment) + 1 >= result_size)
-			{
-				result_size *= 2;
-				temp = realloc(result, result_size);
-				if (!temp)
-				{
-					free(result);
-					free(segment);
-					return (NULL);
-				}
-				result = temp;
-			}
-			
-			ft_strlcpy(result + result_len, segment, result_size - result_len);
-			result_len += ft_strlen(segment);
-			free(segment);
+			add_char_to_result(&state, current);
+			state.input_pos++;
 		}
 	}
 	
-	result[result_len] = '\0';
-	return (result);
+	state.result[state.result_pos] = '\0';
+	return (state.result);
 }
 
 // Función principal de expansión de variables (interfaz pública)
@@ -273,13 +282,25 @@ char	*expand_variable(char *str, char **env)
 int	process_env_variable(char *str, char *result, int *j, char **env)
 {
 	char	*expanded;
+	char	*temp_input;
 	int		pos = 0;
 	
-	expanded = expand_single_variable(str, &pos, env);
+	temp_input = ft_strjoin("$", str);
+	if (!temp_input)
+		return (0);
+	
+	expanded = process_quotes_and_variables(temp_input, env);
+	free(temp_input);
+	
 	if (expanded)
 	{
 		ft_strlcpy(result + *j, expanded, 4096 - *j);
 		*j += ft_strlen(expanded);
+		
+		// Calcular cuántos caracteres se consumieron
+		while (str[pos] && (ft_isalnum(str[pos]) || str[pos] == '_'))
+			pos++;
+		
 		free(expanded);
 	}
 	return (pos);
