@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/05 21:49:12 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 13:52:08 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,12 +146,9 @@ static void	process_single_command(t_command *cmd, char ***env)
 		expanded = expand_variable(cmd->argv[i], *env);
 		free(cmd->argv[i]);
 		cmd->argv[i] = remove_quotes(expanded);
-		if (cmd->argv[i] == expanded)
-		{
-			// Si remove_quotes no modificó la cadena, duplicamos para evitar double-free
-			cmd->argv[i] = ft_strdup(expanded);
-			free(expanded);
-		}
+		// Si remove_quotes retornó el mismo puntero, significa que no había comillas
+		// y expanded no fue liberado, así que no necesitamos hacer nada adicional
+		// Si retornó un puntero diferente, expanded ya fue liberado por remove_quotes
 		i++;
 	}
 	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);

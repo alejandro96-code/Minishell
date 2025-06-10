@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/10 13:22:47 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/10 14:16:24 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,42 @@
 // guarda el resultado en commands y retorna num de comandos
 int	count_commands_and_split(char *input, char ***commands)
 {
-	int	count;
+	int		count;
+	char	*trimmed;
+	char	*trimmed_input;
+
+	// Verificar si el input termina con | (error de sintaxis)
+	trimmed_input = ft_strtrim(input, " \t\n");
+	if (trimmed_input && ft_strlen(trimmed_input) > 0 && 
+		trimmed_input[ft_strlen(trimmed_input) - 1] == '|')
+	{
+		free(trimmed_input);
+		printf("minishell: syntax error near unexpected token `|'\n");
+		*commands = NULL;
+		return (-1);
+	}
+	if (trimmed_input)
+		free(trimmed_input);
 
 	*commands = ft_split(input, '|');
 	count = 0;
 	while ((*commands)[count])
+	{
+		// Verificar si el comando no está vacío o solo contiene espacios
+		trimmed = ft_strtrim((*commands)[count], " \t\n");
+		if (!trimmed || ft_strlen(trimmed) == 0)
+		{
+			// Comando vacío encontrado - error de sintaxis
+			if (trimmed)
+				free(trimmed);
+			ft_free_split(*commands);
+			*commands = NULL;
+			printf("minishell: syntax error near unexpected token `|'\n");
+			return (-1);
+		}
+		free(trimmed);
 		count++;
+	}
 	return (count);
 }
 
@@ -154,8 +184,21 @@ int	execute_pipeline(char *input, char **env)
 
 	i = -1;
 	cmd_count = count_commands_and_split(input, &commands);
+	if (cmd_count == -1)
+		return (1); // Error de sintaxis
 	if (cmd_count == 1)
-		return (process_input(commands[0], &env), ft_free_split(commands), 0);
+	{
+		char *trimmed_cmd = ft_strtrim(commands[0], " \t\n");
+		int result = 0;
+		if (trimmed_cmd && ft_strlen(trimmed_cmd) > 0)
+		{
+			process_input(trimmed_cmd, &env);
+		}
+		if (trimmed_cmd)
+			free(trimmed_cmd);
+		ft_free_split(commands);
+		return (result);
+	}
 	while (++i < cmd_count)
 		handle_pipeline_iteration(i, cmd_count, commands, &env);
 	i = 0;
