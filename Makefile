@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
+#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/10 18:40:42 by alejanr2         ###   ########.fr        #
+#    Updated: 2025/06/10 18:46:18 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,6 @@ SRC =	builtins/cd.c\
       pipes/pipe_handler.c\
       redirections/redirections.c\
       signals/signals.c\
-      utils/autocomplete.c\
       utils/expand_variable.c\
       utils/find_user.c\
       utils/env_utils.c\

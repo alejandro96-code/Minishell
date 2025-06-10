@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 15:15:24 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/10 18:46:33 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,14 +188,6 @@ void		write_command_not_found_error(const char *command);
 void		write_export_error(const char *identifier);
 void		write_exit_error(const char *arg);
 void		write_variable_not_found_warning(const char *var_name);
-
-// utils > autocomplete
-void		free_command_names(void);
-void		initialize_command_names(char **env);
-char		*command_generator(const char *text, int state);
-char		*file_generator(const char *text, int state);
-char		**command_completion(const char *text, int start, int end);
-void		setup_autocomplete(char **env);
 
 // Wildcards
 int			contains_wildcard(const char *str);
