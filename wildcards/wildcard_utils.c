@@ -16,7 +16,7 @@ int	contains_wildcard(const char *str)
 {
 	if (!str)
 		return (0);
-	return (strchr(str, '*') != NULL);
+	return (ft_strchr(str, '*') != NULL);
 }
 
 static void	free_pattern_parts(char **parts)

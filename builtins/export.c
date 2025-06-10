@@ -17,11 +17,11 @@ static int	is_valid_export(char *str)
 	int	cont;
 
 	cont = 0;
-	if (!str || !str[0] || !(isalpha(str[0]) || str[0] == '_'))
+	if (!str || !str[0] || !(ft_isalpha(str[0]) || str[0] == '_'))
 		return (0);
 	while (str[cont] && str[cont] != '=')
 	{
-		if (!(isalnum(str[cont]) || str[cont] == '_'))
+		if (!(ft_isalnum(str[cont]) || str[cont] == '_'))
 			return (0);
 		cont++;
 	}
@@ -42,7 +42,9 @@ int	builtin_export(char **args, char ***env)
 		}
 		else
 		{
-			fprintf(stderr, "export: `%s': not a valid identifier\n", args[i]);
+			write(STDERR_FILENO, "export: `", 9);
+			write(STDERR_FILENO, args[i], ft_strlen(args[i]));
+			write(STDERR_FILENO, "': not a valid identifier\n", 26);
 		}
 		i++;
 	}

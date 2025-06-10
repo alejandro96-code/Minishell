@@ -16,7 +16,7 @@ static int	is_numeric(char *str)
 {
 	if (!str)
 		return (0);
-	while (*str && isspace(*str))
+	while (*str && ft_isspace(*str))
 		str++;
 	if (*str == '+' || *str == '-')
 		str++;
@@ -24,7 +24,7 @@ static int	is_numeric(char *str)
 		return (0);
 	while (*str)
 	{
-		if (!isdigit(*str))
+		if (!ft_isdigit(*str))
 			return (0);
 		str++;
 	}
@@ -40,13 +40,15 @@ int	builtin_exit(char **args)
 	{
 		if (!is_numeric(args[1]))
 		{
-			fprintf(stderr, "exit: %s: numeric argument required\n", args[1]);
+			write(STDERR_FILENO, "exit: ", 6);
+			write(STDERR_FILENO, args[1], ft_strlen(args[1]));
+			write(STDERR_FILENO, ": numeric argument required\n", 28);
 			exit(255);
 		}
-		status = atoi(args[1]);
+		status = ft_atoi(args[1]);
 		if (args[2])
 		{
-			fprintf(stderr, "exit: too many arguments\n");
+			write(STDERR_FILENO, "exit: too many arguments\n", 25);
 			return (1);
 		}
 	}

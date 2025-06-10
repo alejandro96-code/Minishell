@@ -32,7 +32,22 @@ static int	should_skip_part(int i, const char *pattern, char **parts)
 
 static char	*find_part_in_filename(const char *filename, size_t pos, char *part)
 {
-	return (strstr(filename + pos, part));
+	size_t	i;
+	size_t	part_len;
+	size_t	filename_len;
+
+	if (!filename || !part)
+		return (NULL);
+	part_len = ft_strlen(part);
+	filename_len = ft_strlen(filename);
+	i = pos;
+	while (i <= filename_len - part_len)
+	{
+		if (ft_strncmp(filename + i, part, part_len) == 0)
+			return ((char *)(filename + i));
+		i++;
+	}
+	return (NULL);
 }
 
 static void	update_position(char *found, const char *filename,

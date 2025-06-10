@@ -70,7 +70,7 @@ static int	extract_var_name(char *str, char *var_name)
 	int	name_len;
 
 	name_len = 0;
-	while (str[name_len] && (isalnum(str[name_len]) || str[name_len] == '_')
+	while (str[name_len] && (ft_isalnum(str[name_len]) || str[name_len] == '_')
 		&& name_len < 255)
 	{
 		var_name[name_len] = str[name_len];
@@ -117,8 +117,11 @@ int	process_env_variable(char *str, char *result, int *j, char **env)
 			}
 		}
 		else
-			fprintf(stderr, "Warning: Variable %s not found in environment\n",
-				var_name);
+		{
+			write(STDERR_FILENO, "Warning: Variable ", 18);
+			write(STDERR_FILENO, var_name, ft_strlen(var_name));
+			write(STDERR_FILENO, " not found in environment\n", 26);
+		}
 	}
 	return (name_len);
 }
