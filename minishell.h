@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 03:49:56 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/10 15:15:24 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,12 @@ char		*remove_quotes(char *str);
 char		*clean_input(char *input);
 char		*get_prompt(char **env);
 void		process_input(char *input, char ***env);
-//int			main(int argc, char **argv, char **envp);
+
+// env_utils.c
+void		free_env(char **env);
+
+// input_processor.c
+void		cleanup_and_exit(char **env);
 
 // Pipes
 int			count_commands_and_split(char *input, char ***commands);
@@ -107,6 +112,20 @@ void		setup_pipes_and_fork(int i, int cmd_count, int pipefd[2],
 char		**parse_args_and_handle(char *command, char **env);
 void		child_exec_or_builtin(char *command, char ***env);
 int			execute_pipeline(char *input, char **env);
+
+// Pipe utils
+int			split_and_validate_commands(char *input, char ***commands);
+void		handle_child_process(int i, int cmd_count, int pipefd[2],
+				int *prev_pipe);
+
+// Pipe exec
+char		**parse_command_arguments(char *command, char **env);
+void		execute_child_command(char *command, char ***env);
+
+// Pipe handler
+void		process_pipeline_step(int i, int cmd_count, char **commands,
+				char **env);
+int			run_command_pipeline(char *input, char **env);
 
 // Redirecciones
 int			redirect_input(char *filename);
@@ -142,6 +161,16 @@ int			match_pattern(const char *pattern, const char *filename);
 int			count_matching_files(const char *pattern);
 char		**expand_wildcards(const char *arg, int *num_expanded);
 char		**expand_wildcards_in_args(char **args, int *num_args);
+
+// Wildcard utils
+int			match_pattern_with_wildcard(const char *pattern, const char *filename);
+int			check_pattern_middle(const char *pattern, const char *filename,
+				char **parts, size_t *pos);
+
+// Wildcard expand
+char		**create_single_arg_result(const char *arg, int *num_expanded);
+char		**expand_wildcard_matches(const char *arg, int *num_expanded);
+char		**process_args_with_wildcards(char **args, int *num_args);
 
 // Parser args
 char		**ft_split_args(char *str);

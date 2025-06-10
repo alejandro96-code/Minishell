@@ -20,7 +20,7 @@ static void	safe_write(int fd, const void *buf, size_t count)
 	(void)result;
 }
 
-static int	is_valid_n_option(char *arg)
+int	is_valid_n_option(char *arg)
 {
 	int	i;
 
@@ -36,7 +36,7 @@ static int	is_valid_n_option(char *arg)
 	return (1);
 }
 
-static void	print_basic_escapes(char c)
+void	print_basic_escapes(char c)
 {
 	if (c == 'n')
 		safe_write(1, "\n", 1);
@@ -63,7 +63,7 @@ static void	print_basic_escapes(char c)
 	}
 }
 
-static void	print_escape_sequence(char **str)
+void	print_escape_sequence(char **str)
 {
 	char	*s;
 
@@ -73,7 +73,7 @@ static void	print_escape_sequence(char **str)
 	*str = s;
 }
 
-static void	print_with_escapes(char *str)
+void	print_with_escapes(char *str)
 {
 	while (*str)
 	{

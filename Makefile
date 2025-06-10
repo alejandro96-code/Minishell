@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
+#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/10 03:54:27 by dgasco-g         ###   ########.fr        #
+#    Updated: 2025/06/10 15:15:29 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,12 +27,22 @@ SRC =	builtins/cd.c\
       parser/parser.c\
       parser/args.c\
       pipes/pipes.c\
+      pipes/pipe_utils.c\
+      pipes/pipe_exec.c\
+      pipes/pipe_handler.c\
       redirections/redirections.c\
       signals/signals.c\
       utils/autocomplete.c\
       utils/expand_variable.c\
       utils/find_user.c\
-      wildcards/wildcards.c\
+      utils/env_utils.c\
+      utils/quote_utils.c\
+      utils/prompt_utils.c\
+      utils/input_processor.c\
+      wildcards/wildcard_utils.c\
+      wildcards/wildcard_match.c\
+      wildcards/wildcard_expand.c\
+      wildcards/wildcard_args.c\
       main.c
 
 OBJS = $(SRC:.c=.o)
@@ -42,7 +52,7 @@ LIBFT = libft/libft.a
 all: $(NAME)
 
 %.o: %.c
-	$(CC) -I src/ $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 $(LIBFT):
 	$(MAKE) -C libft 
