@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/05 19:35:14 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/09 22:05:34 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,18 +146,24 @@ static void	handle_redirection_type(char **args, int *i, char *cleaned_filename,
 
 static void	process_redirection(char **args, int *i, char **env)
 {
+	int		pid;
 	char	*expanded_filename;
 	char	*cleaned_filename;
 
 	if (!args[*i + 1])
 		return ;
-	expanded_filename = expand_variable(args[*i + 1], env);
-	cleaned_filename = remove_quotes(expanded_filename);
-	handle_redirection_type(args, i, cleaned_filename, env);
-	if (expanded_filename != args[*i + 1])
-		free(expanded_filename);
-	if (cleaned_filename != expanded_filename)
-		free(cleaned_filename);
+	pid = fork();
+	if (pid == 0)
+	{
+		expanded_filename = expand_variable(args[*i + 1], env);
+		cleaned_filename = remove_quotes(expanded_filename);
+		handle_redirection_type(args, i, cleaned_filename, env);
+		if (expanded_filename != args[*i + 1])
+			free(expanded_filename);
+		if (cleaned_filename != expanded_filename)
+			free(cleaned_filename);
+		exit(0);
+	}
 }
 
 // Filtra los argumentos quitando las redirecciones y aplicándolas
@@ -180,6 +186,7 @@ void	handle_redirections(char ***args, char **env)
 			|| (ft_strncmp((*args)[i], ">>", 2) == 0 && ft_strlen((*args)[i]) == 2))
 		{
 			has_redirections = 1;
+			
 			break ;
 		}
 		i++;

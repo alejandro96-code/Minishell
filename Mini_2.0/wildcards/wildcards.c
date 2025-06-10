@@ -229,5 +229,5 @@ char **expand_wildcards_in_args(char **args, int *num_args)
         free(args[i]);
     free(args);
     
-    return new_args;
+    return (new_args);
 }
