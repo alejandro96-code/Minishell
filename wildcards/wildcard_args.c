@@ -78,13 +78,22 @@ char	**process_args_with_wildcards(char **args, int *num_args)
 	char	**new_args;
 	int		total_expanded;
 	int		i;
+	int		original_count;
 
-	new_args = malloc(1024 * sizeof(char *));
+	// Contar argumentos originales para asignar memoria apropiada
+	original_count = 0;
+	while (args[original_count])
+		original_count++;
+	
+	// Asignar memoria suficiente pero no excesiva (máximo 4x el original o 256)
+	int max_args = (original_count * 4 > 256) ? 256 : original_count * 4;
+	new_args = malloc((max_args + 1) * sizeof(char *));
 	if (!new_args)
 		return (args);
+	
 	total_expanded = 0;
 	i = 0;
-	while (args[i] != NULL)
+	while (args[i] != NULL && total_expanded < max_args)
 	{
 		if (contains_wildcard(args[i]))
 			process_wildcard_arg(new_args, args[i], &total_expanded);
@@ -94,6 +103,21 @@ char	**process_args_with_wildcards(char **args, int *num_args)
 	}
 	new_args[total_expanded] = NULL;
 	*num_args = total_expanded;
+	
+	// Redimensionar el array al tamaño exacto para liberar memoria no utilizada
+	char **final_args = malloc((total_expanded + 1) * sizeof(char *));
+	if (final_args)
+	{
+		i = 0;
+		while (i <= total_expanded)
+		{
+			final_args[i] = new_args[i];
+			i++;
+		}
+		free(new_args);
+		new_args = final_args;
+	}
+	
 	free_original_args(args);
 	return (new_args);
 }
