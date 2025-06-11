@@ -16,7 +16,7 @@ int	contains_wildcard(const char *str)
 {
 	if (!str)
 		return (0);
-	return (ft_strchr(str, '*') != NULL);
+	return (ft_strchr(str, '*') != NULL || ft_strchr(str, '?') != NULL);
 }
 
 static void	free_pattern_parts(char **parts)
@@ -61,8 +61,37 @@ static int	check_pattern_end(const char *pattern, size_t filename_len,
 	return (1);
 }
 
+static int	match_with_question_mark(const char *pattern, const char *filename)
+{
+	while (*pattern && *filename)
+	{
+		if (*pattern == '?')
+		{
+			pattern++;
+			filename++;
+		}
+		else if (*pattern == '*')
+		{
+			return (match_pattern_with_wildcard(pattern, filename));
+		}
+		else
+		{
+			if (*pattern != *filename)
+				return (0);
+			pattern++;
+			filename++;
+		}
+	}
+	while (*pattern == '*')
+		pattern++;
+	return (*pattern == '\0' && *filename == '\0');
+}
+
 int	match_pattern_with_wildcard(const char *pattern, const char *filename)
 {
+	if (ft_strchr(pattern, '?') != NULL)
+		return (match_with_question_mark(pattern, filename));
+	
 	char	**parts;
 	int		match;
 	size_t	pos;
