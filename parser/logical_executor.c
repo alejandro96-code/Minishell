@@ -60,8 +60,8 @@ static int	execute_single_command(t_command *cmd, char ***env)
 		if (pid == 0)
 		{
 			handle_redirections(&cmd->argv, *env);
-			execute_external(cmd->argv, *env);
-			exit(127); // Should not reach here if execute_external works correctly
+			exit_status = execute_external(cmd->argv, *env);
+			exit(exit_status);
 		}
 		else if (pid > 0)
 		{

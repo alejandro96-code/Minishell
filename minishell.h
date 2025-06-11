@@ -95,13 +95,13 @@ void		remove_env_entry(int index, char ***env);
 // general_build.c
 int			is_builtin(char *cmd);
 int			execute_builtin(char **args, char ***env, int *exit_status);
-void		execute_external(char **args, char **env);
+int			execute_external(char **args, char **env);
 
 // exec_cmd.c
 void		ft_free_split(char **split);
 char		*find_command_path(char *cmd, char **env);
 void		exec_child_process(char **args, char **env, char *cmd_path);
-void		exec_parent_process(pid_t pid);
+int			exec_parent_process(pid_t pid);
 char		**extract_paths(char **envp);
 char		*search_in_paths(char **paths, char *cmd);
 void		execute_command(char *cmd_line, char **envp);

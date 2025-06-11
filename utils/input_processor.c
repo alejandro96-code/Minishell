@@ -47,7 +47,7 @@ static void	process_single_command(t_command *cmd, char ***env, int *exit_status
 		if (cmd->is_builtin)
 			execute_builtin(cmd->argv, env, exit_status);
 		else
-			execute_external(cmd->argv, *env);
+			*exit_status = execute_external(cmd->argv, *env);
 	}
 }
 

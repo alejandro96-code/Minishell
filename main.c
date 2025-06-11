@@ -23,7 +23,7 @@ static void	handle_input(char *input, char ***env, int *exit_status)
 		free(input);
 }
 
-static void	main_loop(char ***env)
+static int	main_loop(char ***env)
 {
 	char	*input;
 	char	*prompt;
@@ -43,11 +43,13 @@ static void	main_loop(char ***env)
 		}
 		handle_input(input, env, &exit_status);
 	}
+	return (exit_status);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	char	**env;
+	int		final_exit_status;
 
 	(void)argc;
 	(void)argv;
@@ -55,7 +57,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!env)
 		return (1);
 	setup_signal_handlers();
-	main_loop(&env);
+	final_exit_status = main_loop(&env);
 	cleanup_and_exit(env);
-	return (0);
+	return (final_exit_status);
 }

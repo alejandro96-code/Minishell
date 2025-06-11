@@ -12,14 +12,27 @@
 
 #include "../minishell.h"
 
-static void	process_command_args(char **args)
+static void	process_command_args(char **args, char **env)
 {
-	int	i;
+	int		i;
+	char	*expanded;
+	char	*old_arg;
 
 	i = 0;
 	while (args[i])
 	{
-		args[i] = remove_quotes(args[i]);
+		old_arg = args[i];
+		expanded = process_quotes_and_variables(args[i], env, 0);
+		if (expanded)
+		{
+			args[i] = expanded;
+			if (old_arg != expanded)
+				free(old_arg);
+		}
+		else
+		{
+			args[i] = remove_quotes(args[i]);
+		}
 		i++;
 	}
 }
@@ -29,7 +42,7 @@ char	**parse_command_arguments(char *command, char **env)
 	char	**args;
 
 	args = ft_split(command, ' ');
-	process_command_args(args);
+	process_command_args(args, env);
 	handle_redirections(&args, env);
 	return (args);
 }
@@ -51,12 +64,12 @@ static void	execute_external_child(char **args, char **env)
 	if (!cmd_path)
 	{
 		write_command_not_found_error(args[0]);
-		exit(EXIT_FAILURE);
+		exit(127);  // Command not found
 	}
 	execve(cmd_path, args, env);
 	perror("execve");
 	free(cmd_path);
-	exit(EXIT_FAILURE);
+	exit(127);  // execve failed
 }
 
 void	execute_child_command(char *command, char ***env)

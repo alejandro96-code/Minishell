@@ -66,7 +66,7 @@ void	exec_child_process(char **args, char **env, char *cmd_path)
 	exit(127);
 }
 
-void	exec_parent_process(pid_t pid)
+int	exec_parent_process(pid_t pid)
 {
 	int	status;
 	int	sig;
@@ -87,6 +87,14 @@ void	exec_parent_process(pid_t pid)
 			printf("Quit (core dumped)\n");
 			g_signal_received = SIGQUIT;
 		}
+		setup_signal_handlers();
+		return (128 + sig);
+	}
+	else if (WIFEXITED(status))
+	{
+		setup_signal_handlers();
+		return (WEXITSTATUS(status));
 	}
 	setup_signal_handlers();
+	return (1);
 }

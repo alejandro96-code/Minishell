@@ -48,30 +48,29 @@ static int	execute_fork_process(char **args, char **env, char *cmd_path)
 	}
 	else if (pid > 0)
 	{
-		exec_parent_process(pid);
-		return (1);
+		return (exec_parent_process(pid));
 	}
 	else
 	{
 		handle_fork_error(cmd_path);
-		return (-1);
+		return (1);
 	}
 }
 
-void	execute_external(char **args, char **env)
+int	execute_external(char **args, char **env)
 {
 	char	*cmd_path;
-	int		fork_result;
+	int		exit_code;
 
 	if (!args || !args[0])
-		return ;
+		return (1);
 	if (ft_strchr(args[0], '/'))
 		cmd_path = get_cmd_path_absolute(args[0]);
 	else
 		cmd_path = get_cmd_path_relative(args[0], env);
 	if (!cmd_path)
-		return ;
-	fork_result = execute_fork_process(args, env, cmd_path);
-	if (fork_result != -1)
-		free(cmd_path);
+		return (127);  // Command not found
+	exit_code = execute_fork_process(args, env, cmd_path);
+	free(cmd_path);
+	return (exit_code);
 }
