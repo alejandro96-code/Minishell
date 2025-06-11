@@ -55,15 +55,23 @@ static void	process_wildcard_arg(char **new_args, char *arg,
 	}
 	else
 	{
-		new_args[*total_expanded] = ft_strdup(arg);
-		(*total_expanded)++;
+		char *dup = ft_strdup(arg);
+		if (dup)
+		{
+			new_args[*total_expanded] = dup;
+			(*total_expanded)++;
+		}
 	}
 }
 
 static void	process_regular_arg(char **new_args, char *arg, int *total_expanded)
 {
-	new_args[*total_expanded] = ft_strdup(arg);
-	(*total_expanded)++;
+	char *dup = ft_strdup(arg);
+	if (dup)
+	{
+		new_args[*total_expanded] = dup;
+		(*total_expanded)++;
+	}
 }
 
 char	**expand_wildcards_in_args(char **args, int *num_args)
@@ -109,11 +117,12 @@ char	**process_args_with_wildcards(char **args, int *num_args)
 	if (final_args)
 	{
 		i = 0;
-		while (i <= total_expanded)
+		while (i < total_expanded)
 		{
 			final_args[i] = new_args[i];
 			i++;
 		}
+		final_args[total_expanded] = NULL;
 		free(new_args);
 		new_args = final_args;
 	}

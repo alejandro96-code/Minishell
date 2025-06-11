@@ -14,6 +14,7 @@ BOLD="\033[1m"
 PASSED=0
 FAILED=0
 TOTAL=0
+FAILED_COMMANDS=()  # Array para almacenar comandos fallidos
 
 # Función para imprimir encabezados
 print_header() {
@@ -49,12 +50,18 @@ test_with_valgrind() {
     local exit_code=$?
     
     # Analizar resultados de valgrind
-    local definitely_lost=$(grep "definitely lost:" "$valgrind_output" | awk '{print $4}' | sed 's/,//')
-    local possibly_lost=$(grep "possibly lost:" "$valgrind_output" | awk '{print $4}' | sed 's/,//')
-    local still_reachable=$(grep "still reachable:" "$valgrind_output" | awk '{print $4}' | sed 's/,//')
+    local definitely_lost=$(grep "definitely lost:" "$valgrind_output" | tail -1 | awk '{print $4}' | sed 's/,//g' | tr -d '\n')
+    local possibly_lost=$(grep "possibly lost:" "$valgrind_output" | tail -1 | awk '{print $4}' | sed 's/,//g' | tr -d '\n')
+    local still_reachable=$(grep "still reachable:" "$valgrind_output" | tail -1 | awk '{print $4}' | sed 's/,//g' | tr -d '\n')
     
     # Verificar si hay errores graves
-    local errors=$(grep "ERROR SUMMARY:" "$valgrind_output" | awk '{print $4}')
+    local errors=$(grep "ERROR SUMMARY:" "$valgrind_output" | tail -1 | awk '{print $4}' | tr -d '\n')
+    
+    # Establecer valores por defecto si están vacíos o no son números
+    [[ ! "$definitely_lost" =~ ^[0-9]+$ ]] && definitely_lost=0
+    [[ ! "$possibly_lost" =~ ^[0-9]+$ ]] && possibly_lost=0
+    [[ ! "$still_reachable" =~ ^[0-9]+$ ]] && still_reachable=0
+    [[ ! "$errors" =~ ^[0-9]+$ ]] && errors=0
     
     echo -e "${BLUE}Valgrind Results:${NC}"
     echo "  Exit code: $exit_code"
@@ -64,15 +71,16 @@ test_with_valgrind() {
     echo "  Still reachable: ${still_reachable:-0} bytes"
     
     # Determinar si el test pasó
-    if [ "$exit_code" -eq 0 ] && [ "${errors:-0}" -eq 0 ] && [ "${definitely_lost:-0}" -eq 0 ]; then
+    if [ "$exit_code" -eq 0 ] && [ "${errors}" -eq 0 ] && [ "${definitely_lost}" -eq 0 ]; then
         echo -e "${GREEN}✅ PASS - No memory leaks detected${NC}"
         ((PASSED++))
     else
         echo -e "${RED}❌ FAIL - Memory issues detected${NC}"
-        if [ "${definitely_lost:-0}" -gt 0 ]; then
+        FAILED_COMMANDS+=("$command")  # Agregar comando a la lista de fallos
+        if [ "${definitely_lost}" -gt 0 ]; then
             echo -e "${RED}  → Definitely lost: $definitely_lost bytes${NC}"
         fi
-        if [ "${errors:-0}" -gt 0 ]; then
+        if [ "${errors}" -gt 0 ]; then
             echo -e "${RED}  → Valgrind errors: $errors${NC}"
         fi
         if [ "$exit_code" -ne 0 ] && [ "$exit_code" -ne 42 ]; then
@@ -202,6 +210,15 @@ print_header "RESULTADOS FINALES"
 echo -e "${BOLD}Tests ejecutados: $TOTAL${NC}"
 echo -e "${BOLD}${GREEN}Sin memory leaks: $PASSED${NC}"
 echo -e "${BOLD}${RED}Con memory leaks: $FAILED${NC}"
+
+# Mostrar lista de comandos que fallaron
+if [ $FAILED -gt 0 ]; then
+    print_header "COMANDOS QUE FALLARON"
+    echo -e "${RED}Los siguientes comandos tienen memory leaks:${NC}\n"
+    for i in "${!FAILED_COMMANDS[@]}"; do
+        echo -e "${RED}$(($i + 1)). ${FAILED_COMMANDS[$i]}${NC}"
+    done
+fi
 
 if [ $FAILED -eq 0 ]; then
     echo -e "\n${BOLD}${GREEN}🎉 ¡EXCELENTE! NO HAY MEMORY LEAKS 🎉${NC}"

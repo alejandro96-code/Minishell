@@ -16,13 +16,23 @@ static void	expand_command_args(t_command *cmd, char **env, int exit_status)
 {
 	int		i;
 	char	*expanded;
+	char	*old_arg;
 
 	i = 0;
 	while (i < cmd->argc)
 	{
+		old_arg = cmd->argv[i];
 		expanded = expand_variable(cmd->argv[i], env, exit_status);
-		free(cmd->argv[i]);
 		cmd->argv[i] = remove_quotes(expanded);
+		
+		// Solo liberar si expanded es diferente de old_arg y cmd->argv[i]
+		if (expanded != old_arg && expanded != cmd->argv[i])
+			free(expanded);
+		
+		// Solo liberar old_arg si cmd->argv[i] es diferente
+		if (cmd->argv[i] != old_arg)
+			free(old_arg);
+		
 		i++;
 	}
 }

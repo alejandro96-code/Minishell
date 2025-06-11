@@ -146,24 +146,19 @@ static void	handle_redirection_type(char **args, int *i, char *cleaned_filename,
 
 static void	process_redirection(char **args, int *i, char **env)
 {
-	int		pid;
 	char	*expanded_filename;
 	char	*cleaned_filename;
 
 	if (!args[*i + 1])
 		return ;
-	pid = fork();
-	if (pid == 0)
-	{
-		expanded_filename = expand_variable(args[*i + 1], env, 0);
-		cleaned_filename = remove_quotes(expanded_filename);
-		handle_redirection_type(args, i, cleaned_filename, env);
-		if (expanded_filename != args[*i + 1])
-			free(expanded_filename);
-		if (cleaned_filename != expanded_filename)
-			free(cleaned_filename);
-		exit(0);
-	}
+	
+	expanded_filename = expand_variable(args[*i + 1], env, 0);
+	cleaned_filename = remove_quotes(expanded_filename);
+	handle_redirection_type(args, i, cleaned_filename, env);
+	if (expanded_filename != args[*i + 1])
+		free(expanded_filename);
+	if (cleaned_filename != expanded_filename)
+		free(cleaned_filename);
 }
 
 // Filtra los argumentos quitando las redirecciones y aplicándolas
@@ -196,28 +191,50 @@ void	handle_redirections(char ***args, char **env)
 	if (!has_redirections)
 		return ;
 
+	// Contar argumentos actuales después de wildcards
 	count = 0;
 	while ((*args)[count])
 		count++;
+	
 	new_args = malloc(sizeof(char *) * (count + 1));
 	if (!new_args)
 		return ;
 	i = 0;
 	j = 0;
-	while ((*args)[i])
+	while (i < count && (*args)[i])
 	{
 		if ((ft_strncmp((*args)[i], "<", 1) == 0 && ft_strlen((*args)[i]) == 1) 
 			|| (ft_strncmp((*args)[i], "<<", 2) == 0 && ft_strlen((*args)[i]) == 2)
 			|| (ft_strncmp((*args)[i], ">", 1) == 0 && ft_strlen((*args)[i]) == 1) 
 			|| (ft_strncmp((*args)[i], ">>", 2) == 0 && ft_strlen((*args)[i]) == 2))
 		{
+			// Verificar que hay un argumento siguiente (filename) de forma segura
+			if (i + 1 >= count || !(*args)[i + 1])
+			{
+				free(new_args);
+				return ;
+			}
 			process_redirection(*args, &i, env);
-			i++;
+			i += 2; // Skip redirection operator and filename
 			continue ;
 		}
-		new_args[j++] = (*args)[i++];
+		char *dup = ft_strdup((*args)[i]);
+		if (dup)
+			new_args[j++] = dup;
+		i++;
 	}
 	new_args[j] = NULL;
-	free(*args);
+	
+	// Liberar el array anterior incluyendo los strings duplicados
+	if (*args)
+	{
+		i = 0;
+		while ((*args)[i])
+		{
+			free((*args)[i]);
+			i++;
+		}
+		free(*args);
+	}
 	*args = new_args;
 }
