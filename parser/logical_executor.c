@@ -21,9 +21,37 @@ static int	execute_single_command(t_command *cmd, char ***env)
 	char	*processed;
 	int		saved_stdin;
 	int		saved_stdout;
+	char	*full_command;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (1);
+	
+	// Reconstruir el comando completo para verificar si contiene pipes
+	full_command = ft_strdup("");
+	i = 0;
+	while (i < cmd->argc && cmd->argv[i])
+	{
+		char *temp = full_command;
+		if (i > 0)
+			full_command = ft_strjoin(temp, " ");
+		else
+			full_command = ft_strdup("");
+		free(temp);
+		temp = full_command;
+		full_command = ft_strjoin(temp, cmd->argv[i]);
+		free(temp);
+		i++;
+	}
+	
+	// Si el comando contiene pipes, usar el sistema de pipes
+	if (ft_strchr(full_command, '|') != NULL)
+	{
+		exit_status = run_command_pipeline(full_command, *env);
+		free(full_command);
+		return (exit_status);
+	}
+	
+	free(full_command);
 	
 	// Guardar descriptores originales
 	saved_stdin = dup(STDIN_FILENO);
