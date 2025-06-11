@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 19:23:08 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/11 12:29:31 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	builtin_exit(char **args, int exit_status)
 {
 	int	status;
 
-	status = exit_status; // Usar el exit status actual por defecto
+	status = exit_status;
 	if (args[1])
 	{
 		if (!is_numeric(args[1]))
