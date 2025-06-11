@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/11 12:29:31 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/11 23:56:32 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,6 @@ int	builtin_exit(char **args, int exit_status)
 			return (1);
 		}
 	}
-	printf("exit\n");
+	//printf("exit\n");
 	exit(status);
 }

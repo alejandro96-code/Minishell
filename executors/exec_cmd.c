@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/11 12:44:23 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/12 00:12:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static char	*get_cmd_path_relative(char *cmd, char **env)
 
 	cmd_path = find_command_path(cmd, env);
 	if (!cmd_path)
-		printf("minishell: %s: command not found\n", cmd);
+		printf("%s: command not found\n", cmd);
 	return (cmd_path);
 }
 
