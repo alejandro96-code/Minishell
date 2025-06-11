@@ -161,7 +161,6 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 	t_ast_node	*node;
 	t_command	*cmd;
 	char		*full_command;
-	int			cmd_start;
 
 	if (!tokens[*index])
 		return (NULL);
@@ -177,7 +176,6 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 	}
 	
 	// Collect all tokens that form a single command until we hit an operator or parenthesis
-	cmd_start = *index;
 	full_command = ft_strdup("");
 	while (tokens[*index] && !is_operator(tokens[*index]) && !is_parenthesis(tokens[*index]))
 	{
