@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
+#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/10 18:46:18 by dgasco-g         ###   ########.fr        #
+#    Updated: 2025/06/11 12:45:10 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC =	builtins/cd.c\
       builtins/pwd.c\
       builtins/unset.c\
       executors/exec_cmd.c\
+      executors/exec_utils.c\
       parser/parser.c\
       parser/args.c\
       parser/logical_parser.c\

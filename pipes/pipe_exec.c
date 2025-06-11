@@ -47,7 +47,7 @@ static void	execute_external_child(char **args, char **env)
 {
 	char	*cmd_path;
 
-	cmd_path = get_path(args[0], env);
+	cmd_path = find_command_path(args[0], env);
 	if (!cmd_path)
 	{
 		write_command_not_found_error(args[0]);
