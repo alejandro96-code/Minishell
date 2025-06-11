@@ -19,9 +19,15 @@ static int	execute_single_command(t_command *cmd, char ***env)
 	int		status;
 	int		i;
 	char	*processed;
+	int		saved_stdin;
+	int		saved_stdout;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (1);
+	
+	// Guardar descriptores originales
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
 	
 	// Expandir variables de entorno en todos los argumentos
 	exit_status = 0; // Initialize with default exit status
@@ -38,17 +44,22 @@ static int	execute_single_command(t_command *cmd, char ***env)
 	}
 	
 	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
-	handle_redirections(&cmd->argv, *env);
+	
 	if (cmd->is_builtin)
 	{
+		handle_redirections(&cmd->argv, *env);
 		exit_status = 0;
 		execute_builtin(cmd->argv, env, &exit_status);
+		// Restaurar descriptores originales solo para builtins
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
 	}
 	else
 	{
 		pid = fork();
 		if (pid == 0)
 		{
+			handle_redirections(&cmd->argv, *env);
 			execute_external(cmd->argv, *env);
 			exit(127); // Should not reach here if execute_external works correctly
 		}
@@ -66,6 +77,10 @@ static int	execute_single_command(t_command *cmd, char ***env)
 			exit_status = 1;
 		}
 	}
+	
+	close(saved_stdin);
+	close(saved_stdout);
+	
 	return (exit_status);
 }
 

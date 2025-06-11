@@ -20,6 +20,11 @@ static void	safe_write(int fd, const void *buf, size_t count)
 	(void)result;
 }
 
+int	is_valid_e_option(char *arg)
+{
+	return (arg && ft_strncmp(arg, "-e", 3) == 0);
+}
+
 int	is_valid_n_option(char *arg)
 {
 	int	i;
@@ -89,18 +94,36 @@ int	builtin_echo(char **args, char **env)
 {
 	int		i;
 	int		newline;
+	int		interpret_escapes;
 
 	(void)env;
 	i = 1;
 	newline = 1;
-	while (args[i] && is_valid_n_option(args[i]))
-	{
-		newline = 0;
-		i++;
-	}
+	interpret_escapes = 0;
+	
+	// Procesar opciones
 	while (args[i])
 	{
-		print_with_escapes(args[i]);
+		if (is_valid_n_option(args[i]))
+		{
+			newline = 0;
+			i++;
+		}
+		else if (is_valid_e_option(args[i]))
+		{
+			interpret_escapes = 1;
+			i++;
+		}
+		else
+			break;
+	}
+	
+	while (args[i])
+	{
+		if (interpret_escapes)
+			print_with_escapes(args[i]);
+		else
+			safe_write(1, args[i], ft_strlen(args[i]));
 		if (args[i + 1])
 			safe_write(1, " ", 1);
 		i++;

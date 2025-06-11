@@ -16,6 +16,7 @@ BOLD="\033[1m"
 PASSED=0
 FAILED=0
 TOTAL=0
+FAILED_COMMANDS=()
 
 # Función para imprimir encabezados de sección
 print_section() {
@@ -39,11 +40,11 @@ test_command() {
     local exit_code
     
     # Ejecutar comando con timeout
-    echo -e "$command\nexit" | timeout 10 $MINISHELL > "$tmp_file" 2>&1
+    printf '%s\nexit\n' "$command" | timeout 10 $MINISHELL > "$tmp_file" 2>&1
     exit_code=$?
     
     # Verificar código de salida
-    if [ $exit_code -eq $expected_exit_code ] || [ $exit_code -eq 0 ]; then
+    if [ $exit_code -eq $expected_exit_code ]; then
         if [ -n "$check_output" ]; then
             # Verificar contenido específico en la salida
             if grep -q "$check_output" "$tmp_file"; then
@@ -53,6 +54,7 @@ test_command() {
                 echo -e "${RED}❌ FAIL${NC} - Output doesn't contain: $check_output"
                 echo "  Got output:"
                 head -3 "$tmp_file" | sed 's/^/    /'
+                FAILED_COMMANDS+=("$description: $command")
                 ((FAILED++))
             fi
         else
@@ -61,6 +63,7 @@ test_command() {
         fi
     else
         echo -e "${RED}❌ FAIL${NC} - Exit code: $exit_code (expected: $expected_exit_code)"
+        FAILED_COMMANDS+=("$description: $command")
         ((FAILED++))
     fi
     
@@ -77,7 +80,7 @@ test_complex() {
     echo -n "Testing: $description... "
     
     local tmp_file=$(mktemp)
-    echo -e "$command\nexit" | timeout 10 $MINISHELL > "$tmp_file" 2>&1
+    printf '%s\nexit\n' "$command" | timeout 10 $MINISHELL > "$tmp_file" 2>&1
     
     if $validation_func "$tmp_file"; then
         echo -e "${GREEN}✅ PASS${NC}"
@@ -86,6 +89,7 @@ test_complex() {
         echo -e "${RED}❌ FAIL${NC}"
         echo "  Output:"
         head -3 "$tmp_file" | sed 's/^/    /'
+        FAILED_COMMANDS+=("$description: $command")
         ((FAILED++))
     fi
     
@@ -95,35 +99,36 @@ test_complex() {
 # Validaciones personalizadas
 validate_logical_and() {
     local file="$1"
-    grep -q "hello" "$file" && grep -q "world" "$file"
+    grep -v "alejandro@Minishell" "$file" | grep -q "hello" && grep -v "alejandro@Minishell" "$file" | grep -q "world"
 }
 
 validate_logical_or_success() {
     local file="$1"
-    grep -q "first" "$file" && ! grep -q "second" "$file"
+    # Buscar solo en líneas que no sean prompts (que no contengan "alejandro@Minishell")
+    grep -v "alejandro@Minishell" "$file" | grep -q "first" && ! grep -v "alejandro@Minishell" "$file" | grep -q "second"
 }
 
 validate_logical_or_failure() {
     local file="$1"
-    ! grep -q "first" "$file" && grep -q "second" "$file"
+    ! grep -v "alejandro@Minishell" "$file" | grep -q "first" && grep -v "alejandro@Minishell" "$file" | grep -q "second"
 }
 
 validate_pipe_output() {
     local file="$1"
     # Debe mostrar solo las líneas que contienen la palabra buscada
-    local count=$(grep -c "alejandro" "$file" 2>/dev/null || echo "0")
+    local count=$(grep -v "alejandro@Minishell" "$file" | grep -c "USER" 2>/dev/null || echo "0")
     [ "$count" -gt 0 ]
 }
 
 validate_parentheses() {
     local file="$1"
     # (true && echo hello) || echo world debe mostrar "hello" pero no "world"
-    grep -q "hello" "$file" && ! grep -q "world" "$file"
+    grep -v "alejandro@Minishell" "$file" | grep -q "hello" && ! grep -v "alejandro@Minishell" "$file" | grep -q "world"
 }
 
 validate_export_variable() {
     local file="$1"
-    grep -q "testvalue" "$file"
+    grep -v "alejandro@Minishell" "$file" | grep -q "testvalue"
 }
 
 validate_redirection() {
@@ -132,7 +137,7 @@ validate_redirection() {
 
 validate_heredoc() {
     local file="$1"
-    grep -q "line1" "$file" && grep -q "line2" "$file"
+    grep -v "alejandro@Minishell" "$file" | grep -q "line1" && grep -v "alejandro@Minishell" "$file" | grep -q "line2"
 }
 
 # ====================================
@@ -184,7 +189,7 @@ print_section "PIPES"
 test_command "pipe simple" "echo hello world | cat" 0 "hello world"
 test_complex "pipe con grep" "env | grep USER" validate_pipe_output
 test_command "pipe múltiple" "echo hello | cat | cat" 0 "hello"
-test_command "pipe con wc" "echo -e 'line1\nline2\nline3' | wc -l" 0 "3"
+test_command "pipe con wc" "echo -e 'line1\\nline2\\nline3' | wc -l" 0 "3"
 
 # ====================================
 # REDIRECCIONES
@@ -275,6 +280,14 @@ print_section "RESULTADOS FINALES"
 echo -e "${BOLD}Tests ejecutados: $TOTAL${NC}"
 echo -e "${BOLD}${GREEN}Pasados: $PASSED${NC}"
 echo -e "${BOLD}${RED}Fallidos: $FAILED${NC}"
+
+# Mostrar lista de comandos fallidos
+if [ ${#FAILED_COMMANDS[@]} -gt 0 ]; then
+    echo -e "\n${BOLD}${RED}COMANDOS QUE FALLARON:${NC}"
+    for cmd in "${FAILED_COMMANDS[@]}"; do
+        echo -e "${RED}  - $cmd${NC}"
+    done
+fi
 
 if [ $FAILED -eq 0 ]; then
     echo -e "\n${BOLD}${GREEN}🎉 ¡TODOS LOS TESTS PASARON! 🎉${NC}"
