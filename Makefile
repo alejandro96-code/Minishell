@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
+#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/11 12:45:10 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/12 23:05:12 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,14 +48,26 @@ SRC =	builtins/cd.c\
       wildcards/wildcard_args.c\
       main.c
 
-OBJS = $(SRC:.c=.o)
+# Definir el directorio de objetos y crear la estructura de directorios
+OBJ_DIR = obj
+OBJ_SUBDIRS = $(OBJ_DIR) $(OBJ_DIR)/builtins $(OBJ_DIR)/executors $(OBJ_DIR)/parser \
+              $(OBJ_DIR)/pipes $(OBJ_DIR)/redirections $(OBJ_DIR)/signals \
+              $(OBJ_DIR)/utils $(OBJ_DIR)/wildcards
+
+# Definir los objetos con la ruta del directorio obj/
+OBJS = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 LIBFT = libft/libft.a
 
-all: $(NAME)
+all: $(OBJ_SUBDIRS) $(NAME)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+# Crear los directorios de objetos
+$(OBJ_SUBDIRS):
+	mkdir -p $@
+
+# Regla de compilación modificada para colocar los objetos en obj/
+$(OBJ_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
 	$(MAKE) -C libft 
@@ -74,7 +86,7 @@ sani: sanitize re
 
 clean:
 	make clean -C libft
-	rm -f $(OBJS)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	make fclean -C libft

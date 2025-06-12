@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/11 12:44:48 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/12 23:02:01 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,19 +146,24 @@ static void	handle_redirection_type(char **args, int *i, char *cleaned_filename,
 
 static void	process_redirection(char **args, int *i, char **env)
 {
+	int		pid;
 	char	*expanded_filename;
 	char	*cleaned_filename;
 
 	if (!args[*i + 1])
 		return ;
-	
-	expanded_filename = expand_variable(args[*i + 1], env, 0);
-	cleaned_filename = remove_quotes(expanded_filename);
-	handle_redirection_type(args, i, cleaned_filename, env);
-	if (expanded_filename != args[*i + 1])
-		free(expanded_filename);
-	if (cleaned_filename != expanded_filename)
-		free(cleaned_filename);
+	pid = fork(); //// no quitar !!!!!!!!!!!!!
+	if (pid == 0)
+	{
+		expanded_filename = expand_variable(args[*i + 1], env, 0);
+		cleaned_filename = remove_quotes(expanded_filename);
+		handle_redirection_type(args, i, cleaned_filename, env);
+		if (expanded_filename != args[*i + 1])
+			free(expanded_filename);
+		if (cleaned_filename != expanded_filename)
+			free(cleaned_filename);
+		exit(0);
+	}
 }
 
 // Filtra los argumentos quitando las redirecciones y aplicándolas

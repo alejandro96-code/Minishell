@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 18:36:05 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 03:31:02 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/12 21:53:24 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,5 @@ char				*ft_strjoin_s1_free(char *s1, char *s2);
 char				*ft_strcat(char *dst, const char *orig);
 char				*ft_strjoin_char(char *s1, char s2);
 int					ft_isspace(char c);
+void				*ft_realloc(void *s, size_t size);
 #endif
