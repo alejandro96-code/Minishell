@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   logical_parser.c                                   :+:      :+:    :+:   */
+/*   expression_parser.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/13 19:45:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:20:00 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // Construye un comando completo a partir de tokens
-static char	*build_command_from_tokens(char **tokens, int *index)
+static char	*build_command_string(char **tokens, int *index)
 {
 	char	*full_command;
 	char	*temp;
 
 	full_command = ft_strdup("");
-	while (tokens[*index] && !is_operator(tokens[*index])
-		&& !is_parenthesis(tokens[*index]))
+	while (tokens[*index] && !is_logical_operator(tokens[*index])
+		&& !is_parenthesis_token(tokens[*index]))
 	{
 		temp = full_command;
 		if (ft_strlen(full_command) > 0)
@@ -37,7 +37,7 @@ static char	*build_command_from_tokens(char **tokens, int *index)
 }
 
 // Parsea una expresión primaria (comando o expresión entre paréntesis)
-t_ast_node	*parse_primary_expression(char **tokens, int *index)
+t_ast_node	*parse_primary_command(char **tokens, int *index)
 {
 	t_ast_node	*node;
 	t_command	*cmd;
@@ -48,20 +48,20 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 	if (ft_strncmp(tokens[*index], "(", 2) == 0)
 	{
 		(*index)++;
-		node = parse_or_expression(tokens, index);
+		node = parse_or_operation(tokens, index);
 		if (node)
 			node->in_parentheses = 1;
 		if (tokens[*index] && ft_strncmp(tokens[*index], ")", 2) == 0)
 			(*index)++;
 		return (node);
 	}
-	full_command = build_command_from_tokens(tokens, index);
+	full_command = build_command_string(tokens, index);
 	if (ft_strlen(full_command) == 0)
 	{
 		free(full_command);
 		return (NULL);
 	}
-	cmd = parse_input(full_command, NULL);
+	cmd = parse_command_input(full_command, NULL);
 	free(full_command);
 	if (!cmd)
 		return (NULL);
@@ -70,19 +70,19 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 }
 
 // Parsea expresiones con operador AND
-t_ast_node	*parse_and_expression(char **tokens, int *index)
+t_ast_node	*parse_and_operation(char **tokens, int *index)
 {
 	t_ast_node	*left;
 	t_ast_node	*right;
 	t_ast_node	*and_node;
 
-	left = parse_primary_expression(tokens, index);
+	left = parse_primary_command(tokens, index);
 	if (!left)
 		return (NULL);
 	while (tokens[*index] && ft_strncmp(tokens[*index], "&&", 3) == 0)
 	{
 		(*index)++;
-		right = parse_primary_expression(tokens, index);
+		right = parse_primary_command(tokens, index);
 		if (!right)
 		{
 			free_ast_node(left);
@@ -103,19 +103,19 @@ t_ast_node	*parse_and_expression(char **tokens, int *index)
 }
 
 // Parsea expresiones con operador OR  
-t_ast_node	*parse_or_expression(char **tokens, int *index)
+t_ast_node	*parse_or_operation(char **tokens, int *index)
 {
 	t_ast_node	*left;
 	t_ast_node	*right;
 	t_ast_node	*or_node;
 
-	left = parse_and_expression(tokens, index);
+	left = parse_and_operation(tokens, index);
 	if (!left)
 		return (NULL);
 	while (tokens[*index] && ft_strncmp(tokens[*index], "||", 3) == 0)
 	{
 		(*index)++;
-		right = parse_and_expression(tokens, index);
+		right = parse_and_operation(tokens, index);
 		if (!right)
 		{
 			free_ast_node(left);
@@ -144,11 +144,11 @@ t_ast_node	*parse_logical_expression(const char *input)
 
 	if (!input || !*input)
 		return (NULL);
-	tokens = tokenize_input(input);
+	tokens = tokenize_expression(input);
 	if (!tokens)
 		return (NULL);
 	index = 0;
-	ast = parse_or_expression(tokens, &index);
+	ast = parse_or_operation(tokens, &index);
 	free_tokens(tokens);
 	return (ast);
 }

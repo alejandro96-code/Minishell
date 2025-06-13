@@ -6,7 +6,7 @@
 #    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/13 19:22:49 by alejanr2         ###   ########.fr        #
+#    Updated: 2025/06/13 19:45:38 by alejanr2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,13 +25,13 @@ SRC =	builtins/cd.c\
       builtins/unset.c\
       executors/exec_cmd.c\
       executors/exec_utils.c\
-      parser/parser.c\
-      parser/args.c\
-      parser/logical_parser.c\
-      parser/logical_executor.c\
-      parser/command_executor.c\
-      parser/token_parser.c\
-      parser/ast_utils.c\
+      parser/argument_splitter.c\
+      parser/command_parser.c\
+      parser/ast_manager.c\
+      parser/expression_tokenizer.c\
+      parser/expression_parser.c\
+      parser/expression_executor.c\
+      parser/command_runner.c\
       pipes/pipes.c\
       pipes/pipe_utils.c\
       pipes/pipe_exec.c\
@@ -52,14 +52,14 @@ SRC =	builtins/cd.c\
       wildcards/wildcard_match.c\
       wildcards/wildcard_expand.c\
       wildcards/wildcard_args.c\
-      cleanup.c\
+      cleanup/cleanup.c\
       main.c
 
 # Definir el directorio de objetos y crear la estructura de directorios
 OBJ_DIR = obj
 OBJ_SUBDIRS = $(OBJ_DIR) $(OBJ_DIR)/builtins $(OBJ_DIR)/executors $(OBJ_DIR)/parser \
               $(OBJ_DIR)/pipes $(OBJ_DIR)/redirections $(OBJ_DIR)/signals \
-              $(OBJ_DIR)/utils $(OBJ_DIR)/wildcards
+              $(OBJ_DIR)/utils $(OBJ_DIR)/wildcards $(OBJ_DIR)/cleanup
 
 # Definir los objetos con la ruta del directorio obj/
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))

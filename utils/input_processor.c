@@ -97,7 +97,7 @@ void	process_input(char *input, char ***env, int *exit_status)
 		ast = parse_logical_expression(input);
 		if (ast)
 		{
-			*exit_status = execute_ast(ast, env);
+			*exit_status = execute_expression_tree(ast, env);
 			free_ast_node(ast);
 		}
 		free(input);
@@ -113,7 +113,7 @@ void	process_input(char *input, char ***env, int *exit_status)
 	}
 	
 	// Single command
-	cmd = parse_input(input, exit_status);
+	cmd = parse_command_input(input, exit_status);
 	if (!cmd)
 	{
 		free(input);

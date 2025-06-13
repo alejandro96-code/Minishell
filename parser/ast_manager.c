@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_utils.c                                        :+:      :+:    :+:   */
+/*   ast_manager.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:00 by alejanr2          #+#    #+#             */
-/*   Updated: 2025/06/13 20:20:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:10:00 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,18 @@ t_ast_node	*create_ast_node(t_operator_type op, t_command *cmd)
 	node->right = NULL;
 	node->in_parentheses = 0;
 	return (node);
+}
+
+// Libera un nodo del AST y todos sus hijos recursivamente
+void	free_ast_node(t_ast_node *node)
+{
+	if (!node)
+		return ;
+	if (node->left)
+		free_ast_node(node->left);
+	if (node->right)
+		free_ast_node(node->right);
+	if (node->command)
+		free_command(node->command);
+	free(node);
 }

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 19:22:20 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:05:00 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Función para verificar si el comando es un builtin
+// Verifica si el comando es un builtin
 int	is_builtin_command(const char *cmd)
 {
 	if (!cmd)
@@ -26,6 +26,7 @@ int	is_builtin_command(const char *cmd)
 		|| (ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4));
 }
 
+// Verifica si la entrada está vacía o solo contiene espacios
 static int	is_empty_or_whitespace(const char *str)
 {
 	while (*str)
@@ -37,8 +38,8 @@ static int	is_empty_or_whitespace(const char *str)
 	return (1);
 }
 
-// Función para verificar si las comillas están balanceadas
-static int	quote_balance_check(const char *input)
+// Verifica si las comillas están balanceadas
+static int	validate_quotes(const char *input)
 {
 	int	i;
 	int	in_single_quotes;
@@ -58,14 +59,14 @@ static int	quote_balance_check(const char *input)
 	return (in_single_quotes || in_double_quotes);
 }
 
-// Función que procesa la entrada y genera la estructura t_command
-t_command	*parse_input(const char *input, int *exit_status)
+// Procesa la entrada y genera la estructura t_command
+t_command	*parse_command_input(const char *input, int *exit_status)
 {
 	t_command	*cmd;
 
 	if (!input || is_empty_or_whitespace(input))
 		return (NULL);
-	if (quote_balance_check(input))
+	if (validate_quotes(input))
 	{
 		ft_putstr_fd("minishell: unclosed quote\n", 2);
 		*exit_status = 258;
@@ -74,7 +75,7 @@ t_command	*parse_input(const char *input, int *exit_status)
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
-	cmd->argv = ft_split_args((char *)input);
+	cmd->argv = split_command_args((char *)input);
 	if (!cmd->argv)
 	{
 		cmd->argc = 0;
@@ -89,7 +90,7 @@ t_command	*parse_input(const char *input, int *exit_status)
 			&& cmd->argv[0]) ? is_builtin_command(cmd->argv[0]) : 0;
 	if (cmd->argc == 0)
 	{
-		free(cmd);
+		free_command(cmd);
 		return (NULL);
 	}
 	return (cmd);

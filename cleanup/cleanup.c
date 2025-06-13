@@ -6,11 +6,11 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 20:00:00 by alejanr2          #+#    #+#             */
-/*   Updated: 2025/06/13 20:00:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/13 21:35:00 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 // Libera un array de strings (como char **)
 void	ft_free_split(char **split)
@@ -80,18 +80,4 @@ void	free_command(t_command *cmd)
 		free(cmd->argv);
 	}
 	free(cmd);
-}
-
-// Libera un nodo del AST y todos sus hijos recursivamente
-void	free_ast_node(t_ast_node *node)
-{
-	if (!node)
-		return ;
-	if (node->left)
-		free_ast_node(node->left);
-	if (node->right)
-		free_ast_node(node->right);
-	if (node->command)
-		free_command(node->command);
-	free(node);
 }

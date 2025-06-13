@@ -107,38 +107,43 @@ char		*search_in_paths(char **paths, char *cmd);
 void		execute_command(char *cmd_line, char **envp);
 
 // parser.c
+t_command	*parse_command_input(const char *input, int *exit_status);
 int			is_builtin_command(const char *cmd);
-t_command	*parse_input(const char *input, int *exit_status);
-void		free_command(t_command *cmd);
 
-// Logical operators parsing
-t_ast_node	*parse_logical_expression(const char *input);
-t_ast_node	*parse_or_expression(char **tokens, int *index);
-t_ast_node	*parse_and_expression(char **tokens, int *index);
-t_ast_node	*parse_primary_expression(char **tokens, int *index);
+// Command parsing functions
+t_command	*parse_command_input(const char *input, int *exit_status);
+int			is_builtin_command(const char *cmd);
+
+// Argument processing functions  
+char		**split_command_args(char *str);
+int			count_command_args(char *str);
+char		*extract_next_argument(char **str);
+void		skip_whitespace(char **str);
+
+// AST management functions
 t_ast_node	*create_ast_node(t_operator_type op, t_command *cmd);
 void		free_ast_node(t_ast_node *node);
-int			execute_ast(t_ast_node *node, char ***env);
-char		**tokenize_input(const char *input);
-void		free_tokens(char **tokens);
 
-// Token parser functions
-int			is_operator(const char *token);
-int			is_parenthesis(const char *token);
-void		add_token_to_list(char ***tokens, int *count, char *token);
+// Expression tokenization functions
+char		**tokenize_expression(const char *input);
+int			is_logical_operator(const char *token);
+int			is_parenthesis_token(const char *token);
+void		add_token_to_array(char ***tokens, int *count, char *token);
 
-// Command executor functions
+// Expression parsing functions
+t_ast_node	*parse_logical_expression(const char *input);
+t_ast_node	*parse_or_operation(char **tokens, int *index);
+t_ast_node	*parse_and_operation(char **tokens, int *index);
+t_ast_node	*parse_primary_command(char **tokens, int *index);
+
+// Expression execution functions
+int			execute_expression_tree(t_ast_node *node, char ***env);
+
+// Command execution functions
 char		*build_full_command(t_command *cmd);
-void		process_command_arguments(t_command *cmd, char **env, int exit_status);
-int			execute_builtin_command(t_command *cmd, char ***env, int saved_stdin, int saved_stdout);
-int			execute_external_command(t_command *cmd, char ***env);
-
-// funciones del main
-char		**copy_env(char **envp);
-char		*remove_quotes(char *str);
-char		*clean_input(char *input);
-char		*get_prompt(char **env);
-void		process_input(char *input, char ***env, int *exit_status);
+void		process_command_args(t_command *cmd, char **env, int exit_status);
+int			run_builtin_command(t_command *cmd, char ***env, int saved_stdin, int saved_stdout);
+int			run_external_command(t_command *cmd, char ***env);
 
 // Cleanup functions (centralized memory management)
 void		ft_free_split(char **split);
@@ -234,5 +239,12 @@ int			count_args(char *str);
 char		*extract_next_arg(char **str);
 void		skip_spaces(char **str);
 char		**free_args(char **args);
+
+// funciones del main
+char		**copy_env(char **envp);
+char		*remove_quotes(char *str);
+char		*clean_input(char *input);
+char		*get_prompt(char **env);
+void		process_input(char *input, char ***env, int *exit_status);
 
 #endif

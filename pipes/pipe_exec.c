@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static void	process_command_args(char **args, char **env)
+static void	process_pipe_command_args(char **args, char **env)
 {
 	int		i;
 	char	*expanded;
@@ -42,7 +42,7 @@ char	**parse_command_arguments(char *command, char **env)
 	char	**args;
 
 	args = ft_split(command, ' ');
-	process_command_args(args, env);
+	process_pipe_command_args(args, env);
 	handle_redirections(&args, env);
 	return (args);
 }
