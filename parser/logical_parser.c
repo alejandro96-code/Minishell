@@ -19,7 +19,7 @@ t_ast_node	*create_ast_node(t_operator_type op, t_command *cmd)
 	node = malloc(sizeof(t_ast_node));
 	if (!node)
 		return (NULL);
-	node->operator = op;
+	node->operator= op;
 	node->command = cmd;
 	node->left = NULL;
 	node->right = NULL;
@@ -82,6 +82,7 @@ char	**tokenize_input(const char *input)
 	int		count;
 	int		i;
 	int		start;
+	char	quote;
 
 	tokens = malloc(sizeof(char *));
 	tokens[0] = NULL;
@@ -117,14 +118,14 @@ char	**tokenize_input(const char *input)
 		}
 		else
 		{
-			while (input[i] && input[i] != ' ' && input[i] != '\t' 
-				&& input[i] != '(' && input[i] != ')' 
-				&& !(input[i] == '&' && input[i + 1] == '&')
-				&& !(input[i] == '|' && input[i + 1] == '|'))
+			while (input[i] && input[i] != ' ' && input[i] != '\t'
+				&& input[i] != '(' && input[i] != ')' && !(input[i] == '&'
+					&& input[i + 1] == '&') && !(input[i] == '|' && input[i
+					+ 1] == '|'))
 			{
 				if (input[i] == '"' || input[i] == '\'')
 				{
-					char quote = input[i++];
+					quote = input[i++];
 					while (input[i] && input[i] != quote)
 						i++;
 					if (input[i] == quote)
@@ -161,6 +162,7 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 	t_ast_node	*node;
 	t_command	*cmd;
 	char		*full_command;
+	char		*temp;
 
 	if (!tokens[*index])
 		return (NULL);
@@ -174,12 +176,12 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 			(*index)++;
 		return (node);
 	}
-	
 	// Collect all tokens that form a single command until we hit an operator or parenthesis
 	full_command = ft_strdup("");
-	while (tokens[*index] && !is_operator(tokens[*index]) && !is_parenthesis(tokens[*index]))
+	while (tokens[*index] && !is_operator(tokens[*index])
+		&& !is_parenthesis(tokens[*index]))
 	{
-		char *temp = full_command;
+		temp = full_command;
 		if (ft_strlen(full_command) > 0)
 			full_command = ft_strjoin(temp, " ");
 		else
@@ -190,13 +192,11 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 		free(temp);
 		(*index)++;
 	}
-	
 	if (ft_strlen(full_command) == 0)
 	{
 		free(full_command);
 		return (NULL);
 	}
-	
 	cmd = parse_input(full_command, NULL);
 	free(full_command);
 	if (!cmd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   logical_executor.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/10 16:00:00 by alejandro         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:58:04 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,15 @@ static int	execute_single_command(t_command *cmd, char ***env)
 	int		saved_stdin;
 	int		saved_stdout;
 	char	*full_command;
+	char	*temp;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (1);
-	
-	// Reconstruir el comando completo para verificar si contiene pipes
 	full_command = ft_strdup("");
 	i = 0;
 	while (i < cmd->argc && cmd->argv[i])
 	{
-		char *temp = full_command;
+		temp = full_command;
 		if (i > 0)
 			full_command = ft_strjoin(temp, " ");
 		else
@@ -42,27 +41,20 @@ static int	execute_single_command(t_command *cmd, char ***env)
 		free(temp);
 		i++;
 	}
-	
-	// Si el comando contiene pipes, usar el sistema de pipes
 	if (ft_strchr(full_command, '|') != NULL)
 	{
 		exit_status = run_command_pipeline(full_command, *env);
 		free(full_command);
 		return (exit_status);
 	}
-	
 	free(full_command);
-	
-	// Guardar descriptores originales
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
-	
-	// Expandir variables de entorno en todos los argumentos
-	exit_status = 0; // Initialize with default exit status
 	i = 0;
 	while (i < cmd->argc && cmd->argv[i])
 	{
-		processed = process_quotes_and_variables(cmd->argv[i], *env, exit_status);
+		processed = process_quotes_and_variables(cmd->argv[i], *env,
+				exit_status);
 		if (processed)
 		{
 			free(cmd->argv[i]);
@@ -70,15 +62,12 @@ static int	execute_single_command(t_command *cmd, char ***env)
 		}
 		i++;
 	}
-	
 	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
-	
 	if (cmd->is_builtin)
 	{
 		handle_redirections(&cmd->argv, *env);
 		exit_status = 0;
 		execute_builtin(cmd->argv, env, &exit_status);
-		// Restaurar descriptores originales solo para builtins
 		dup2(saved_stdin, STDIN_FILENO);
 		dup2(saved_stdout, STDOUT_FILENO);
 	}
@@ -105,10 +94,8 @@ static int	execute_single_command(t_command *cmd, char ***env)
 			exit_status = 1;
 		}
 	}
-	
 	close(saved_stdin);
 	close(saved_stdout);
-	
 	return (exit_status);
 }
 
@@ -144,11 +131,11 @@ int	execute_ast(t_ast_node *node, char ***env)
 {
 	if (!node)
 		return (1);
-	if (node->operator == OP_NONE && node->command)
+	if (node->operator== OP_NONE && node->command)
 		return (execute_single_command(node->command, env));
-	else if (node->operator == OP_AND)
+	else if (node->operator== OP_AND)
 		return (execute_and_operator(node, env));
-	else if (node->operator == OP_OR)
+	else if (node->operator== OP_OR)
 		return (execute_or_operator(node, env));
 	return (1);
 }

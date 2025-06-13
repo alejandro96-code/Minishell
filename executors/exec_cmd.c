@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/12 22:58:02 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:55:17 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	execute_external(char **args, char **env)
 	else
 		cmd_path = get_cmd_path_relative(args[0], env);
 	if (!cmd_path)
-		return (127);  // Command not found
+		return (127);
 	exit_code = execute_fork_process(args, env, cmd_path);
 	free(cmd_path);
 	return (exit_code);

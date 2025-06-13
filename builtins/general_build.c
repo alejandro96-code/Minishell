@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_build.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/12 22:58:09 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:54:09 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	is_builtin(char *cmd)
 {
-	return (!ft_strncmp(cmd, "cd", 2) && cmd[2] == '\0') || (!ft_strncmp(cmd,
-			"echo", 4) && cmd[4] == '\0') || (!ft_strncmp(cmd, "pwd", 3)
-		&& cmd[3] == '\0') || (!ft_strncmp(cmd, "export", 6) && cmd[6] == '\0')
-		|| (!ft_strncmp(cmd, "unset", 5) && cmd[5] == '\0') || (!ft_strncmp(cmd,
-			"env", 3) && cmd[3] == '\0') || (!ft_strncmp(cmd, "exit", 4)
-		&& cmd[4] == '\0');
+	return ((!ft_strncmp(cmd, "cd", 2) && cmd[2] == '\0') || (!ft_strncmp(cmd,
+				"echo", 4) && cmd[4] == '\0') || (!ft_strncmp(cmd, "pwd", 3)
+			&& cmd[3] == '\0') || (!ft_strncmp(cmd, "export", 6)
+			&& cmd[6] == '\0') || (!ft_strncmp(cmd, "unset", 5)
+			&& cmd[5] == '\0') || (!ft_strncmp(cmd, "env", 3) && cmd[3] == '\0')
+		|| (!ft_strncmp(cmd, "exit", 4) && cmd[4] == '\0'));
 }
 
 int	execute_builtin(char **args, char ***env, int *exit_status)

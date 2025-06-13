@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/05/10 12:54:57 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/13 18:54:27 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,16 +92,14 @@ void	print_with_escapes(char *str)
 
 int	builtin_echo(char **args, char **env)
 {
-	int		i;
-	int		newline;
-	int		interpret_escapes;
+	int	i;
+	int	newline;
+	int	interpret_escapes;
 
 	(void)env;
 	i = 1;
 	newline = 1;
 	interpret_escapes = 0;
-	
-	// Procesar opciones
 	while (args[i])
 	{
 		if (is_valid_n_option(args[i]))
@@ -115,9 +113,8 @@ int	builtin_echo(char **args, char **env)
 			i++;
 		}
 		else
-			break;
+			break ;
 	}
-	
 	while (args[i])
 	{
 		if (interpret_escapes)
