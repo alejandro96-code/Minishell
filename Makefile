@@ -6,7 +6,7 @@
 #    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/13 18:42:50 by alejanr2         ###   ########.fr        #
+#    Updated: 2025/06/13 19:22:49 by alejanr2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,9 @@ SRC =	builtins/cd.c\
       parser/args.c\
       parser/logical_parser.c\
       parser/logical_executor.c\
+      parser/command_executor.c\
+      parser/token_parser.c\
+      parser/ast_utils.c\
       pipes/pipes.c\
       pipes/pipe_utils.c\
       pipes/pipe_exec.c\
@@ -49,6 +52,7 @@ SRC =	builtins/cd.c\
       wildcards/wildcard_match.c\
       wildcards/wildcard_expand.c\
       wildcards/wildcard_args.c\
+      cleanup.c\
       main.c
 
 # Definir el directorio de objetos y crear la estructura de directorios

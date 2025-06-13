@@ -122,12 +122,33 @@ int			execute_ast(t_ast_node *node, char ***env);
 char		**tokenize_input(const char *input);
 void		free_tokens(char **tokens);
 
+// Token parser functions
+int			is_operator(const char *token);
+int			is_parenthesis(const char *token);
+void		add_token_to_list(char ***tokens, int *count, char *token);
+
+// Command executor functions
+char		*build_full_command(t_command *cmd);
+void		process_command_arguments(t_command *cmd, char **env, int exit_status);
+int			execute_builtin_command(t_command *cmd, char ***env, int saved_stdin, int saved_stdout);
+int			execute_external_command(t_command *cmd, char ***env);
+
 // funciones del main
 char		**copy_env(char **envp);
 char		*remove_quotes(char *str);
 char		*clean_input(char *input);
 char		*get_prompt(char **env);
 void		process_input(char *input, char ***env, int *exit_status);
+
+// Cleanup functions (centralized memory management)
+void		ft_free_split(char **split);
+void		free_string_array(char **array);
+void		free_env(char **env);
+char		**free_args(char **args);
+void		free_tokens(char **tokens);
+void		free_command(t_command *cmd);
+void		free_ast_node(t_ast_node *node);
+void		cleanup_and_exit(char **env);
 
 // env_utils.c
 void		free_env(char **env);

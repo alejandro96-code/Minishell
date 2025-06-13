@@ -3,180 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   logical_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/10 16:00:00 by alejandro         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:45:00 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_ast_node	*create_ast_node(t_operator_type op, t_command *cmd)
+// Construye un comando completo a partir de tokens
+static char	*build_command_from_tokens(char **tokens, int *index)
 {
-	t_ast_node	*node;
+	char	*full_command;
+	char	*temp;
 
-	node = malloc(sizeof(t_ast_node));
-	if (!node)
-		return (NULL);
-	node->operator= op;
-	node->command = cmd;
-	node->left = NULL;
-	node->right = NULL;
-	node->in_parentheses = 0;
-	return (node);
-}
-
-void	free_ast_node(t_ast_node *node)
-{
-	if (!node)
-		return ;
-	if (node->left)
-		free_ast_node(node->left);
-	if (node->right)
-		free_ast_node(node->right);
-	if (node->command)
-		free_command(node->command);
-	free(node);
-}
-
-static int	is_operator(const char *token)
-{
-	if (!token)
-		return (0);
-	return (ft_strncmp(token, "&&", 3) == 0 || ft_strncmp(token, "||", 3) == 0);
-}
-
-static int	is_parenthesis(const char *token)
-{
-	if (!token)
-		return (0);
-	return (ft_strncmp(token, "(", 2) == 0 || ft_strncmp(token, ")", 2) == 0);
-}
-
-static void	add_token_to_list(char ***tokens, int *count, char *token)
-{
-	char	**new_tokens;
-	int		i;
-
-	new_tokens = malloc(sizeof(char *) * (*count + 2));
-	if (!new_tokens)
-		return ;
-	i = 0;
-	while (i < *count)
-	{
-		new_tokens[i] = (*tokens)[i];
-		i++;
-	}
-	new_tokens[*count] = ft_strdup(token);
-	new_tokens[*count + 1] = NULL;
-	free(*tokens);
-	*tokens = new_tokens;
-	(*count)++;
-}
-
-char	**tokenize_input(const char *input)
-{
-	char	**tokens;
-	char	*token;
-	int		count;
-	int		i;
-	int		start;
-	char	quote;
-
-	tokens = malloc(sizeof(char *));
-	tokens[0] = NULL;
-	count = 0;
-	i = 0;
-	while (input[i])
-	{
-		while (input[i] == ' ' || input[i] == '\t')
-			i++;
-		if (!input[i])
-			break ;
-		start = i;
-		if (input[i] == '(' || input[i] == ')')
-		{
-			token = ft_substr(input, i, 1);
-			add_token_to_list(&tokens, &count, token);
-			free(token);
-			i++;
-		}
-		else if (input[i] == '&' && input[i + 1] == '&')
-		{
-			token = ft_strdup("&&");
-			add_token_to_list(&tokens, &count, token);
-			free(token);
-			i += 2;
-		}
-		else if (input[i] == '|' && input[i + 1] == '|')
-		{
-			token = ft_strdup("||");
-			add_token_to_list(&tokens, &count, token);
-			free(token);
-			i += 2;
-		}
-		else
-		{
-			while (input[i] && input[i] != ' ' && input[i] != '\t'
-				&& input[i] != '(' && input[i] != ')' && !(input[i] == '&'
-					&& input[i + 1] == '&') && !(input[i] == '|' && input[i
-					+ 1] == '|'))
-			{
-				if (input[i] == '"' || input[i] == '\'')
-				{
-					quote = input[i++];
-					while (input[i] && input[i] != quote)
-						i++;
-					if (input[i] == quote)
-						i++;
-				}
-				else
-					i++;
-			}
-			token = ft_substr(input, start, i - start);
-			add_token_to_list(&tokens, &count, token);
-			free(token);
-		}
-	}
-	return (tokens);
-}
-
-void	free_tokens(char **tokens)
-{
-	int	i;
-
-	if (!tokens)
-		return ;
-	i = 0;
-	while (tokens[i])
-	{
-		free(tokens[i]);
-		i++;
-	}
-	free(tokens);
-}
-
-t_ast_node	*parse_primary_expression(char **tokens, int *index)
-{
-	t_ast_node	*node;
-	t_command	*cmd;
-	char		*full_command;
-	char		*temp;
-
-	if (!tokens[*index])
-		return (NULL);
-	if (ft_strncmp(tokens[*index], "(", 2) == 0)
-	{
-		(*index)++;
-		node = parse_or_expression(tokens, index);
-		if (node)
-			node->in_parentheses = 1;
-		if (tokens[*index] && ft_strncmp(tokens[*index], ")", 2) == 0)
-			(*index)++;
-		return (node);
-	}
-	// Collect all tokens that form a single command until we hit an operator or parenthesis
 	full_command = ft_strdup("");
 	while (tokens[*index] && !is_operator(tokens[*index])
 		&& !is_parenthesis(tokens[*index]))
@@ -192,6 +33,29 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 		free(temp);
 		(*index)++;
 	}
+	return (full_command);
+}
+
+// Parsea una expresión primaria (comando o expresión entre paréntesis)
+t_ast_node	*parse_primary_expression(char **tokens, int *index)
+{
+	t_ast_node	*node;
+	t_command	*cmd;
+	char		*full_command;
+
+	if (!tokens[*index])
+		return (NULL);
+	if (ft_strncmp(tokens[*index], "(", 2) == 0)
+	{
+		(*index)++;
+		node = parse_or_expression(tokens, index);
+		if (node)
+			node->in_parentheses = 1;
+		if (tokens[*index] && ft_strncmp(tokens[*index], ")", 2) == 0)
+			(*index)++;
+		return (node);
+	}
+	full_command = build_command_from_tokens(tokens, index);
 	if (ft_strlen(full_command) == 0)
 	{
 		free(full_command);
@@ -205,6 +69,7 @@ t_ast_node	*parse_primary_expression(char **tokens, int *index)
 	return (node);
 }
 
+// Parsea expresiones con operador AND
 t_ast_node	*parse_and_expression(char **tokens, int *index)
 {
 	t_ast_node	*left;
@@ -237,6 +102,7 @@ t_ast_node	*parse_and_expression(char **tokens, int *index)
 	return (left);
 }
 
+// Parsea expresiones con operador OR  
 t_ast_node	*parse_or_expression(char **tokens, int *index)
 {
 	t_ast_node	*left;
@@ -269,6 +135,7 @@ t_ast_node	*parse_or_expression(char **tokens, int *index)
 	return (left);
 }
 
+// Función principal de parsing de expresiones lógicas
 t_ast_node	*parse_logical_expression(const char *input)
 {
 	char		**tokens;

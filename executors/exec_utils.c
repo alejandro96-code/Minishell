@@ -6,25 +6,56 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 12:40:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/13 18:55:44 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:10:00 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_free_split(char **split)
+// Extraer paths del entorno
+char	**extract_paths(char **envp)
 {
-	int	i;
+	int		i;
+	char	*path_var;
 
 	i = 0;
-	if (!split)
-		return ;
-	while (split[i])
+	while (envp[i])
 	{
-		free(split[i]);
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
+		{
+			path_var = envp[i] + 5;
+			return (ft_split(path_var, ':'));
+		}
 		i++;
 	}
-	free(split);
+	return (NULL);
+}
+
+// Buscar comando en los paths
+char	*search_in_paths(char **paths, char *cmd)
+{
+	int		i;
+	char	*temp;
+	char	*cmd_path;
+
+	if (!paths || !cmd)
+		return (NULL);
+	i = 0;
+	while (paths[i])
+	{
+		temp = ft_strjoin(paths[i], "/");
+		cmd_path = ft_strjoin(temp, cmd);
+		free(temp);
+		if (access(cmd_path, F_OK | X_OK) == 0)
+		{
+			ft_free_split(paths);
+			return (cmd_path);
+		}
+		free(cmd_path);
+		i++;
+	}
+	ft_free_split(paths);
+	return (NULL);
 }
 
 char	*find_command_path(char *cmd, char **env)

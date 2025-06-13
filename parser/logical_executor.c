@@ -6,42 +6,24 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/13 18:58:04 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:06:43 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+// Función principal simplificada para ejecutar un comando individual
 static int	execute_single_command(t_command *cmd, char ***env)
 {
 	int		exit_status;
-	pid_t	pid;
-	int		status;
-	int		i;
-	char	*processed;
 	int		saved_stdin;
 	int		saved_stdout;
 	char	*full_command;
-	char	*temp;
 
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (1);
-	full_command = ft_strdup("");
-	i = 0;
-	while (i < cmd->argc && cmd->argv[i])
-	{
-		temp = full_command;
-		if (i > 0)
-			full_command = ft_strjoin(temp, " ");
-		else
-			full_command = ft_strdup("");
-		free(temp);
-		temp = full_command;
-		full_command = ft_strjoin(temp, cmd->argv[i]);
-		free(temp);
-		i++;
-	}
-	if (ft_strchr(full_command, '|') != NULL)
+	full_command = build_full_command(cmd);
+	if (full_command && ft_strchr(full_command, '|') != NULL)
 	{
 		exit_status = run_command_pipeline(full_command, *env);
 		free(full_command);
@@ -50,50 +32,11 @@ static int	execute_single_command(t_command *cmd, char ***env)
 	free(full_command);
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
-	i = 0;
-	while (i < cmd->argc && cmd->argv[i])
-	{
-		processed = process_quotes_and_variables(cmd->argv[i], *env,
-				exit_status);
-		if (processed)
-		{
-			free(cmd->argv[i]);
-			cmd->argv[i] = processed;
-		}
-		i++;
-	}
-	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
+	process_command_arguments(cmd, *env, 0);
 	if (cmd->is_builtin)
-	{
-		handle_redirections(&cmd->argv, *env);
-		exit_status = 0;
-		execute_builtin(cmd->argv, env, &exit_status);
-		dup2(saved_stdin, STDIN_FILENO);
-		dup2(saved_stdout, STDOUT_FILENO);
-	}
+		exit_status = execute_builtin_command(cmd, env, saved_stdin, saved_stdout);
 	else
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			handle_redirections(&cmd->argv, *env);
-			exit_status = execute_external(cmd->argv, *env);
-			exit(exit_status);
-		}
-		else if (pid > 0)
-		{
-			waitpid(pid, &status, 0);
-			if (WIFEXITED(status))
-				exit_status = WEXITSTATUS(status);
-			else
-				exit_status = 1;
-		}
-		else
-		{
-			perror("fork");
-			exit_status = 1;
-		}
-	}
+		exit_status = execute_external_command(cmd, env);
 	close(saved_stdin);
 	close(saved_stdout);
 	return (exit_status);

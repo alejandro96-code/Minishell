@@ -6,13 +6,13 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 18:56:51 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:22:20 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Función para verificar si el comando es un builtin (puedes agregar más)
+// Función para verificar si el comando es un builtin
 int	is_builtin_command(const char *cmd)
 {
 	if (!cmd)
@@ -24,22 +24,6 @@ int	is_builtin_command(const char *cmd)
 		|| (ft_strncmp(cmd, "unset", 5) == 0 && ft_strlen(cmd) == 5)
 		|| (ft_strncmp(cmd, "env", 3) == 0 && ft_strlen(cmd) == 3)
 		|| (ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4));
-}
-
-void	free_command(t_command *cmd)
-{
-	int	i;
-
-	if (!cmd)
-		return ;
-	if (cmd->argv)
-	{
-		i = 0;
-		while (cmd->argv[i])
-			free(cmd->argv[i++]);
-		free(cmd->argv);
-	}
-	free(cmd);
 }
 
 static int	is_empty_or_whitespace(const char *str)
@@ -105,7 +89,7 @@ t_command	*parse_input(const char *input, int *exit_status)
 			&& cmd->argv[0]) ? is_builtin_command(cmd->argv[0]) : 0;
 	if (cmd->argc == 0)
 	{
-		free_command(cmd);
+		free(cmd);
 		return (NULL);
 	}
 	return (cmd);
