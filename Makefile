@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
+#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/12 23:05:12 by dgasco-g         ###   ########.fr        #
+#    Updated: 2025/06/13 18:42:50 by alejanr2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,9 @@ SRC =	builtins/cd.c\
       pipes/pipe_exec.c\
       pipes/pipe_handler.c\
       redirections/redirections.c\
+      redirections/redirections_basic.c\
+      redirections/redirections_heredoc.c\
+      redirections/redirections_handler.c\
       signals/signals.c\
       utils/expand_variable.c\
       utils/find_user.c\
@@ -87,6 +90,7 @@ sani: sanitize re
 clean:
 	make clean -C libft
 	rm -rf $(OBJ_DIR)
+	find . -name "*.o" -type f -delete
 
 fclean: clean
 	make fclean -C libft

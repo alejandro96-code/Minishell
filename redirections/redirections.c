@@ -3,243 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/12 23:02:01 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:33:42 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Redirigir la entrada desde un archivo
-int	redirect_input(char *filename)
+// Libera un array de strings
+static void	free_string_array(char **array)
 {
-	int	fd;
+	int	i;
 
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		perror(filename);
-		return (1);
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		close(fd);
-		return (1);
-	}
-	close(fd);
-	return (0);
-}
-
-// Redirigir la salida a un archivo
-int	redirect_output(char *filename, int append)
-{
-	int	flags;
-	int	fd;
-
-	flags = O_WRONLY | O_CREAT;
-	if (append)
-		flags |= O_APPEND;
-	else
-		flags |= O_TRUNC;
-	fd = open(filename, flags, 0644);
-	if (fd < 0)
-	{
-		perror(filename);
-		return (1);
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		perror("dup2");
-		close(fd);
-		return (1);
-	}
-	close(fd);
-	return (0);
-}
-
-// Implementación del heredoc (<<) con expansión de variables
-static void	write_expanded_line(int write_fd, char *line, char **env)
-{
-	char	*expanded_line;
-	ssize_t	bytes_written;
-
-	expanded_line = expand_variable(line, env, 0);
-	bytes_written = write(write_fd, expanded_line, ft_strlen(expanded_line));
-	if (bytes_written == -1)
-		perror("write");
-	bytes_written = write(write_fd, "\n", 1);
-	if (bytes_written == -1)
-		perror("write");
-	free(expanded_line);
-}
-
-static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
-{
-	char	*line;
-	size_t	bufsize;
-	size_t	len;
-
-	line = NULL;
-	bufsize = 0;
-	printf("> ");
-	while (getline(&line, &bufsize, stdin) != -1)
-	{
-		len = ft_strlen(line);
-		if (len > 0 && line[len - 1] == '\n')
-			line[len - 1] = '\0';
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 
-			&& ft_strlen(line) == ft_strlen(delimiter))
-			break ;
-		write_expanded_line(write_fd, line, env);
-		printf("> ");
-	}
-	free(line);
-}
-
-// Implementación del heredoc (<<): crea un pipe y redirige su lectura a stdin
-int	heredoc(char *delimiter, char **env)
-{
-	int	pipefd[2];
-
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		return (1);
-	}
-	read_heredoc_input(pipefd[1], delimiter, env);
-	close(pipefd[1]);
-	if (dup2(pipefd[0], STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		close(pipefd[0]);
-		return (1);
-	}
-	close(pipefd[0]);
-	return (0);
-}
-
-// Función para procesar las redirecciones en los argumentos
-// Procesa una redirección individual según el tipo y avanza el índice
-static void	handle_redirection_type(char **args, int *i, char *cleaned_filename,
-		char **env)
-{
-	char	*cleaned_delimiter;
-
-	if (ft_strncmp(args[*i], "<", 1) == 0 && ft_strlen(args[*i]) == 1)
-		redirect_input(cleaned_filename);
-	else if (ft_strncmp(args[*i], "<<", 2) == 0 && ft_strlen(args[*i]) == 2)
-	{
-		cleaned_delimiter = remove_quotes(args[*i + 1]);
-		heredoc(cleaned_delimiter, env);
-		if (cleaned_delimiter != args[*i + 1])
-			free(cleaned_delimiter);
-	}
-	else if (ft_strncmp(args[*i], ">", 1) == 0 && ft_strlen(args[*i]) == 1)
-		redirect_output(cleaned_filename, 0);
-	else if (ft_strncmp(args[*i], ">>", 2) == 0 && ft_strlen(args[*i]) == 2)
-		redirect_output(cleaned_filename, 1);
-	(*i)++;
-}
-
-static void	process_redirection(char **args, int *i, char **env)
-{
-	int		pid;
-	char	*expanded_filename;
-	char	*cleaned_filename;
-
-	if (!args[*i + 1])
+	if (!array)
 		return ;
-	pid = fork(); //// no quitar !!!!!!!!!!!!!
-	if (pid == 0)
+	i = 0;
+	while (array[i])
 	{
-		expanded_filename = expand_variable(args[*i + 1], env, 0);
-		cleaned_filename = remove_quotes(expanded_filename);
-		handle_redirection_type(args, i, cleaned_filename, env);
-		if (expanded_filename != args[*i + 1])
-			free(expanded_filename);
-		if (cleaned_filename != expanded_filename)
-			free(cleaned_filename);
-		exit(0);
+		free(array[i]);
+		i++;
 	}
+	free(array);
+}
+
+// Cuenta el número de argumentos en el array
+static int	count_string_args(char **args)
+{
+	int	count;
+
+	count = 0;
+	while (args[count])
+		count++;
+	return (count);
 }
 
 // Filtra los argumentos quitando las redirecciones y aplicándolas
 void	handle_redirections(char ***args, char **env)
 {
 	char	**new_args;
-	int		i;
-	int		j;
 	int		count;
-	int		has_redirections;
 
-	// Primero verificar si hay redirecciones
-	has_redirections = 0;
-	i = 0;
-	while ((*args)[i])
-	{
-		if ((ft_strncmp((*args)[i], "<", 1) == 0 && ft_strlen((*args)[i]) == 1) 
-			|| (ft_strncmp((*args)[i], "<<", 2) == 0 && ft_strlen((*args)[i]) == 2)
-			|| (ft_strncmp((*args)[i], ">", 1) == 0 && ft_strlen((*args)[i]) == 1) 
-			|| (ft_strncmp((*args)[i], ">>", 2) == 0 && ft_strlen((*args)[i]) == 2))
-		{
-			has_redirections = 1;
-			
-			break ;
-		}
-		i++;
-	}
-
-	// Si no hay redirecciones, no hacer nada
-	if (!has_redirections)
+	if (!args || !*args)
 		return ;
-
-	// Contar argumentos actuales después de wildcards
-	count = 0;
-	while ((*args)[count])
-		count++;
-	
-	new_args = malloc(sizeof(char *) * (count + 1));
+	if (!check_redirections_exist(*args))
+		return ;
+	count = count_string_args(*args);
+	new_args = create_filtered_args(*args, count, env);
 	if (!new_args)
 		return ;
-	i = 0;
-	j = 0;
-	while (i < count && (*args)[i])
-	{
-		if ((ft_strncmp((*args)[i], "<", 1) == 0 && ft_strlen((*args)[i]) == 1) 
-			|| (ft_strncmp((*args)[i], "<<", 2) == 0 && ft_strlen((*args)[i]) == 2)
-			|| (ft_strncmp((*args)[i], ">", 1) == 0 && ft_strlen((*args)[i]) == 1) 
-			|| (ft_strncmp((*args)[i], ">>", 2) == 0 && ft_strlen((*args)[i]) == 2))
-		{
-			// Verificar que hay un argumento siguiente (filename) de forma segura
-			if (i + 1 >= count || !(*args)[i + 1])
-			{
-				free(new_args);
-				return ;
-			}
-			process_redirection(*args, &i, env);
-			i += 2; // Skip redirection operator and filename
-			continue ;
-		}
-		char *dup = ft_strdup((*args)[i]);
-		if (dup)
-			new_args[j++] = dup;
-		i++;
-	}
-	new_args[j] = NULL;
-	
-	// Liberar el array anterior incluyendo los strings duplicados
-	if (*args)
-	{
-		i = 0;
-		while ((*args)[i])
-		{
-			free((*args)[i]);
-			i++;
-		}
-		free(*args);
-	}
+	free_string_array(*args);
 	*args = new_args;
 }

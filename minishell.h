@@ -162,6 +162,8 @@ int			redirect_input(char *filename);
 int			redirect_output(char *filename, int append);
 int			heredoc(char *delimiter, char **env);
 void		handle_redirections(char ***args, char **env);
+int			check_redirections_exist(char **args);
+char		**create_filtered_args(char **args, int count, char **env);
 
 // signals.c
 void		sigint_handler(int sig);
