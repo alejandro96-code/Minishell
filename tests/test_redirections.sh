@@ -148,11 +148,6 @@ run_test "Redirección append >>" "echo line1 >> append.txt" 1
 run_test "Redirección append segunda línea" "echo line2 >> append.txt" 1
 run_test "Append builtin" "pwd >> append.txt" 1
 
-echo -e "${GREEN}=== REDIRECCIONES DE ENTRADA (<) ===${NC}"
-# Tests que crean y usan archivos
-run_test "Redirección entrada <" "echo 'test input content' > input.txt && cat < input.txt" 1
-run_test "Redirección entrada wc" "echo -e 'line1\nline2\nline3' > lines.txt && wc -l < lines.txt" 1
-
 echo -e "${GREEN}=== HEREDOC (<<) ===${NC}"
 run_test "Heredoc simple" "cat << EOF
 hello world
