@@ -20,6 +20,11 @@ MEMORY_LEAKS=0
 MINISHELL="./minishell"
 TMP_DIR="/tmp/minishell_test_builtins"
 VALGRIND_OUTPUT="${TMP_DIR}/valgrind_output.txt"
+BASH_OUTPUT="${TMP_DIR}/bash_output.txt"
+MINISHELL_OUTPUT="${TMP_DIR}/minishell_output.txt"
+
+# Arrays para comandos fallidos
+declare -a FAILED_COMMANDS
 
 # Crear directorio temporal
 mkdir -p "$TMP_DIR"
@@ -38,6 +43,16 @@ run_test() {
     ((TOTAL_TESTS++))
     echo -e "${YELLOW}Test $TOTAL_TESTS:${NC} $description"
     echo -e "${BLUE}Command:${NC} $command"
+    
+    # Ejecutar en bash para comparación
+    bash -c "$command" > "$BASH_OUTPUT" 2>&1
+    local bash_exit=$?
+    echo -e "${BLUE}Bash result:${NC} Exit code: $bash_exit"
+    
+    # Ejecutar en minishell
+    printf '%s\nexit\n' "$command" | timeout 10 "$MINISHELL" > "$MINISHELL_OUTPUT" 2>&1
+    local minishell_exit=$?
+    echo -e "${BLUE}Minishell result:${NC} Exit code: $minishell_exit"
     
     # Ejecutar con valgrind
     printf '%s\nexit\n' "$command" | timeout 10 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --error-exitcode=42 "$MINISHELL" > /dev/null 2> "$VALGRIND_OUTPUT"
@@ -58,21 +73,16 @@ run_test() {
         ((MEMORY_LEAKS++))
     fi
     
-    # Ejecutar comando para verificar funcionalidad
-    local exit_code
-    printf '%s\nexit\n' "$command" | timeout 10 "$MINISHELL" > /dev/null 2>&1
-    exit_code=$?
-    
     # Evaluar resultado
     local test_passed=0
     if [[ $should_work -eq 1 ]]; then
         # Comando debería funcionar (exit code 0 o 1 está bien para algunos builtins)
-        if [[ $exit_code -eq 0 || $exit_code -eq 1 ]]; then
+        if [[ $minishell_exit -eq 0 || $minishell_exit -eq 1 ]]; then
             test_passed=1
         fi
     else
         # Comando NO debería funcionar (exit code != 0)
-        if [[ $exit_code -ne 0 ]]; then
+        if [[ $minishell_exit -ne 0 ]]; then
             test_passed=1
         fi
     fi
@@ -89,9 +99,11 @@ run_test() {
     else
         if [[ $has_leaks -eq 0 ]]; then
             echo -e "  ${RED}❌ FAIL${NC} - No memory leaks but wrong behavior"
+            FAILED_COMMANDS+=("$command")
             ((FAILED_TESTS++))
         else
             echo -e "  ${RED}❌ FAIL${NC} - Wrong behavior + Memory leaks (Lost: ${definitely_lost}B, Errors: $errors)"
+            FAILED_COMMANDS+=("$command")
             ((FAILED_TESTS++))
         fi
     fi
@@ -152,6 +164,16 @@ echo -e "Total tests: $TOTAL_TESTS"
 echo -e "${GREEN}Passed: $PASSED_TESTS${NC}"
 echo -e "${RED}Failed: $FAILED_TESTS${NC}"
 echo -e "${YELLOW}Memory leaks: $MEMORY_LEAKS${NC}"
+
+# Mostrar comandos que fallaron
+if [[ ${#FAILED_COMMANDS[@]} -gt 0 ]]; then
+    echo -e "\n${RED}======================================${NC}"
+    echo -e "${RED}  FAILED COMMANDS LIST${NC}"
+    echo -e "${RED}======================================${NC}"
+    for cmd in "${FAILED_COMMANDS[@]}"; do
+        echo -e "${RED}- $cmd${NC}"
+    done
+fi
 
 if [[ $FAILED_TESTS -eq 0 ]]; then
     echo -e "${GREEN}All tests passed!${NC}"
