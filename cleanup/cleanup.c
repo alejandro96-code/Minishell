@@ -6,17 +6,17 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 20:00:00 by alejanr2          #+#    #+#             */
-/*   Updated: 2025/06/14 09:26:08 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/14 12:22:01 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
 // Libera un array de strings (como char **)
 void	ft_free_split(char **split)
 {
 	int	i;
+
 	if (!split)
 		return ;
 	i = 0;
@@ -32,6 +32,7 @@ void	ft_free_split(char **split)
 void	free_string_array(char **array)
 {
 	int	i;
+
 	if (!array)
 		return ;
 	i = 0;
@@ -61,6 +62,7 @@ char	**free_args(char **args)
 void	free_command(t_command *cmd)
 {
 	int	i;
+
 	if (!cmd)
 		return ;
 	if (cmd->argv)

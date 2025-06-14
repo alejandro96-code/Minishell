@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   argument_splitter.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/13 21:00:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:52:00 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,31 @@ void	skip_whitespace(char **str)
 		(*str)++;
 }
 
+// Procesa un argumento y avanza el puntero
+static void	skip_current_arg(char **str)
+{
+	int		in_quotes;
+	char	quote_char;
+
+	in_quotes = 0;
+	quote_char = 0;
+	while (**str && (in_quotes || (**str != ' ' && **str != '\t')))
+	{
+		if (!in_quotes && (**str == '"' || **str == '\''))
+		{
+			in_quotes = 1;
+			quote_char = **str;
+		}
+		else if (in_quotes && **str == quote_char)
+			in_quotes = 0;
+		(*str)++;
+	}
+}
+
 // Cuenta el número de argumentos en una cadena de comando
 int	count_command_args(char *str)
 {
-	int	count;
-	int	in_quotes;
-	char	quote_char;
+	int		count;
 
 	count = 0;
 	while (*str)
@@ -33,19 +52,7 @@ int	count_command_args(char *str)
 		if (!*str)
 			break ;
 		count++;
-		in_quotes = 0;
-		quote_char = 0;
-		while (*str && (in_quotes || (*str != ' ' && *str != '\t')))
-		{
-			if (!in_quotes && (*str == '"' || *str == '\''))
-			{
-				in_quotes = 1;
-				quote_char = *str;
-			}
-			else if (in_quotes && *str == quote_char)
-				in_quotes = 0;
-			str++;
-		}
+		skip_current_arg(&str);
 	}
 	return (count);
 }

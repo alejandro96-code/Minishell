@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 12:05:59 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/14 12:49:43 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void		exec_child_process(char **args, char **env, char *cmd_path);
 int			exec_parent_process(pid_t pid);
 char		**extract_paths(char **envp);
 char		*search_in_paths(char **paths, char *cmd);
+char		*get_command_full_path(char *cmd, char **env);
 void		execute_command(char *cmd_line, char **envp);
 
 // parser.c
@@ -159,8 +160,7 @@ void		restore_file_descriptors(int original_stdin, int original_stdout);
 void		sigint_handler(int sig);
 void		sigquit_handler(int sig);
 void		setup_signal_handlers(void);
-void		setup_child_signals(void);
-void		reset_signal_handlers(void);
+void		reset_signal_to_default(void);
 
 // utils > expand_variable
 char		*expand_variable(char *str, char **env, int exit_status);

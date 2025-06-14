@@ -91,6 +91,6 @@ void	process_input(char *input, char ***env, int *exit_status)
 
 void	cleanup_and_exit(char **env)
 {
-	reset_signal_handlers();
+	reset_signal_to_default();
 	free_env(env);
 }

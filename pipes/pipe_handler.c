@@ -16,7 +16,7 @@ static void	setup_child_pipes(int i, int cmd_count, int pipefd[2],
 		int *prev_pipe)
 {
 	handle_child_process(i, cmd_count, pipefd, prev_pipe);
-	setup_child_signals();
+	reset_signal_to_default();
 }
 
 static void	setup_parent_pipes(int i, int cmd_count, int pipefd[2],

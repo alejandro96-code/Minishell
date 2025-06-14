@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 21:05:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:49:40 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// Verifica si el comando es un builtin
-int	is_builtin_command(const char *cmd)
-{
-	if (!cmd)
-		return (0);
-	return ((ft_strncmp(cmd, "echo", 4) == 0 && ft_strlen(cmd) == 4)
-		|| (ft_strncmp(cmd, "cd", 2) == 0 && ft_strlen(cmd) == 2)
-		|| (ft_strncmp(cmd, "pwd", 3) == 0 && ft_strlen(cmd) == 3)
-		|| (ft_strncmp(cmd, "export", 6) == 0 && ft_strlen(cmd) == 6)
-		|| (ft_strncmp(cmd, "unset", 5) == 0 && ft_strlen(cmd) == 5)
-		|| (ft_strncmp(cmd, "env", 3) == 0 && ft_strlen(cmd) == 3)
-		|| (ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4));
-}
 
 // Verifica si la entrada está vacía o solo contiene espacios
 static int	is_empty_or_whitespace(const char *str)
@@ -59,6 +45,37 @@ static int	validate_quotes(const char *input)
 	return (in_single_quotes || in_double_quotes);
 }
 
+// Inicializa la estructura t_command
+static t_command	*init_command(void)
+{
+	t_command	*cmd;
+
+	cmd = malloc(sizeof(t_command));
+	if (!cmd)
+		return (NULL);
+	cmd->argv = NULL;
+	cmd->argc = 0;
+	cmd->is_builtin = 0;
+	cmd->redirections = NULL;
+	cmd->next = NULL;
+	return (cmd);
+}
+
+// Configura los argumentos del comando
+static int	setup_command_args(t_command *cmd, const char *input)
+{
+	cmd->argv = split_command_args((char *)input);
+	if (!cmd->argv)
+		return (0);
+	while (cmd->argv[cmd->argc] != NULL)
+		cmd->argc++;
+	if (cmd->argc > 0 && cmd->argv[0])
+		cmd->is_builtin = is_builtin_command(cmd->argv[0]);
+	else
+		cmd->is_builtin = 0;
+	return (1);
+}
+
 // Procesa la entrada y genera la estructura t_command
 t_command	*parse_command_input(const char *input, int *exit_status)
 {
@@ -72,22 +89,14 @@ t_command	*parse_command_input(const char *input, int *exit_status)
 		*exit_status = 258;
 		return (NULL);
 	}
-	cmd = malloc(sizeof(t_command));
+	cmd = init_command();
 	if (!cmd)
 		return (NULL);
-	cmd->argv = split_command_args((char *)input);
-	if (!cmd->argv)
+	if (!setup_command_args(cmd, input))
 	{
-		cmd->argc = 0;
-		cmd->is_builtin = 0;
 		free(cmd);
 		return (NULL);
 	}
-	cmd->argc = 0;
-	while (cmd->argv[cmd->argc] != NULL)
-		cmd->argc++;
-	cmd->is_builtin = (cmd->argc > 0
-			&& cmd->argv[0]) ? is_builtin_command(cmd->argv[0]) : 0;
 	if (cmd->argc == 0)
 	{
 		free_command(cmd);

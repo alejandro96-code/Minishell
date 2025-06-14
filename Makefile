@@ -6,7 +6,7 @@
 #    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/14 09:40:27 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/14 12:49:42 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,11 @@ SRC =	builtins/cd.c\
       builtins/unset.c\
       executors/exec_cmd.c\
       executors/exec_utils.c\
+      executors/exec_path.c\
+      executors/exec_process.c\
       parser/command_parser.c\
       parser/argument_splitter.c\
+      parser/parser_utils.c\
       pipes/pipe_utils.c\
       pipes/pipe_exec.c\
       pipes/pipe_handler.c\
