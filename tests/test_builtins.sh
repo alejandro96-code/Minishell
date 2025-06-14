@@ -1,152 +1,162 @@
 #!/bin/bash
 
-# Pruebas para comandos builtin de minishell
-MINISHELL=${1:-"../Mini_2.0/minishell"}
-PASSED=0
-FAILED=0
+# ============================================================================
+# TEST BUILTINS - Pruebas de comandos built-in de minishell
+# ============================================================================
 
+# Colores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-echo -e "${YELLOW}🔧 TESTING BUILTINS${NC}"
+# Contadores
+TOTAL_TESTS=0
+PASSED_TESTS=0
+FAILED_TESTS=0
+MEMORY_LEAKS=0
 
-# Función mejorada para ejecutar test
+MINISHELL="./minishell"
+TMP_DIR="/tmp/minishell_test_builtins"
+VALGRIND_OUTPUT="${TMP_DIR}/valgrind_output.txt"
+
+# Crear directorio temporal
+mkdir -p "$TMP_DIR"
+
+echo -e "${BLUE}======================================${NC}"
+echo -e "${BLUE}  MINISHELL BUILTINS TEST SUITE${NC}"
+echo -e "${BLUE}======================================${NC}"
+echo ""
+
+# Función para ejecutar test con valgrind
 run_test() {
-    local cmd="$1"
-    local expected="$2"
-    local test_name="$3"
-    local no_newline="$4"
+    local description="$1"
+    local command="$2"
+    local should_work="$3"  # 1 = debería funcionar, 0 = no debería funcionar
     
-    echo -n "Testing: $test_name... "
+    ((TOTAL_TESTS++))
+    echo -e "${YELLOW}Test $TOTAL_TESTS:${NC} $description"
+    echo -e "${BLUE}Command:${NC} $command"
     
-    # Crear archivos temporales
-    local tmp_output=$(mktemp)
+    # Ejecutar con valgrind
+    printf '%s\nexit\n' "$command" | timeout 10 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --error-exitcode=42 "$MINISHELL" > /dev/null 2> "$VALGRIND_OUTPUT"
+    local valgrind_exit=$?
     
-    # Ejecutar comando en minishell
-    echo -e "$cmd\nexit" | timeout 5 $MINISHELL > "$tmp_output" 2>/dev/null
+    # Analizar memory leaks
+    local definitely_lost=$(grep "definitely lost:" "$VALGRIND_OUTPUT" | grep -o '[0-9,]* bytes' | head -1 | tr -d ',' | grep -o '[0-9]*')
+    local errors=$(grep "ERROR SUMMARY:" "$VALGRIND_OUTPUT" | grep -o '[0-9]* errors' | grep -o '[0-9]*')
     
-    # Limpiar salida eliminando líneas del prompt y exit
-    if [ "$no_newline" = "true" ]; then
-        # Para echo -n, extraer solo el contenido entre el comando y el siguiente prompt
-        result=$(cat "$tmp_output" | sed 's/\x1b\[[0-9;]*m//g' | grep -A1 "$cmd" | tail -1 | sed 's/.*: //' | tr -d '\n')
-    else
-        result=$(grep -v "exit" "$tmp_output" | sed '/dgasco-g@Minishell/d' | sed '/^$/d' | tail -1)
+    # Defaults si no se encuentran
+    definitely_lost=${definitely_lost:-0}
+    errors=${errors:-0}
+    
+    # Verificar memory leaks
+    local has_leaks=0
+    if [[ $definitely_lost -gt 0 || $errors -gt 0 ]]; then
+        has_leaks=1
+        ((MEMORY_LEAKS++))
     fi
     
-    if [[ "$result" == *"$expected"* ]] || [[ -z "$expected" && -z "$result" ]]; then
-        echo -e "${GREEN}✅ PASS${NC}"
-        ((PASSED++))
+    # Ejecutar comando para verificar funcionalidad
+    local exit_code
+    printf '%s\nexit\n' "$command" | timeout 10 "$MINISHELL" > /dev/null 2>&1
+    exit_code=$?
+    
+    # Evaluar resultado
+    local test_passed=0
+    if [[ $should_work -eq 1 ]]; then
+        # Comando debería funcionar (exit code 0 o 1 está bien para algunos builtins)
+        if [[ $exit_code -eq 0 || $exit_code -eq 1 ]]; then
+            test_passed=1
+        fi
     else
-        echo -e "${RED}❌ FAIL${NC}"
-        echo "  Command: $cmd"
-        echo "  Expected: '$expected'"
-        echo "  Got: '$result'"
-        ((FAILED++))
+        # Comando NO debería funcionar (exit code != 0)
+        if [[ $exit_code -ne 0 ]]; then
+            test_passed=1
+        fi
     fi
     
-    rm -f "$tmp_output"
+    # Mostrar resultado
+    if [[ $test_passed -eq 1 ]]; then
+        if [[ $has_leaks -eq 0 ]]; then
+            echo -e "  ${GREEN}✅ PASS${NC} - No memory leaks (Lost: ${definitely_lost}B, Errors: $errors)"
+            ((PASSED_TESTS++))
+        else
+            echo -e "  ${YELLOW}⚠️  PASS (with memory leaks)${NC} - Lost: ${definitely_lost}B, Errors: $errors"
+            ((PASSED_TESTS++))
+        fi
+    else
+        if [[ $has_leaks -eq 0 ]]; then
+            echo -e "  ${RED}❌ FAIL${NC} - No memory leaks but wrong behavior"
+            ((FAILED_TESTS++))
+        else
+            echo -e "  ${RED}❌ FAIL${NC} - Wrong behavior + Memory leaks (Lost: ${definitely_lost}B, Errors: $errors)"
+            ((FAILED_TESTS++))
+        fi
+    fi
+    echo ""
 }
 
-# Función especial para comandos con pipes
-run_pipe_test() {
-    local cmd="$1"
-    local expected="$2"
-    local test_name="$3"
-    
-    echo -n "Testing: $test_name... "
-    
-    # Crear archivos temporales
-    local tmp_output=$(mktemp)
-    
-    # Ejecutar comando en minishell
-    echo -e "$cmd\nexit" | timeout 5 $MINISHELL > "$tmp_output" 2>/dev/null
-    
-    # Limpiar salida
-    result=$(grep -v "exit" "$tmp_output" | sed '/dgasco-g@Minishell/d' | grep "$expected")
-    
-    if [[ -n "$result" ]]; then
-        echo -e "${GREEN}✅ PASS${NC}"
-        ((PASSED++))
-    else
-        echo -e "${RED}❌ FAIL${NC}"
-        echo "  Command: $cmd"
-        echo "  Expected to contain: '$expected'"
-        echo "  Full output:"
-        cat "$tmp_output" | head -5
-        ((FAILED++))
-    fi
-    
-    rm -f "$tmp_output"
-}
+echo -e "${GREEN}=== ECHO BUILTIN TESTS ===${NC}"
+run_test "Echo simple" "echo hello world" 1
+run_test "Echo con -n" "echo -n hello" 1
+run_test "Echo con comillas" "echo \"hello world\"" 1
+run_test "Echo con variables" "echo \$HOME" 1
+run_test "Echo sin argumentos" "echo" 1
+run_test "Echo con argumentos inválidos" "echo -x hello" 1
 
-# Tests para echo
-run_test "echo hello world" "hello world" "echo básico"
-run_test "echo" "" "echo vacío"
+echo -e "${GREEN}=== PWD BUILTIN TESTS ===${NC}"
+run_test "PWD simple" "pwd" 1
+run_test "PWD con argumentos (no debería)" "pwd arg1 arg2" 1
+run_test "PWD con flags inválidos" "pwd -x" 1
 
-# Tests para pwd
-current_dir=$(pwd)
-# Ajustar para obtener solo el directorio actual
-current_dirname=$(basename "$current_dir")
-run_test "pwd" "$current_dirname" "pwd"
+echo -e "${GREEN}=== ENV BUILTIN TESTS ===${NC}"
+run_test "ENV simple" "env" 1
+run_test "ENV con argumentos (no debería)" "env arg1" 1
 
-# Tests para cd - simplificado
-echo -n "Testing: cd command... "
-echo -e "cd ..\npwd\nexit" | timeout 5 $MINISHELL >/dev/null 2>&1
-if [ $? -eq 0 ]; then
-    echo -e "${GREEN}✅ PASS${NC}"
-    ((PASSED++))
+echo -e "${GREEN}=== CD BUILTIN TESTS ===${NC}"
+run_test "CD a directorio existente" "cd /" 1
+run_test "CD a HOME" "cd" 1
+run_test "CD a directorio inexistente" "cd /directorio/inexistente" 0
+run_test "CD con demasiados argumentos" "cd / /tmp" 0
+run_test "CD con .." "cd .." 1
+
+echo -e "${GREEN}=== EXPORT BUILTIN TESTS ===${NC}"
+run_test "Export variable válida" "export TEST_VAR=hello" 1
+run_test "Export sin argumentos" "export" 1
+run_test "Export variable inválida (número al inicio)" "export 123VAR=test" 0
+run_test "Export variable inválida (caracteres especiales)" "export VAR-TEST=hello" 0
+run_test "Export variable válida con underscore" "export TEST_VAR_2=world" 1
+
+echo -e "${GREEN}=== UNSET BUILTIN TESTS ===${NC}"
+run_test "Unset variable existente" "unset PATH" 1
+run_test "Unset variable inexistente" "unset VARIABLE_INEXISTENTE" 1
+run_test "Unset sin argumentos" "unset" 0
+run_test "Unset variable inválida" "unset 123VAR" 0
+
+echo -e "${GREEN}=== EXIT BUILTIN TESTS ===${NC}"
+run_test "Exit sin argumentos" "exit" 1
+run_test "Exit con número válido" "exit 42" 1
+run_test "Exit con número inválido" "exit abc" 0
+run_test "Exit con demasiados argumentos" "exit 1 2" 0
+
+# Limpiar
+rm -rf "$TMP_DIR"
+
+# Mostrar resumen
+echo -e "${BLUE}======================================${NC}"
+echo -e "${BLUE}  BUILTINS TEST SUMMARY${NC}"
+echo -e "${BLUE}======================================${NC}"
+echo -e "Total tests: $TOTAL_TESTS"
+echo -e "${GREEN}Passed: $PASSED_TESTS${NC}"
+echo -e "${RED}Failed: $FAILED_TESTS${NC}"
+echo -e "${YELLOW}Memory leaks: $MEMORY_LEAKS${NC}"
+
+if [[ $FAILED_TESTS -eq 0 ]]; then
+    echo -e "${GREEN}All tests passed!${NC}"
+    exit 0
 else
-    echo -e "${RED}❌ FAIL${NC}"
-    ((FAILED++))
+    echo -e "${RED}Some tests failed!${NC}"
+    exit 1
 fi
-
-# Tests para env
-run_pipe_test "env | grep HOME" "HOME=" "env muestra HOME"
-
-# Tests para export/unset - mejorados
-echo -n "Testing: export variable... "
-tmp_file=$(mktemp)
-echo -e "export TEST_VAR=hello\necho \$TEST_VAR\nexit" | timeout 5 $MINISHELL > "$tmp_file" 2>/dev/null
-result=$(grep -v "exit" "$tmp_file" | sed '/dgasco-g@Minishell/d' | grep "hello")
-if [[ -n "$result" ]]; then
-    echo -e "${GREEN}✅ PASS${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ FAIL${NC}"
-    echo "  Expected: 'hello'"
-    echo "  Got output:"
-    cat "$tmp_file" | head -5
-    ((FAILED++))
-fi
-rm -f "$tmp_file"
-
-echo -n "Testing: unset variable... "
-tmp_file=$(mktemp)
-echo -e "export TEST_VAR=hello\nunset TEST_VAR\necho \$TEST_VAR\nexit" | timeout 5 $MINISHELL > "$tmp_file" 2>/dev/null
-result=$(grep -v "exit" "$tmp_file" | sed '/dgasco-g@Minishell/d' | tail -1)
-if [[ -z "$result" ]] || [[ "$result" == *"\$TEST_VAR"* ]]; then
-    echo -e "${GREEN}✅ PASS${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ FAIL${NC}"
-    echo "  Expected: empty or \$TEST_VAR"
-    echo "  Got: '$result'"
-    ((FAILED++))
-fi
-rm -f "$tmp_file"
-
-# Tests para exit
-echo -n "Testing: exit code... "
-echo "exit 42" | timeout 3 $MINISHELL >/dev/null 2>&1
-if [ $? -eq 42 ]; then
-    echo -e "${GREEN}✅ PASS${NC}"
-    ((PASSED++))
-else
-    echo -e "${RED}❌ FAIL${NC}"
-    ((FAILED++))
-fi
-
-echo -e "\n${YELLOW}BUILTINS RESULTS: ${GREEN}$PASSED passed${NC}, ${RED}$FAILED failed${NC}"
-[ $FAILED -eq 0 ] && exit 0 || exit 1

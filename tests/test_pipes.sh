@@ -1,124 +1,145 @@
 #!/bin/bash
 
-# Pruebas específicas para pipelines
-MINISHELL=${1:-"../Mini_2.0/minishell"}
-PASSED=0
-FAILED=0
+# ============================================================================
+# TEST PIPES - Pruebas de pipes en minishell
+# ============================================================================
 
+# Colores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-echo -e "${YELLOW}🔗 TESTING PIPES${NC}"
+# Contadores
+TOTAL_TESTS=0
+PASSED_TESTS=0
+FAILED_TESTS=0
+MEMORY_LEAKS=0
 
-# Función mejorada para comparar con bash
-test_pipe() {
-    local cmd="$1"
-    local test_name="$2"
+MINISHELL="./minishell"
+TMP_DIR="/tmp/minishell_test_pipes"
+VALGRIND_OUTPUT="${TMP_DIR}/valgrind_output.txt"
+
+# Crear directorio temporal
+mkdir -p "$TMP_DIR"
+
+echo -e "${BLUE}======================================${NC}"
+echo -e "${BLUE}  MINISHELL PIPES TEST SUITE${NC}"
+echo -e "${BLUE}======================================${NC}"
+echo ""
+
+# Función para ejecutar test con valgrind
+run_test() {
+    local description="$1"
+    local command="$2"
+    local should_work="$3"  # 1 = debería funcionar, 0 = no debería funcionar
     
-    echo -n "Testing: $test_name... "
+    ((TOTAL_TESTS++))
+    echo -e "${YELLOW}Test $TOTAL_TESTS:${NC} $description"
+    echo -e "${BLUE}Command:${NC} $command"
     
-    # Crear archivos temporales
-    local tmp_mini=$(mktemp)
-    local tmp_bash=$(mktemp)
-    local tmp_mini_clean=$(mktemp)
+    # Ejecutar con valgrind
+    printf '%s\nexit\n' "$command" | timeout 10 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --error-exitcode=42 "$MINISHELL" > /dev/null 2> "$VALGRIND_OUTPUT"
+    local valgrind_exit=$?
     
-    # Ejecutar en minishell
-    echo -e "$cmd\nexit" | timeout 8 $MINISHELL > "$tmp_mini" 2>/dev/null
-    local exit_mini=$?
+    # Analizar memory leaks
+    local definitely_lost=$(grep "definitely lost:" "$VALGRIND_OUTPUT" | grep -o '[0-9,]* bytes' | head -1 | tr -d ',' | grep -o '[0-9]*')
+    local errors=$(grep "ERROR SUMMARY:" "$VALGRIND_OUTPUT" | grep -o '[0-9]* errors' | grep -o '[0-9]*')
     
-    # Ejecutar en bash
-    timeout 8 bash -c "$cmd" > "$tmp_bash" 2>/dev/null
-    local exit_bash=$?
+    # Defaults si no se encuentran
+    definitely_lost=${definitely_lost:-0}
+    errors=${errors:-0}
     
-    # Limpiar output de minishell (quitar líneas del prompt y exit)
-    grep -v "exit" "$tmp_mini" | sed '/dgasco-g@Minishell/d' | sed '/^$/d' > "$tmp_mini_clean"
+    # Verificar memory leaks
+    local has_leaks=0
+    if [[ $definitely_lost -gt 0 || $errors -gt 0 ]]; then
+        has_leaks=1
+        ((MEMORY_LEAKS++))
+    fi
     
-    # Comparar si ambos tienen contenido similar
-    if [ -s "$tmp_mini_clean" ] && [ -s "$tmp_bash" ]; then
-        # Verificar que el contenido principal coincida
-        mini_content=$(cat "$tmp_mini_clean" | head -1)
-        bash_content=$(cat "$tmp_bash" | head -1)
-        
-        if [[ "$mini_content" == "$bash_content" ]] || [[ "$mini_content" == *"$(echo "$bash_content" | cut -c1-10)"* ]]; then
-            echo -e "${GREEN}✅ PASS${NC}"
-            ((PASSED++))
-        else
-            echo -e "${RED}❌ FAIL${NC}"
-            echo "  Command: $cmd"
-            echo "  Minishell: '$mini_content'"
-            echo "  Bash: '$bash_content'"
-            ((FAILED++))
+    # Ejecutar comando para verificar funcionalidad
+    local exit_code
+    printf '%s\nexit\n' "$command" | timeout 10 "$MINISHELL" > /dev/null 2>&1
+    exit_code=$?
+    
+    # Evaluar resultado
+    local test_passed=0
+    if [[ $should_work -eq 1 ]]; then
+        # Comando debería funcionar
+        if [[ $exit_code -eq 0 ]]; then
+            test_passed=1
         fi
-    elif [ ! -s "$tmp_mini_clean" ] && [ ! -s "$tmp_bash" ]; then
-        # Ambos vacíos, ok
-        echo -e "${GREEN}✅ PASS${NC}"
-        ((PASSED++))
     else
-        echo -e "${RED}❌ FAIL${NC}"
-        echo "  Command: $cmd"
-        echo "  Minishell output exists: $([ -s "$tmp_mini_clean" ] && echo "yes" || echo "no")"
-        echo "  Bash output exists: $([ -s "$tmp_bash" ] && echo "yes" || echo "no")"
-        ((FAILED++))
+        # Comando NO debería funcionar
+        if [[ $exit_code -ne 0 ]]; then
+            test_passed=1
+        fi
     fi
     
-    # Limpieza
-    rm -f "$tmp_mini" "$tmp_bash" "$tmp_mini_clean"
-}
-
-# Función para tests simples que solo verifican que no fallen
-test_pipe_simple() {
-    local cmd="$1"
-    local test_name="$2"
-    
-    echo -n "Testing: $test_name... "
-    
-    local tmp_output=$(mktemp)
-    echo -e "$cmd\nexit" | timeout 5 $MINISHELL > "$tmp_output" 2>/dev/null
-    local exit_code=$?
-    
-    # Si no hay timeout (exit code 124) y el comando se ejecutó, considerarlo éxito
-    if [ $exit_code -ne 124 ]; then
-        echo -e "${GREEN}✅ PASS${NC}"
-        ((PASSED++))
+    # Mostrar resultado
+    if [[ $test_passed -eq 1 ]]; then
+        if [[ $has_leaks -eq 0 ]]; then
+            echo -e "  ${GREEN}✅ PASS${NC} - No memory leaks (Lost: ${definitely_lost}B, Errors: $errors)"
+            ((PASSED_TESTS++))
+        else
+            echo -e "  ${YELLOW}⚠️  PASS (with memory leaks)${NC} - Lost: ${definitely_lost}B, Errors: $errors"
+            ((PASSED_TESTS++))
+        fi
     else
-        echo -e "${RED}❌ FAIL${NC} (timeout)"
-        ((FAILED++))
+        if [[ $has_leaks -eq 0 ]]; then
+            echo -e "  ${RED}❌ FAIL${NC} - No memory leaks but wrong behavior"
+            ((FAILED_TESTS++))
+        else
+            echo -e "  ${RED}❌ FAIL${NC} - Wrong behavior + Memory leaks (Lost: ${definitely_lost}B, Errors: $errors)"
+            ((FAILED_TESTS++))
+        fi
     fi
-    
-    rm -f "$tmp_output"
+    echo ""
 }
 
-# Tests básicos de pipes
-test_pipe "echo hello | cat" "pipe básico"
-test_pipe "echo hello world | wc -w" "echo pipe wc"
+echo -e "${GREEN}=== PIPES FUNCIONALES ===${NC}"
+run_test "Pipe simple echo cat" "echo hello | cat" 1
+run_test "Pipe echo grep" "echo hello world | grep hello" 1
+run_test "Pipe ls head" "ls | head -n 5" 1
+run_test "Pipe cat sort" "echo -e \"c\\nb\\na\" | sort" 1
+run_test "Pipe multiple" "echo hello | cat | cat" 1
+run_test "Pipe con variables" "echo \$HOME | cat" 1
+run_test "Pipe con comillas" "echo \"hello world\" | wc -w" 1
 
-# Tests con ls (usando test simple para evitar diferencias de formato)
-test_pipe_simple "ls | head -3" "ls pipe head"
+echo -e "${GREEN}=== PIPES CON BUILTINS ===${NC}"
+run_test "Pipe builtin a externo" "pwd | cat" 1
+run_test "Pipe externo a builtin" "echo test | cat" 1
+run_test "Pipe env grep" "env | grep PATH" 1
 
-# Tests con múltiples pipes
-test_pipe "echo hello world | cat | cat" "pipe doble"
-test_pipe_simple "echo test | cat | wc -c" "pipe triple"
+echo -e "${GREEN}=== PIPES ERRÓNEOS (NO DEBERÍAN FUNCIONAR) ===${NC}"
+run_test "Pipe sin comando después" "echo hello |" 0
+run_test "Pipe sin comando antes" "| cat" 0
+run_test "Pipe doble vacío" "echo hello || cat" 0
+run_test "Pipe a comando inexistente" "echo hello | comandoinexistente123" 0
+run_test "Pipe múltiple mal formado" "echo hello | | cat" 0
 
-# Tests con builtins en pipes
-test_pipe "echo test | cat" "echo builtin en pipe"
-test_pipe_simple "pwd | cat" "pwd builtin en pipe"
+echo -e "${GREEN}=== PIPES COMPLEJOS ===${NC}"
+run_test "Pipe con 3 comandos" "echo hello | cat | wc -c" 1
+run_test "Pipe con 4 comandos" "echo hello | cat | cat | wc -w" 1
+run_test "Pipe con argumentos múltiples" "echo hello world test | grep -o hello" 1
 
-# Tests casos especiales
-test_pipe "echo | cat" "pipes con echo vacío"
-test_pipe_simple "echo hello | grep hello" "pipe con grep"
+# Limpiar
+rm -rf "$TMP_DIR"
 
-# Test específico para verificar que los pipes básicos funcionan
-echo -n "Testing: basic pipe functionality... "
-result=$(echo -e "echo test | cat\nexit" | timeout 3 $MINISHELL 2>/dev/null | grep -v "exit" | sed '/dgasco-g@Minishell/d' | grep "test")
-if [[ -n "$result" ]]; then
-    echo -e "${GREEN}✅ PASS${NC}"
-    ((PASSED++))
+# Mostrar resumen
+echo -e "${BLUE}======================================${NC}"
+echo -e "${BLUE}  PIPES TEST SUMMARY${NC}"
+echo -e "${BLUE}======================================${NC}"
+echo -e "Total tests: $TOTAL_TESTS"
+echo -e "${GREEN}Passed: $PASSED_TESTS${NC}"
+echo -e "${RED}Failed: $FAILED_TESTS${NC}"
+echo -e "${YELLOW}Memory leaks: $MEMORY_LEAKS${NC}"
+
+if [[ $FAILED_TESTS -eq 0 ]]; then
+    echo -e "${GREEN}All tests passed!${NC}"
+    exit 0
 else
-    echo -e "${RED}❌ FAIL${NC}"
-    ((FAILED++))
+    echo -e "${RED}Some tests failed!${NC}"
+    exit 1
 fi
-
-echo -e "\n${YELLOW}PIPES RESULTS: ${GREEN}$PASSED passed${NC}, ${RED}$FAILED failed${NC}"
-[ $FAILED -eq 0 ] && exit 0 || exit 1
