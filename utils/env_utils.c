@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 17:46:19 by alejanr2          #+#    #+#             */
-/*   Updated: 2025/06/14 13:03:38 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/14 13:52:03 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,4 @@ char	**copy_env_array(char **env)
 	}
 	new_env[i] = NULL;
 	return (new_env);
-}
-
-// Alias para mantener compatibilidad con main.c
-char	**copy_env(char **env)
-{
-	return (copy_env_array(env));
 }

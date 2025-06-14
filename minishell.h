@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 13:46:10 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/14 13:52:03 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,9 +178,8 @@ void		skip_spaces(char **str);
 char		**free_args(char **args);
 
 // funciones del main
-char		**copy_env(char **envp);
+char		**copy_env_array(char **envp);
 char		*remove_quotes(char *str);
-char		*clean_input(char *input);
 char		*get_prompt(char **env);
 void		process_input(char *input, char ***env, int *exit_status);
 
