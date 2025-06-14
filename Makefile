@@ -41,7 +41,6 @@ SRC =	builtins/cd.c\
       utils/expand_variable.c\
       utils/find_user.c\
       utils/env_utils.c\
-      utils/error_utils.c\
       utils/quote_utils.c\
       utils/prompt_utils.c\
       utils/input_processor.c\

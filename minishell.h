@@ -171,12 +171,6 @@ int			process_env_variable(char *str, char *result, int *j, char **env);
 // utils > find_user
 char		*find_user(char **env);
 
-// Error handling utility
-void		write_error_parts(const char *part1, const char *part2, const char *part3);
-void		write_command_not_found_error(const char *command);
-void		write_export_error(const char *identifier);
-void		write_exit_error(const char *arg);
-
 // Parser args
 char		**ft_split_args(char *str);
 int			count_args(char *str);

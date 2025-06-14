@@ -63,7 +63,8 @@ static void	execute_external_child(char **args, char **env)
 	cmd_path = find_command_path(args[0], env);
 	if (!cmd_path)
 	{
-		write_command_not_found_error(args[0]);
+		ft_putstr_fd(args[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit(127);
 	}
 	execve(cmd_path, args, env);
