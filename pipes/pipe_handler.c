@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/10 15:00:00 by alejandro         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:54:01 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ static void	setup_parent_pipes(int i, int cmd_count, int pipefd[2],
 	}
 }
 
-void	process_pipeline_step(int i, int cmd_count, char **commands,
-		char **env)
+void	process_pipeline_step(int i, int cmd_count, char **commands, char **env)
 {
 	int			pipefd[2];
 	static int	prev_pipe = STDIN_FILENO;

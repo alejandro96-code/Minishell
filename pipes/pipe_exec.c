@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/10 15:00:00 by alejandro         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:53:58 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ static void	execute_external_child(char **args, char **env)
 	if (!cmd_path)
 	{
 		write_command_not_found_error(args[0]);
-		exit(127);  // Command not found
+		exit(127);
 	}
 	execve(cmd_path, args, env);
 	perror("execve");
 	free(cmd_path);
-	exit(127);  // execve failed
+	exit(127);
 }
 
 void	execute_child_command(char *command, char ***env)
