@@ -276,31 +276,3 @@ char	*expand_variable(char *str, char **env, int exit_status)
 {
 	return (process_quotes_and_variables(str, env, exit_status));
 }
-
-// Funciones auxiliares mantenidas para compatibilidad
-int	process_env_variable(char *str, char *result, int *j, char **env)
-{
-	char	*expanded;
-	char	*temp_input;
-	int		pos = 0;
-	
-	temp_input = ft_strjoin("$", str);
-	if (!temp_input)
-		return (0);
-	
-	expanded = process_quotes_and_variables(temp_input, env, 0);
-	free(temp_input);
-	
-	if (expanded)
-	{
-		ft_strlcpy(result + *j, expanded, 4096 - *j);
-		*j += ft_strlen(expanded);
-		
-		// Calcular cuántos caracteres se consumieron
-		while (str[pos] && (ft_isalnum(str[pos]) || str[pos] == '_'))
-			pos++;
-		
-		free(expanded);
-	}
-	return (pos);
-}

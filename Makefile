@@ -27,8 +27,6 @@ SRC =	builtins/cd.c\
       executors/exec_utils.c\
       parser/command_parser.c\
       parser/argument_splitter.c\
-      parser/command_runner.c\
-      pipes/pipes.c\
       pipes/pipe_utils.c\
       pipes/pipe_exec.c\
       pipes/pipe_handler.c\

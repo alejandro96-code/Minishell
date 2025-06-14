@@ -43,8 +43,3 @@ void	write_exit_error(const char *arg)
 {
 	write_error_parts("exit: ", arg, ": numeric argument required\n");
 }
-
-void	write_variable_not_found_warning(const char *var_name)
-{
-	write_error_parts("Warning: Variable ", var_name, " not found in environment\n");
-}

@@ -109,12 +109,6 @@ int			count_command_args(char *str);
 char		*extract_next_argument(char **str);
 void		skip_whitespace(char **str);
 
-// Command execution functions
-char		*build_full_command(t_command *cmd);
-void		process_command_args(t_command *cmd, char **env, int exit_status);
-int			run_builtin_command(t_command *cmd, char ***env, int saved_stdin, int saved_stdout);
-int			run_external_command(t_command *cmd, char ***env);
-
 // Cleanup functions (centralized memory management)
 void		ft_free_split(char **split);
 void		free_string_array(char **array);
