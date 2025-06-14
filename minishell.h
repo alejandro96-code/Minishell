@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 13:36:34 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/14 13:46:10 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ void		free_string_array(char **array);
 void		free_env(char **env);
 char		**free_args(char **args);
 void		free_command(t_command *cmd);
-void		cleanup_and_exit(char **env);
 
 // env_utils.c
 void		free_env(char **env);
