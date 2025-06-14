@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 19:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/10 19:00:00 by alejandro         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:04:55 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	write_error_msg(const char *msg)
 	}
 }
 
-void	write_error_parts(const char *part1, const char *part2, const char *part3)
+void	write_error_parts(const char *part1, const char *part2,
+		const char *part3)
 {
 	write_error_msg(part1);
 	if (part2)

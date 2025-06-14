@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:30:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/10 21:30:00 by alejandro         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:05:06 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ char	*remove_quotes(char *str)
 	return (str);
 }
 
-static void	process_quote_char(char input_char, int *in_quotes, char *quote_char)
+static void	process_quote_char(char input_char, int *in_quotes,
+		char *quote_char)
 {
 	if (!*in_quotes && (input_char == '"' || input_char == '\''))
 	{
@@ -35,7 +36,8 @@ static void	process_quote_char(char input_char, int *in_quotes, char *quote_char
 	}
 }
 
-static void	init_clean_vars(size_t *i, size_t *j, int *in_quotes, char *quote_char)
+static void	init_clean_vars(size_t *i, size_t *j, int *in_quotes,
+		char *quote_char)
 {
 	*i = 0;
 	*j = 0;

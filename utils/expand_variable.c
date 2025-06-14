@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/10 19:27:09 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:05:45 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef struct s_expand_state
 	int		in_double_quotes;
 	char	**env;
 	int		exit_status;
-}	t_expand_state;
+}			t_expand_state;
 
 // Función para redimensionar el buffer de resultado
 static int	resize_result_buffer(t_expand_state *state)
@@ -103,16 +103,18 @@ static int	extract_braced_var_name(t_expand_state *state, char *var_name)
 	int	i;
 
 	i = 0;
-	state->input_pos++; // Saltar '{'
-	while (state->input[state->input_pos] && state->input[state->input_pos] != '}' && i < 255)
+	state->input_pos++;
+	while (state->input[state->input_pos]
+		&& state->input[state->input_pos] != '}' && i < 255)
 	{
-		if (!ft_isalnum(state->input[state->input_pos]) && state->input[state->input_pos] != '_')
-			break;
+		if (!ft_isalnum(state->input[state->input_pos])
+			&& state->input[state->input_pos] != '_')
+			break ;
 		var_name[i++] = state->input[state->input_pos++];
 	}
 	var_name[i] = '\0';
 	if (state->input[state->input_pos] == '}')
-		state->input_pos++; // Saltar '}'
+		state->input_pos++;
 	return (i);
 }
 
@@ -122,9 +124,9 @@ static int	extract_var_name(t_expand_state *state, char *var_name)
 	int	i;
 
 	i = 0;
-	while (state->input[state->input_pos] && 
-		   (ft_isalnum(state->input[state->input_pos]) || state->input[state->input_pos] == '_') && 
-		   i < 255)
+	while (state->input[state->input_pos]
+		&& (ft_isalnum(state->input[state->input_pos])
+			|| state->input[state->input_pos] == '_') && i < 255)
 	{
 		var_name[i++] = state->input[state->input_pos++];
 	}
@@ -139,9 +141,7 @@ static int	expand_variable_internal(t_expand_state *state)
 	char	*value;
 	int		name_len;
 
-	state->input_pos++; // Saltar '$'
-	
-	// Casos especiales
+	state->input_pos++;
 	if (state->input[state->input_pos] == '?')
 	{
 		state->input_pos++;
@@ -164,48 +164,39 @@ static int	expand_variable_internal(t_expand_state *state)
 		}
 		return (1);
 	}
-	
-	// Variable con llaves ${VAR}
 	if (state->input[state->input_pos] == '{')
 	{
 		name_len = extract_braced_var_name(state, var_name);
 	}
 	else
 	{
-		// Variable normal $VAR
 		name_len = extract_var_name(state, var_name);
 	}
-	
 	if (name_len == 0)
 	{
 		add_char_to_result(state, '$');
 		return (1);
 	}
-	
 	value = get_env_value(var_name, state->env);
 	if (value)
 		add_string_to_result(state, value);
-	
 	return (1);
 }
 
 // Función para procesar escape sequences en comillas dobles
 static int	process_escape_in_double_quotes(t_expand_state *state)
 {
-	state->input_pos++; // Saltar '\'
-	
+	state->input_pos++;
 	if (!state->input[state->input_pos])
 	{
 		add_char_to_result(state, '\\');
 		return (1);
 	}
-	
-	// En comillas dobles, solo ciertos caracteres pueden ser escapados
-	if (state->input[state->input_pos] == '"' || 
-		state->input[state->input_pos] == '\\' || 
-		state->input[state->input_pos] == '$' || 
-		state->input[state->input_pos] == '`' ||
-		state->input[state->input_pos] == '\n')
+	if (state->input[state->input_pos] == '"'
+		|| state->input[state->input_pos] == '\\'
+		|| state->input[state->input_pos] == '$'
+		|| state->input[state->input_pos] == '`'
+		|| state->input[state->input_pos] == '\n')
 	{
 		add_char_to_result(state, state->input[state->input_pos++]);
 	}
@@ -221,11 +212,10 @@ static int	process_escape_in_double_quotes(t_expand_state *state)
 char	*process_quotes_and_variables(char *input, char **env, int exit_status)
 {
 	t_expand_state	state;
+	char			current;
 
 	if (!input)
 		return (NULL);
-	
-	// Inicializar estado
 	state.input = input;
 	state.input_pos = 0;
 	state.result_size = ft_strlen(input) * 2 + 256;
@@ -237,20 +227,18 @@ char	*process_quotes_and_variables(char *input, char **env, int exit_status)
 	state.in_double_quotes = 0;
 	state.env = env;
 	state.exit_status = exit_status;
-	
 	while (state.input[state.input_pos])
 	{
-		char current = state.input[state.input_pos];
-		
+		current = state.input[state.input_pos];
 		if (current == '\'' && !state.in_double_quotes)
 		{
 			state.in_single_quotes = !state.in_single_quotes;
-			state.input_pos++; // Consumir la comilla pero no añadirla al resultado
+			state.input_pos++;
 		}
 		else if (current == '"' && !state.in_single_quotes)
 		{
 			state.in_double_quotes = !state.in_double_quotes;
-			state.input_pos++; // Consumir la comilla pero no añadirla al resultado
+			state.input_pos++;
 		}
 		else if (current == '$' && !state.in_single_quotes)
 		{
@@ -266,7 +254,6 @@ char	*process_quotes_and_variables(char *input, char **env, int exit_status)
 			state.input_pos++;
 		}
 	}
-	
 	state.result[state.result_pos] = '\0';
 	return (state.result);
 }
