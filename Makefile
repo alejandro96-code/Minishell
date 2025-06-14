@@ -6,7 +6,7 @@
 #    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/14 09:34:17 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/14 09:40:27 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,25 +47,13 @@ SRC =	builtins/cd.c\
       cleanup/cleanup.c\
       main.c
 
-# Definir el directorio de objetos y crear la estructura de directorios
-OBJ_DIR = obj
-OBJ_SUBDIRS = $(OBJ_DIR) $(OBJ_DIR)/builtins $(OBJ_DIR)/executors $(OBJ_DIR)/parser \
-              $(OBJ_DIR)/pipes $(OBJ_DIR)/redirections $(OBJ_DIR)/signals \
-              $(OBJ_DIR)/utils $(OBJ_DIR)/cleanup
-
-# Definir los objetos con la ruta del directorio obj/
-OBJS = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
+OBJS = $(SRC:.c=.o)
 
 LIBFT = libft/libft.a
 
-all: $(OBJ_SUBDIRS) $(NAME)
+all: $(NAME)
 
-# Crear los directorios de objetos
-$(OBJ_SUBDIRS):
-	mkdir -p $@
-
-# Regla de compilación modificada para colocar los objetos en obj/
-$(OBJ_DIR)/%.o: %.c
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
@@ -85,7 +73,6 @@ sani: sanitize re
 
 clean:
 	make clean -C libft
-	rm -rf $(OBJ_DIR)
 	find . -name "*.o" -type f -delete
 
 fclean: clean
