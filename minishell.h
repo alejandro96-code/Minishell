@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/12 22:58:16 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/14 09:34:21 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ extern volatile sig_atomic_t	g_signal_received;
 typedef enum e_operator_type
 {
 	OP_NONE,
-	OP_AND,
-	OP_OR,
 	OP_PIPE
 }	t_operator_type;
 
@@ -58,15 +56,6 @@ typedef struct s_command
     t_redirect			*redirections;
     struct s_command	*next;
 }	t_command;
-
-typedef struct s_ast_node
-{
-    t_operator_type		operator;
-    t_command			*command;
-    struct s_ast_node	*left;
-    struct s_ast_node	*right;
-    int					in_parentheses;
-}	t_ast_node;
 
 // builtin del CD
 char		*get_env_var(char *name, char **env);
@@ -120,25 +109,6 @@ int			count_command_args(char *str);
 char		*extract_next_argument(char **str);
 void		skip_whitespace(char **str);
 
-// AST management functions
-t_ast_node	*create_ast_node(t_operator_type op, t_command *cmd);
-void		free_ast_node(t_ast_node *node);
-
-// Expression tokenization functions
-char		**tokenize_expression(const char *input);
-int			is_logical_operator(const char *token);
-int			is_parenthesis_token(const char *token);
-void		add_token_to_array(char ***tokens, int *count, char *token);
-
-// Expression parsing functions
-t_ast_node	*parse_logical_expression(const char *input);
-t_ast_node	*parse_or_operation(char **tokens, int *index);
-t_ast_node	*parse_and_operation(char **tokens, int *index);
-t_ast_node	*parse_primary_command(char **tokens, int *index);
-
-// Expression execution functions
-int			execute_expression_tree(t_ast_node *node, char ***env);
-
 // Command execution functions
 char		*build_full_command(t_command *cmd);
 void		process_command_args(t_command *cmd, char **env, int exit_status);
@@ -150,9 +120,7 @@ void		ft_free_split(char **split);
 void		free_string_array(char **array);
 void		free_env(char **env);
 char		**free_args(char **args);
-void		free_tokens(char **tokens);
 void		free_command(t_command *cmd);
-void		free_ast_node(t_ast_node *node);
 void		cleanup_and_exit(char **env);
 
 // env_utils.c
@@ -215,23 +183,6 @@ void		write_command_not_found_error(const char *command);
 void		write_export_error(const char *identifier);
 void		write_exit_error(const char *arg);
 void		write_variable_not_found_warning(const char *var_name);
-
-// Wildcards
-int			contains_wildcard(const char *str);
-int			match_pattern(const char *pattern, const char *filename);
-int			count_matching_files(const char *pattern);
-char		**expand_wildcards(const char *arg, int *num_expanded);
-char		**expand_wildcards_in_args(char **args, int *num_args);
-
-// Wildcard utils
-int			match_pattern_with_wildcard(const char *pattern, const char *filename);
-int			check_pattern_middle(const char *pattern, const char *filename,
-				char **parts, size_t *pos);
-
-// Wildcard expand
-char		**create_single_arg_result(const char *arg, int *num_expanded);
-char		**expand_wildcard_matches(const char *arg, int *num_expanded);
-char		**process_args_with_wildcards(char **args, int *num_args);
 
 // Parser args
 char		**ft_split_args(char *str);

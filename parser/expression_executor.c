@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expression_executor.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/13 21:25:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 09:34:31 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,43 +52,11 @@ static int	execute_single_command(t_command *cmd, char ***env)
 	return (exit_status);
 }
 
-static int	execute_and_operation(t_ast_node *node, char ***env)
-{
-	int	left_result;
-	int	right_result;
-
-	if (!node->left || !node->right)
-		return (1);
-	left_result = execute_expression_tree(node->left, env);
-	if (left_result != 0)
-		return (left_result);
-	right_result = execute_expression_tree(node->right, env);
-	return (right_result);
-}
-
-static int	execute_or_operation(t_ast_node *node, char ***env)
-{
-	int	left_result;
-	int	right_result;
-
-	if (!node->left || !node->right)
-		return (1);
-	left_result = execute_expression_tree(node->left, env);
-	if (left_result == 0)
-		return (left_result);
-	right_result = execute_expression_tree(node->right, env);
-	return (right_result);
-}
-
 int	execute_expression_tree(t_ast_node *node, char ***env)
 {
 	if (!node)
 		return (1);
-	if (node->operator== OP_NONE && node->command)
+	if (node->operator == OP_NONE && node->command)
 		return (execute_single_command(node->command, env));
-	else if (node->operator== OP_AND)
-		return (execute_and_operation(node, env));
-	else if (node->operator== OP_OR)
-		return (execute_or_operation(node, env));
 	return (1);
 }

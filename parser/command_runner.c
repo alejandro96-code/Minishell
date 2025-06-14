@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_runner.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:10:00 by alejanr2          #+#    #+#             */
-/*   Updated: 2025/06/13 21:30:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 09:34:29 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	process_command_args(t_command *cmd, char **env, int exit_status)
 		}
 		i++;
 	}
-	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
 }
 
 // Ejecuta un comando builtin con manejo de redirecciones

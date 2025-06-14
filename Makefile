@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
+#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/13 19:45:38 by alejanr2         ###   ########.fr        #
+#    Updated: 2025/06/14 09:34:17 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,21 +25,17 @@ SRC =	builtins/cd.c\
       builtins/unset.c\
       executors/exec_cmd.c\
       executors/exec_utils.c\
-      parser/argument_splitter.c\
       parser/command_parser.c\
-      parser/ast_manager.c\
-      parser/expression_tokenizer.c\
-      parser/expression_parser.c\
-      parser/expression_executor.c\
+      parser/argument_splitter.c\
       parser/command_runner.c\
       pipes/pipes.c\
       pipes/pipe_utils.c\
       pipes/pipe_exec.c\
       pipes/pipe_handler.c\
       redirections/redirections.c\
+      redirections/redirections_handler.c\
       redirections/redirections_basic.c\
       redirections/redirections_heredoc.c\
-      redirections/redirections_handler.c\
       signals/signals.c\
       utils/expand_variable.c\
       utils/find_user.c\
@@ -48,10 +44,6 @@ SRC =	builtins/cd.c\
       utils/quote_utils.c\
       utils/prompt_utils.c\
       utils/input_processor.c\
-      wildcards/wildcard_utils.c\
-      wildcards/wildcard_match.c\
-      wildcards/wildcard_expand.c\
-      wildcards/wildcard_args.c\
       cleanup/cleanup.c\
       main.c
 
@@ -59,7 +51,7 @@ SRC =	builtins/cd.c\
 OBJ_DIR = obj
 OBJ_SUBDIRS = $(OBJ_DIR) $(OBJ_DIR)/builtins $(OBJ_DIR)/executors $(OBJ_DIR)/parser \
               $(OBJ_DIR)/pipes $(OBJ_DIR)/redirections $(OBJ_DIR)/signals \
-              $(OBJ_DIR)/utils $(OBJ_DIR)/wildcards $(OBJ_DIR)/cleanup
+              $(OBJ_DIR)/utils $(OBJ_DIR)/cleanup
 
 # Definir los objetos con la ruta del directorio obj/
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))

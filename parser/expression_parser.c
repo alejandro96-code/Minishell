@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expression_parser.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/13 21:20:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 09:34:33 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,70 +69,16 @@ t_ast_node	*parse_primary_command(char **tokens, int *index)
 	return (node);
 }
 
-// Parsea expresiones con operador AND
+// Parsea expresiones - sin operadores lógicos
 t_ast_node	*parse_and_operation(char **tokens, int *index)
 {
-	t_ast_node	*left;
-	t_ast_node	*right;
-	t_ast_node	*and_node;
-
-	left = parse_primary_command(tokens, index);
-	if (!left)
-		return (NULL);
-	while (tokens[*index] && ft_strncmp(tokens[*index], "&&", 3) == 0)
-	{
-		(*index)++;
-		right = parse_primary_command(tokens, index);
-		if (!right)
-		{
-			free_ast_node(left);
-			return (NULL);
-		}
-		and_node = create_ast_node(OP_AND, NULL);
-		if (!and_node)
-		{
-			free_ast_node(left);
-			free_ast_node(right);
-			return (NULL);
-		}
-		and_node->left = left;
-		and_node->right = right;
-		left = and_node;
-	}
-	return (left);
+	return (parse_primary_command(tokens, index));
 }
 
-// Parsea expresiones con operador OR  
+// Parsea expresiones - sin operadores lógicos  
 t_ast_node	*parse_or_operation(char **tokens, int *index)
 {
-	t_ast_node	*left;
-	t_ast_node	*right;
-	t_ast_node	*or_node;
-
-	left = parse_and_operation(tokens, index);
-	if (!left)
-		return (NULL);
-	while (tokens[*index] && ft_strncmp(tokens[*index], "||", 3) == 0)
-	{
-		(*index)++;
-		right = parse_and_operation(tokens, index);
-		if (!right)
-		{
-			free_ast_node(left);
-			return (NULL);
-		}
-		or_node = create_ast_node(OP_OR, NULL);
-		if (!or_node)
-		{
-			free_ast_node(left);
-			free_ast_node(right);
-			return (NULL);
-		}
-		or_node->left = left;
-		or_node->right = right;
-		left = or_node;
-	}
-	return (left);
+	return (parse_and_operation(tokens, index));
 }
 
 // Función principal de parsing de expresiones lógicas

@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 20:00:00 by alejanr2          #+#    #+#             */
-/*   Updated: 2025/06/13 21:35:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 09:26:08 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+
 // Libera un array de strings (como char **)
 void	ft_free_split(char **split)
 {
 	int	i;
-
 	if (!split)
 		return ;
 	i = 0;
@@ -32,7 +32,6 @@ void	ft_free_split(char **split)
 void	free_string_array(char **array)
 {
 	int	i;
-
 	if (!array)
 		return ;
 	i = 0;
@@ -58,18 +57,10 @@ char	**free_args(char **args)
 	return (NULL);
 }
 
-// Libera un array de tokens
-void	free_tokens(char **tokens)
-{
-	if (tokens)
-		free_string_array(tokens);
-}
-
 // Libera una estructura t_command completa
 void	free_command(t_command *cmd)
 {
 	int	i;
-
 	if (!cmd)
 		return ;
 	if (cmd->argv)

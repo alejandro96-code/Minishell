@@ -40,7 +40,6 @@ static void	expand_command_args(t_command *cmd, char **env, int exit_status)
 static void	process_single_command(t_command *cmd, char ***env, int *exit_status)
 {
 	expand_command_args(cmd, *env, *exit_status);
-	cmd->argv = expand_wildcards_in_args(cmd->argv, &cmd->argc);
 	handle_redirections(&cmd->argv, *env);
 	if (cmd->argv && cmd->argv[0])
 	{
@@ -51,63 +50,16 @@ static void	process_single_command(t_command *cmd, char ***env, int *exit_status
 	}
 }
 
-static int	has_logical_operators(char *input)
-{
-	int	i;
-	int	in_quotes;
-	char	quote_char;
-
-	i = 0;
-	in_quotes = 0;
-	quote_char = 0;
-	while (input[i])
-	{
-		if (!in_quotes && (input[i] == '"' || input[i] == '\''))
-		{
-			in_quotes = 1;
-			quote_char = input[i];
-		}
-		else if (in_quotes && input[i] == quote_char)
-		{
-			in_quotes = 0;
-			quote_char = 0;
-		}
-		else if (!in_quotes)
-		{
-			if ((input[i] == '&' && input[i + 1] == '&') || 
-				(input[i] == '|' && input[i + 1] == '|') ||
-				input[i] == '(' || input[i] == ')')
-				return (1);
-		}
-		i++;
-	}
-	return (0);
-}
-
 void	process_input(char *input, char ***env, int *exit_status)
 {
 	t_command	*cmd;
-	t_ast_node	*ast;
 
 	g_signal_received = 0;
-	
-	// Check for logical operators first
-	if (has_logical_operators(input))
-	{
-		ast = parse_logical_expression(input);
-		if (ast)
-		{
-			*exit_status = execute_expression_tree(ast, env);
-			free_ast_node(ast);
-		}
-		free(input);
-		return ;
-	}
 	
 	// Check for pipes
 	if (ft_strchr(input, '|') != NULL)
 	{
-		run_command_pipeline(input, *env);
+		*exit_status = run_command_pipeline(input, *env);
 		free(input);
 		return ;
 	}

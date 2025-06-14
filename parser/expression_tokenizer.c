@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expression_tokenizer.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:30:00 by alejanr2          #+#    #+#             */
-/*   Updated: 2025/06/13 21:15:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 09:34:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 // Verifica si un token es un operador lógico
 int	is_logical_operator(const char *token)
 {
-	if (!token)
-		return (0);
-	return (ft_strncmp(token, "&&", 3) == 0 || ft_strncmp(token, "||", 3) == 0);
+	(void)token;
+	return (0);  // No hay operadores lógicos
 }
 
 // Verifica si un token es un paréntesis
@@ -50,7 +49,7 @@ void	add_token_to_array(char ***tokens, int *count, char *token)
 	(*count)++;
 }
 
-// Procesa un token especial (paréntesis u operadores)
+// Procesa un token especial (paréntesis solamente)
 static void	process_special_token(const char *input, int *i, char ***tokens, int *count)
 {
 	char	*token;
@@ -61,20 +60,6 @@ static void	process_special_token(const char *input, int *i, char ***tokens, int
 		add_token_to_array(tokens, count, token);
 		free(token);
 		(*i)++;
-	}
-	else if (input[*i] == '&' && input[*i + 1] == '&')
-	{
-		token = ft_strdup("&&");
-		add_token_to_array(tokens, count, token);
-		free(token);
-		*i += 2;
-	}
-	else if (input[*i] == '|' && input[*i + 1] == '|')
-	{
-		token = ft_strdup("||");
-		add_token_to_array(tokens, count, token);
-		free(token);
-		*i += 2;
 	}
 }
 
@@ -87,8 +72,7 @@ static void	process_word_token(const char *input, int *i, char ***tokens, int *c
 
 	start = *i;
 	while (input[*i] && input[*i] != ' ' && input[*i] != '\t'
-		&& input[*i] != '(' && input[*i] != ')' && !(input[*i] == '&'
-			&& input[*i + 1] == '&') && !(input[*i] == '|' && input[*i + 1] == '|'))
+		&& input[*i] != '(' && input[*i] != ')')
 	{
 		if (input[*i] == '"' || input[*i] == '\'')
 		{
@@ -124,8 +108,7 @@ char	**tokenize_expression(const char *input)
 			i++;
 		if (!input[i])
 			break ;
-		if (input[i] == '(' || input[i] == ')' || (input[i] == '&' 
-				&& input[i + 1] == '&') || (input[i] == '|' && input[i + 1] == '|'))
+		if (input[i] == '(' || input[i] == ')')
 			process_special_token(input, &i, &tokens, &count);
 		else
 			process_word_token(input, &i, &tokens, &count);

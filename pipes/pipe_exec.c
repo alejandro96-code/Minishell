@@ -81,7 +81,6 @@ void	execute_child_command(char *command, char ***env)
 	num_args = 0;
 	while (args && args[num_args])
 		num_args++;
-	args = expand_wildcards_in_args(args, &num_args);
 	if (args[0])
 	{
 		if (is_builtin(args[0]))
