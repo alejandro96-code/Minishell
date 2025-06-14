@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_handler.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 18:49:18 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:01:48 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,24 @@ static void	process_redirection(char **args, int *i, char **env)
 		free(cleaned_filename);
 }
 
-// Verifica si existen redirecciones en los argumentos
-int	check_redirections_exist(char **args)
+// Verifica si un argumento es una redirección
+static int	is_redirection_operator(char *arg)
 {
-	int	i;
+	return ((ft_strncmp(arg, "<", 1) == 0 && ft_strlen(arg) == 1)
+		|| (ft_strncmp(arg, "<<", 2) == 0 && ft_strlen(arg) == 2)
+		|| (ft_strncmp(arg, ">", 1) == 0 && ft_strlen(arg) == 1)
+		|| (ft_strncmp(arg, ">>", 2) == 0 && ft_strlen(arg) == 2));
+}
 
-	i = 0;
-	while (args[i])
-	{
-		if ((ft_strncmp(args[i], "<", 1) == 0 && ft_strlen(args[i]) == 1) 
-			|| (ft_strncmp(args[i], "<<", 2) == 0 && ft_strlen(args[i]) == 2)
-			|| (ft_strncmp(args[i], ">", 1) == 0 && ft_strlen(args[i]) == 1) 
-			|| (ft_strncmp(args[i], ">>", 2) == 0 && ft_strlen(args[i]) == 2))
-			return (1);
-		i++;
-	}
-	return (0);
+// Procesa un operador de redirección y actualiza el índice
+static int	process_redirection_operator(char **args, int *i, int count,
+		char **env)
+{
+	if (*i + 1 >= count || !args[*i + 1])
+		return (0);
+	process_redirection(args, i, env);
+	*i += 2;
+	return (1);
 }
 
 // Crea un nuevo array de argumentos sin las redirecciones
@@ -83,18 +85,13 @@ char	**create_filtered_args(char **args, int count, char **env)
 	j = 0;
 	while (i < count && args[i])
 	{
-		if ((ft_strncmp(args[i], "<", 1) == 0 && ft_strlen(args[i]) == 1) 
-			|| (ft_strncmp(args[i], "<<", 2) == 0 && ft_strlen(args[i]) == 2)
-			|| (ft_strncmp(args[i], ">", 1) == 0 && ft_strlen(args[i]) == 1) 
-			|| (ft_strncmp(args[i], ">>", 2) == 0 && ft_strlen(args[i]) == 2))
+		if (is_redirection_operator(args[i]))
 		{
-			if (i + 1 >= count || !args[i + 1])
+			if (!process_redirection_operator(args, &i, count, env))
 			{
 				free(new_args);
 				return (NULL);
 			}
-			process_redirection(args, &i, env);
-			i += 2;
 			continue ;
 		}
 		new_args[j++] = ft_strdup(args[i]);

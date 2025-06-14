@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 20:35:00 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:01:47 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// Verifica si existen redirecciones en los argumentos
+int	check_redirections_exist(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args[i])
+	{
+		if ((ft_strncmp(args[i], "<", 1) == 0 && ft_strlen(args[i]) == 1)
+			|| (ft_strncmp(args[i], "<<", 2) == 0 && ft_strlen(args[i]) == 2)
+			|| (ft_strncmp(args[i], ">", 1) == 0 && ft_strlen(args[i]) == 1)
+			|| (ft_strncmp(args[i], ">>", 2) == 0 && ft_strlen(args[i]) == 2))
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 // Cuenta el número de argumentos en el array
 static int	count_string_args(char **args)
