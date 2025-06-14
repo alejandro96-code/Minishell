@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 18:52:33 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:36:34 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	builtin_exit(char **args, int exit_status)
 		status = ft_atoi(args[1]);
 		if (args[2])
 		{
-			write_error_msg("exit: too many arguments\n");
+			ft_putstr_fd("exit: too many arguments\n", STDERR_FILENO);
 			return (1);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 13:05:45 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/14 13:24:51 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,25 +76,6 @@ static int	add_string_to_result(t_expand_state *state, const char *str)
 		i++;
 	}
 	return (1);
-}
-
-// Función para encontrar el valor de una variable de entorno
-char	*get_env_value(char *var_name, char **env)
-{
-	int		i;
-	size_t	len;
-
-	if (!var_name || !env)
-		return (NULL);
-	len = ft_strlen(var_name);
-	i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], var_name, len) == 0 && env[i][len] == '=')
-			return (env[i] + len + 1);
-		i++;
-	}
-	return (NULL);
 }
 
 // Función para extraer el nombre de variable con llaves ${VAR}
@@ -177,7 +158,7 @@ static int	expand_variable_internal(t_expand_state *state)
 		add_char_to_result(state, '$');
 		return (1);
 	}
-	value = get_env_value(var_name, state->env);
+	value = get_env_var(var_name, state->env);
 	if (value)
 		add_string_to_result(state, value);
 	return (1);

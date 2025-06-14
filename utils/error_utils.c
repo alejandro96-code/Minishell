@@ -6,28 +6,20 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 19:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 13:04:55 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/14 13:36:33 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	write_error_msg(const char *msg)
-{
-	if (write(STDERR_FILENO, msg, ft_strlen(msg)) == -1)
-	{
-		/* Silent fail - error writing to stderr */
-	}
-}
-
 void	write_error_parts(const char *part1, const char *part2,
 		const char *part3)
 {
-	write_error_msg(part1);
+	ft_putstr_fd((char *)part1, STDERR_FILENO);
 	if (part2)
-		write_error_msg(part2);
+		ft_putstr_fd((char *)part2, STDERR_FILENO);
 	if (part3)
-		write_error_msg(part3);
+		ft_putstr_fd((char *)part3, STDERR_FILENO);
 }
 
 void	write_command_not_found_error(const char *command)

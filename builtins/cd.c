@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 18:51:32 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:36:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*resolve_home_path(char *path, char **env)
 	home = get_env_var("HOME", env);
 	if (!home)
 	{
-		write_error_msg("cd: HOME not set\n");
+		ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
 		return (NULL);
 	}
 	new_path = malloc(ft_strlen(home) + ft_strlen(path));

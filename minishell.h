@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 12:49:43 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/14 13:36:34 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,6 @@ void		reset_signal_to_default(void);
 // utils > expand_variable
 char		*expand_variable(char *str, char **env, int exit_status);
 char		*process_quotes_and_variables(char *input, char **env, int exit_status);
-char		*get_env_value(char *var_name, char **env);
 int			process_env_variable(char *str, char *result, int *j, char **env);
 
 
@@ -173,12 +172,10 @@ int			process_env_variable(char *str, char *result, int *j, char **env);
 char		*find_user(char **env);
 
 // Error handling utility
-void		write_error_msg(const char *msg);
 void		write_error_parts(const char *part1, const char *part2, const char *part3);
 void		write_command_not_found_error(const char *command);
 void		write_export_error(const char *identifier);
 void		write_exit_error(const char *arg);
-void		write_variable_not_found_warning(const char *var_name);
 
 // Parser args
 char		**ft_split_args(char *str);

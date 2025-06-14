@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 18:52:05 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:36:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	builtin_unset(char **args, char ***env)
 	i = 1;
 	if (!args[1])
 	{
-		write_error_msg("unset: not enough arguments\n");
+		ft_putstr_fd("unset: not enough arguments\n", STDERR_FILENO);
 		return (1);
 	}
 	while (args[i])
