@@ -53,6 +53,12 @@ run_test() {
     timeout 5 bash -c "$command" > "$BASH_OUTPUT" 2>&1
     local bash_exit=$?
     echo -e "${BLUE}Bash result:${NC} Exit code: $bash_exit"
+    if [[ -s "$BASH_OUTPUT" ]]; then
+        echo -e "${BLUE}Bash output:${NC}"
+        cat "$BASH_OUTPUT" | head -10 | sed 's/^/  /'
+    else
+        echo -e "${BLUE}Bash output:${NC} (empty)"
+    fi
     
     # Ejecutar en minishell con valgrind
     printf '%s\nexit\n' "$command" | timeout 10 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --error-exitcode=42 "$MINISHELL" > "$MINISHELL_OUTPUT" 2> "$VALGRIND_OUTPUT"
@@ -61,6 +67,12 @@ run_test() {
     printf '%s\nexit\n' "$command" | timeout 10 "$MINISHELL" > /dev/null 2>&1
     local minishell_exit=$?
     echo -e "${BLUE}Minishell result:${NC} Exit code: $minishell_exit"
+    if [[ -s "$MINISHELL_OUTPUT" ]]; then
+        echo -e "${BLUE}Minishell output:${NC}"
+        cat "$MINISHELL_OUTPUT" | head -10 | sed 's/^/  /'
+    else
+        echo -e "${BLUE}Minishell output:${NC} (empty)"
+    fi
     
     # Verificar memory leaks
     local definitely_lost=$(grep "definitely lost:" "$VALGRIND_OUTPUT" | grep -o '[0-9,]* bytes' | head -1 | tr -d ',' | grep -o '[0-9]*')
@@ -77,17 +89,22 @@ run_test() {
     
     # Evaluar comportamiento
     local behavior_match=0
+    local comparison_result="Different behavior"
+    
     if [[ $should_work -eq 1 ]]; then
         # Comando debería funcionar
         if [[ $bash_exit -eq 0 && $minishell_exit -eq 0 ]]; then
             behavior_match=1
+            comparison_result="Both successful"
         elif [[ $bash_exit -ne 0 && $minishell_exit -ne 0 ]]; then
             behavior_match=1  # Ambos fallan, está bien
+            comparison_result="Both failed (acceptable)"
         fi
     else
         # Comando NO debería funcionar
         if [[ $minishell_exit -ne 0 ]]; then
             behavior_match=1
+            comparison_result="Correctly failed"
         fi
     fi
     

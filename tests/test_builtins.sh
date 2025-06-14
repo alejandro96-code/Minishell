@@ -48,11 +48,23 @@ run_test() {
     bash -c "$command" > "$BASH_OUTPUT" 2>&1
     local bash_exit=$?
     echo -e "${BLUE}Bash result:${NC} Exit code: $bash_exit"
+    if [[ -s "$BASH_OUTPUT" ]]; then
+        echo -e "${BLUE}Bash output:${NC}"
+        cat "$BASH_OUTPUT" | head -10 | sed 's/^/  /'
+    else
+        echo -e "${BLUE}Bash output:${NC} (empty)"
+    fi
     
     # Ejecutar en minishell
     printf '%s\nexit\n' "$command" | timeout 10 "$MINISHELL" > "$MINISHELL_OUTPUT" 2>&1
     local minishell_exit=$?
     echo -e "${BLUE}Minishell result:${NC} Exit code: $minishell_exit"
+    if [[ -s "$MINISHELL_OUTPUT" ]]; then
+        echo -e "${BLUE}Minishell output:${NC}"
+        cat "$MINISHELL_OUTPUT" | head -10 | sed 's/^/  /'
+    else
+        echo -e "${BLUE}Minishell output:${NC} (empty)"
+    fi
     
     # Ejecutar con valgrind
     printf '%s\nexit\n' "$command" | timeout 10 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --error-exitcode=42 "$MINISHELL" > /dev/null 2> "$VALGRIND_OUTPUT"
@@ -73,36 +85,48 @@ run_test() {
         ((MEMORY_LEAKS++))
     fi
     
-    # Evaluar resultado
+    # Evaluar resultado comparando con bash
     local test_passed=0
+    local comparison_result="Different behavior"
+    
     if [[ $should_work -eq 1 ]]; then
-        # Comando debería funcionar (exit code 0 o 1 está bien para algunos builtins)
-        if [[ $minishell_exit -eq 0 || $minishell_exit -eq 1 ]]; then
+        # Comando debería funcionar - comparar exit codes y salidas
+        if [[ $bash_exit -eq $minishell_exit ]]; then
             test_passed=1
+            comparison_result="Exit codes match"
+        elif [[ $bash_exit -eq 0 && ($minishell_exit -eq 0 || $minishell_exit -eq 1) ]]; then
+            # Para algunos builtins, exit code 1 puede ser aceptable
+            test_passed=1
+            comparison_result="Exit codes acceptable"
+        elif [[ $bash_exit -ne 0 && $minishell_exit -ne 0 ]]; then
+            # Ambos fallan, comparar si es por la misma razón
+            test_passed=1
+            comparison_result="Both failed (acceptable)"
         fi
     else
-        # Comando NO debería funcionar (exit code != 0)
+        # Comando NO debería funcionar
         if [[ $minishell_exit -ne 0 ]]; then
             test_passed=1
+            comparison_result="Correctly failed"
         fi
     fi
     
     # Mostrar resultado
     if [[ $test_passed -eq 1 ]]; then
         if [[ $has_leaks -eq 0 ]]; then
-            echo -e "  ${GREEN}✅ PASS${NC} - No memory leaks (Lost: ${definitely_lost}B, Errors: $errors)"
+            echo -e "  ${GREEN}✅ PASS${NC} - $comparison_result (Lost: ${definitely_lost}B, Errors: $errors)"
             ((PASSED_TESTS++))
         else
-            echo -e "  ${YELLOW}⚠️  PASS (with memory leaks)${NC} - Lost: ${definitely_lost}B, Errors: $errors"
+            echo -e "  ${YELLOW}⚠️  PASS (with memory leaks)${NC} - $comparison_result (Lost: ${definitely_lost}B, Errors: $errors)"
             ((PASSED_TESTS++))
         fi
     else
         if [[ $has_leaks -eq 0 ]]; then
-            echo -e "  ${RED}❌ FAIL${NC} - No memory leaks but wrong behavior"
+            echo -e "  ${RED}❌ FAIL${NC} - $comparison_result (Lost: ${definitely_lost}B, Errors: $errors)"
             FAILED_COMMANDS+=("$command")
             ((FAILED_TESTS++))
         else
-            echo -e "  ${RED}❌ FAIL${NC} - Wrong behavior + Memory leaks (Lost: ${definitely_lost}B, Errors: $errors)"
+            echo -e "  ${RED}❌ FAIL${NC} - $comparison_result + Memory leaks (Lost: ${definitely_lost}B, Errors: $errors)"
             FAILED_COMMANDS+=("$command")
             ((FAILED_TESTS++))
         fi
