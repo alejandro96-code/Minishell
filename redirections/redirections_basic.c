@@ -59,3 +59,31 @@ int	redirect_output(char *filename, int append)
 	close(fd);
 	return (0);
 }
+
+// Hacer backup de los file descriptors originales
+int	backup_file_descriptors(void)
+{
+	int	original_stdout;
+
+	original_stdout = dup(STDOUT_FILENO);
+	if (original_stdout == -1)
+		perror("dup stdout");
+	return (original_stdout);
+}
+
+// Restaurar los file descriptors originales
+void	restore_file_descriptors(int original_stdin, int original_stdout)
+{
+	if (original_stdin != -1)
+	{
+		if (dup2(original_stdin, STDIN_FILENO) == -1)
+			perror("restore stdin");
+		close(original_stdin);
+	}
+	if (original_stdout != -1)
+	{
+		if (dup2(original_stdout, STDOUT_FILENO) == -1)
+			perror("restore stdout");
+		close(original_stdout);
+	}
+}

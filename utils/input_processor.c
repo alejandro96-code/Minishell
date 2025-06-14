@@ -39,7 +39,13 @@ static void	expand_command_args(t_command *cmd, char **env, int exit_status)
 
 static void	process_single_command(t_command *cmd, char ***env, int *exit_status)
 {
+	int	original_stdout;
+	
 	expand_command_args(cmd, *env, *exit_status);
+	
+	// Hacer backup del file descriptor de stdout antes de las redirecciones
+	original_stdout = backup_file_descriptors();
+	
 	handle_redirections(&cmd->argv, *env);
 	if (cmd->argv && cmd->argv[0])
 	{
@@ -48,6 +54,9 @@ static void	process_single_command(t_command *cmd, char ***env, int *exit_status
 		else
 			*exit_status = execute_external(cmd->argv, *env);
 	}
+	
+	// Restaurar el file descriptor original de stdout
+	restore_file_descriptors(-1, original_stdout);
 }
 
 void	process_input(char *input, char ***env, int *exit_status)

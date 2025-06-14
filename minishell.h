@@ -152,6 +152,8 @@ int			heredoc(char *delimiter, char **env);
 void		handle_redirections(char ***args, char **env);
 int			check_redirections_exist(char **args);
 char		**create_filtered_args(char **args, int count, char **env);
+int			backup_file_descriptors(void);
+void		restore_file_descriptors(int original_stdin, int original_stdout);
 
 // signals.c
 void		sigint_handler(int sig);
