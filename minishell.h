@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/15 13:10:08 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/15 13:37:15 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,13 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
-# include <sys/ioctl.h>
 # include <signal.h>
-# include <ctype.h>
-# include <dirent.h>
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
-# include <sys/stat.h>    // Para stat() y S_ISDIR
-# include <limits.h>      // Para PATH_MAX
 # define RED "\033[31m"    // Rojo
 # define YELLOW "\033[33m" // Amarillo
 # define RESET "\033[0m"   // Reset
@@ -73,7 +66,10 @@ int			try_change_directory(char *path);
 
 // builtins/echo.c
 int			builtin_echo(char **args, char **env);
-// static void	safe_write(int fd, const void *buf, size_t count);
+// static void	output_char_sequence(const char *sequence, size_t len);
+// static int	parse_echo_options(char *arg, int *newline, int *interpret_escapes)
+// static void	print_basic_escapes(char c);
+// static void	print_with_escapes(char *str)
 
 // builtins/env.c
 int			builtin_env(char **env);

@@ -3,32 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/13 18:54:27 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/15 13:34:03 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	safe_write(int fd, const void *buf, size_t count)
+static void	output_char_sequence(const char *sequence, size_t len)
 {
 	ssize_t	result;
 
-	result = write(fd, buf, count);
+	result = write(1, sequence, len);
 	(void)result;
 }
 
-int	is_valid_e_option(char *arg)
-{
-	return (arg && ft_strncmp(arg, "-e", 3) == 0);
-}
-
-int	is_valid_n_option(char *arg)
+static int	parse_echo_options(char *arg, int *newline, int *interpret_escapes)
 {
 	int	i;
 
+	if (arg && ft_strncmp(arg, "-e", 3) == 0)
+	{
+		*interpret_escapes = 1;
+		return (1);
+	}
 	if (!arg || arg[0] != '-' || arg[1] != 'n')
 		return (0);
 	i = 2;
@@ -38,54 +38,48 @@ int	is_valid_n_option(char *arg)
 			return (0);
 		i++;
 	}
+	*newline = 0;
 	return (1);
 }
 
-void	print_basic_escapes(char c)
+static void	print_basic_escapes(char c)
 {
 	if (c == 'n')
-		safe_write(1, "\n", 1);
+		output_char_sequence("\n", 1);
 	else if (c == 't')
-		safe_write(1, "\t", 1);
+		output_char_sequence("\t", 1);
 	else if (c == 'r')
-		safe_write(1, "\r", 1);
+		output_char_sequence("\r", 1);
 	else if (c == 'b')
-		safe_write(1, "\b", 1);
+		output_char_sequence("\b", 1);
 	else if (c == 'a')
-		safe_write(1, "\a", 1);
+		output_char_sequence("\a", 1);
 	else if (c == 'v')
-		safe_write(1, "\v", 1);
+		output_char_sequence("\v", 1);
 	else if (c == 'f')
-		safe_write(1, "\f", 1);
+		output_char_sequence("\f", 1);
 	else if (c == '\\')
-		safe_write(1, "\\", 1);
+		output_char_sequence("\\", 1);
 	else if (c == '0')
-		safe_write(1, "\0", 1);
+		output_char_sequence("\0", 1);
 	else
 	{
-		safe_write(1, "\\", 1);
-		safe_write(1, &c, 1);
+		output_char_sequence("\\", 1);
+		output_char_sequence(&c, 1);
 	}
 }
 
-void	print_escape_sequence(char **str)
-{
-	char	*s;
-
-	s = *str;
-	s++;
-	print_basic_escapes(*s);
-	*str = s;
-}
-
-void	print_with_escapes(char *str)
+static void	print_with_escapes(char *str)
 {
 	while (*str)
 	{
 		if (*str == '\\' && *(str + 1))
-			print_escape_sequence(&str);
+		{
+			str++;
+			print_basic_escapes(*str);
+		}
 		else
-			safe_write(1, str, 1);
+			output_char_sequence(str, 1);
 		str++;
 	}
 }
@@ -100,32 +94,19 @@ int	builtin_echo(char **args, char **env)
 	i = 1;
 	newline = 1;
 	interpret_escapes = 0;
-	while (args[i])
-	{
-		if (is_valid_n_option(args[i]))
-		{
-			newline = 0;
-			i++;
-		}
-		else if (is_valid_e_option(args[i]))
-		{
-			interpret_escapes = 1;
-			i++;
-		}
-		else
-			break ;
-	}
+	while (args[i] && parse_echo_options(args[i], &newline, &interpret_escapes))
+		i++;
 	while (args[i])
 	{
 		if (interpret_escapes)
 			print_with_escapes(args[i]);
 		else
-			safe_write(1, args[i], ft_strlen(args[i]));
+			output_char_sequence(args[i], ft_strlen(args[i]));
 		if (args[i + 1])
-			safe_write(1, " ", 1);
+			output_char_sequence(" ", 1);
 		i++;
 	}
 	if (newline)
-		safe_write(1, "\n", 1);
+		output_char_sequence("\n", 1);
 	return (0);
 }
