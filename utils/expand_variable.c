@@ -6,25 +6,11 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 13:24:51 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/15 13:10:09 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// Estructura para el estado del parser de expansión
-typedef struct s_expand_state
-{
-	char	*input;
-	char	*result;
-	int		input_pos;
-	int		result_pos;
-	int		result_size;
-	int		in_single_quotes;
-	int		in_double_quotes;
-	char	**env;
-	int		exit_status;
-}			t_expand_state;
 
 // Función para redimensionar el buffer de resultado
 static int	resize_result_buffer(t_expand_state *state)
