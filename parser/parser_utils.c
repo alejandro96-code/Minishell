@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 12:49:40 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/16 22:56:02 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,25 @@ int	is_builtin_command(const char *cmd)
 		|| (ft_strncmp(cmd, "unset", 5) == 0 && ft_strlen(cmd) == 5)
 		|| (ft_strncmp(cmd, "env", 3) == 0 && ft_strlen(cmd) == 3)
 		|| (ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4));
+}
+int	is_redirection(char c)
+{
+	if (c == '<' || c == '>')
+		return (1);
+	return (0);
+}
+
+char *aux_split_redirection(char **str, char *start)
+{
+	char	*arg;
+	char	redirect;
+	
+	redirect = **str;
+	(*str)++;
+	if (**str && is_redirection(**str) && **str == redirect)
+	{
+		(*str)++;
+		return (arg = ft_substr(start, 0, 2));
+	}
+	return (arg = ft_substr(start, 0, 1));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 12:49:40 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/16 22:53:02 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,12 @@ static t_command	*init_command(void)
 static int	setup_command_args(t_command *cmd, const char *input)
 {
 	cmd->argv = split_command_args((char *)input);
+	int i = 0;
+	while(cmd->argv[i])
+	{
+		printf("%s\n",cmd->argv[i]);
+		i++;
+	}
 	if (!cmd->argv)
 		return (0);
 	while (cmd->argv[cmd->argc] != NULL)

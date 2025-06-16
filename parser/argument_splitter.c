@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   argument_splitter.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 12:52:00 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/16 22:38:57 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,19 @@ static void	skip_current_arg(char **str)
 {
 	int		in_quotes;
 	char	quote_char;
+	char	redir_tipe;
 
 	in_quotes = 0;
 	quote_char = 0;
-	while (**str && (in_quotes || (**str != ' ' && **str != '\t')))
+	if (is_redirection(**str))
+	{
+		redir_tipe = **str;
+		(*str)++;
+		if (**str && is_redirection(**str) && redir_tipe == **str)
+			(*str)++;
+		return ;
+	}
+	while (**str && (in_quotes || (**str != ' ' && **str != '\t' && !is_redirection(**str))))
 	{
 		if (!in_quotes && (**str == '"' || **str == '\''))
 		{
@@ -71,6 +80,8 @@ char	*extract_next_argument(char **str)
 	len = 0;
 	in_quotes = 0;
 	quote_char = 0;
+	if (**str && is_redirection(**str))
+		return (aux_split_redirection(str, start));	
 	while (**str && (in_quotes || (**str != ' ' && **str != '\t')))
 	{
 		if (!in_quotes && (**str == '"' || **str == '\''))
@@ -80,6 +91,8 @@ char	*extract_next_argument(char **str)
 		}
 		else if (in_quotes && **str == quote_char)
 			in_quotes = 0;
+		else if (!in_quotes && is_redirection(**str)) // esto esta en caso de encontrar redireccion
+            break;
 		(*str)++;
 		len++;
 	}
