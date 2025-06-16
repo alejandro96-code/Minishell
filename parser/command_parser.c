@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/16 23:01:43 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/17 01:08:27 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ static t_command	*init_command(void)
 static int	setup_command_args(t_command *cmd, const char *input)
 {
 	cmd->argv = split_command_args((char *)input);
-	int i = 0;
 	if (!cmd->argv)
 		return (0);
 	while (cmd->argv[cmd->argc] != NULL)
@@ -90,18 +89,18 @@ t_command	*parse_command_input(const char *input, int *exit_status)
 		*exit_status = 258;
 		return (NULL);
 	}
+	if (!validate_redirections(input))
+	{
+		*exit_status = 258;
+		ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
+		return (NULL);
+	}
 	cmd = init_command();
 	if (!cmd)
 		return (NULL);
 	if (!setup_command_args(cmd, input))
-	{
-		free(cmd);
-		return (NULL);
-	}
+		return (free(cmd), NULL);
 	if (cmd->argc == 0)
-	{
-		free_command(cmd);
-		return (NULL);
-	}
+		return (free_command(cmd), NULL);
 	return (cmd);
 }

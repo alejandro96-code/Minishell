@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/16 22:39:09 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/17 01:09:20 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ t_command	*parse_command_input(const char *input, int *exit_status);
 int			is_builtin_command(const char *cmd);
 int			is_redirection(char c);
 char		*aux_split_redirection(char **str, char *start);
+int	validate_redirections(const char *input);
 
 // pipes/pipe_exec.c
 char		**parse_command_arguments(char *command, char **env);

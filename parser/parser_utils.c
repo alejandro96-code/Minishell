@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/16 22:56:02 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/17 01:09:25 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int	is_redirection(char c)
 
 char *aux_split_redirection(char **str, char *start)
 {
-	char	*arg;
 	char	redirect;
 	
 	redirect = **str;
@@ -42,7 +41,38 @@ char *aux_split_redirection(char **str, char *start)
 	if (**str && is_redirection(**str) && **str == redirect)
 	{
 		(*str)++;
-		return (arg = ft_substr(start, 0, 2));
+		return (ft_substr(start, 0, 2));
 	}
-	return (arg = ft_substr(start, 0, 1));
+	return (ft_substr(start, 0, 1));
+}
+
+// Valida la sintaxis de las redirecciones
+int	validate_redirections(const char *input)
+{
+	int	i;
+	int	in_single_quotes;
+	int	in_double_quotes;
+
+	i = 0;
+	in_single_quotes = 0;
+	in_double_quotes = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'' && !in_double_quotes)
+			in_single_quotes = !in_single_quotes;
+		else if (input[i] == '"' && !in_single_quotes)
+			in_double_quotes = !in_double_quotes;
+		else if (!in_single_quotes && !in_double_quotes && is_redirection(input[i]))
+		{
+			if (input[i + 1] && input[i] == input[i + 1])
+				i++;
+			i++;
+			while (input[i] && (input[i] == ' ' || input[i] == '\t'))
+				i++;
+			if (input[i] && is_redirection(input[i--]))
+				return (0);
+		}
+		i++;
+	}
+	return (1);
 }
