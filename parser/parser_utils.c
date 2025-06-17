@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/17 01:09:25 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/17 02:31:53 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,27 @@ char *aux_split_redirection(char **str, char *start)
 	return (ft_substr(start, 0, 1));
 }
 
+int	redirection_last_arg(const char *input)
+{
+	int	i;
+	int	boolean;
+
+	boolean = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (!boolean && (is_redirection(input[i])))
+			boolean = 1;
+		else if (boolean && (!is_redirection(input[i]))
+			&& !ft_isspace(input[i]))
+			boolean = 0;
+		i++;
+	}
+	if (boolean)
+		return (0);
+	return (1);
+}
+
 // Valida la sintaxis de las redirecciones
 int	validate_redirections(const char *input)
 {
@@ -74,5 +95,5 @@ int	validate_redirections(const char *input)
 		}
 		i++;
 	}
-	return (1);
+	return (redirection_last_arg(input));
 }
