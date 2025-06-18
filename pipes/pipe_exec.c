@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 12:53:58 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/18 18:46:42 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	process_pipe_command_args(char **args, char **env)
 	while (args[i])
 	{
 		old_arg = args[i];
-		expanded = process_quotes_and_variables(args[i], env, 0);
+		expanded = process_quotes_and_vars(args[i], env, 0);
 		if (expanded)
 		{
 			args[i] = expanded;

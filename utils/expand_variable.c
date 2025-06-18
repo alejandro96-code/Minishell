@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/15 13:10:09 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/18 18:46:42 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ static int	process_escape_in_double_quotes(t_expand_state *state)
 }
 
 // Función principal de expansión
-char	*process_quotes_and_variables(char *input, char **env, int exit_status)
+char	*process_quotes_and_vars(char *input, char **env, int exit_status)
 {
 	t_expand_state	state;
 	char			current;
@@ -228,5 +228,5 @@ char	*process_quotes_and_variables(char *input, char **env, int exit_status)
 // Función principal de expansión de variables (interfaz pública)
 char	*expand_variable(char *str, char **env, int exit_status)
 {
-	return (process_quotes_and_variables(str, env, exit_status));
+	return (process_quotes_and_vars(str, env, exit_status));
 }
