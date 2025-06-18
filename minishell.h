@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/18 19:18:37 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/18 19:50:58 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,12 @@ char		*search_in_paths(char **paths, char *cmd);
 // executors/exec_process.c
 void		execute_command(char *cmd_line, char **envp);
 
+// parser/argument_extraction.c
+char		*extract_next_argument(char **str);
+
 // parser/argument_splitter.c
 char		**split_command_args(char *str);
 int			count_command_args(char *str);
-char		*extract_next_argument(char **str);
 void		skip_whitespace(char **str);
 
 // parser/command_parser.c

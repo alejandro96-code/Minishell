@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   argument_splitter.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/16 22:38:57 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/18 20:00:00 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,40 +64,6 @@ int	count_command_args(char *str)
 		skip_current_arg(&str);
 	}
 	return (count);
-}
-
-// Extrae el siguiente argumento de la cadena
-char	*extract_next_argument(char **str)
-{
-	char	*start;
-	char	*arg;
-	int		len;
-	int		in_quotes;
-	char	quote_char;
-
-	skip_whitespace(str);
-	start = *str;
-	len = 0;
-	in_quotes = 0;
-	quote_char = 0;
-	if (**str && is_redirection(**str))
-		return (aux_split_redirection(str, start));	
-	while (**str && (in_quotes || (**str != ' ' && **str != '\t')))
-	{
-		if (!in_quotes && (**str == '"' || **str == '\''))
-		{
-			in_quotes = 1;
-			quote_char = **str;
-		}
-		else if (in_quotes && **str == quote_char)
-			in_quotes = 0;
-		else if (!in_quotes && is_redirection(**str)) // esto esta en caso de encontrar redireccion
-            break;
-		(*str)++;
-		len++;
-	}
-	arg = ft_substr(start, 0, len);
-	return (arg);
 }
 
 // Divide una cadena de comando en argumentos individuales

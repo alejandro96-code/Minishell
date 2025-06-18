@@ -6,7 +6,7 @@
 #    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/18 19:12:30 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/18 19:50:58 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRC =	builtins/cd.c\
       executors/exec_path.c\
       executors/exec_process.c\
       parser/command_parser.c\
+      parser/argument_extraction.c\
       parser/argument_splitter.c\
       parser/parser_utils.c\
       pipes/pipe_utils.c\
