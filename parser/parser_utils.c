@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/17 01:09:25 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/18 20:01:05 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	is_builtin_command(const char *cmd)
 		|| (ft_strncmp(cmd, "env", 3) == 0 && ft_strlen(cmd) == 3)
 		|| (ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4));
 }
+
 int	is_redirection(char c)
 {
 	if (c == '<' || c == '>')
@@ -32,10 +33,10 @@ int	is_redirection(char c)
 	return (0);
 }
 
-char *aux_split_redirection(char **str, char *start)
+char	*aux_split_redirection(char **str, char *start)
 {
 	char	redirect;
-	
+
 	redirect = **str;
 	(*str)++;
 	if (**str && is_redirection(**str) && **str == redirect)
@@ -44,6 +45,16 @@ char *aux_split_redirection(char **str, char *start)
 		return (ft_substr(start, 0, 2));
 	}
 	return (ft_substr(start, 0, 1));
+}
+
+// Actualiza el estado de las comillas durante el parsing
+static void	update_quote_state(char c, int *in_single_quotes,
+		int *in_double_quotes)
+{
+	if (c == '\'' && !*in_double_quotes)
+		*in_single_quotes = !*in_single_quotes;
+	else if (c == '"' && !*in_single_quotes)
+		*in_double_quotes = !*in_double_quotes;
 }
 
 // Valida la sintaxis de las redirecciones
@@ -58,11 +69,8 @@ int	validate_redirections(const char *input)
 	in_double_quotes = 0;
 	while (input[i])
 	{
-		if (input[i] == '\'' && !in_double_quotes)
-			in_single_quotes = !in_single_quotes;
-		else if (input[i] == '"' && !in_single_quotes)
-			in_double_quotes = !in_double_quotes;
-		else if (!in_single_quotes && !in_double_quotes && is_redirection(input[i]))
+		update_quote_state(input[i], &in_single_quotes, &in_double_quotes);
+		if (!in_single_quotes && !in_double_quotes && is_redirection(input[i]))
 		{
 			if (input[i + 1] && input[i] == input[i + 1])
 				i++;
