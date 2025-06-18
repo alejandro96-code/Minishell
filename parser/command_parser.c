@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_parser.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/17 01:08:27 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/18 18:44:09 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ static t_command	*init_command(void)
 	cmd->argv = NULL;
 	cmd->argc = 0;
 	cmd->is_builtin = 0;
-	cmd->redirections = NULL;
-	cmd->next = NULL;
 	return (cmd);
 }
 

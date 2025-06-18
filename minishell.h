@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/17 01:09:20 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/18 18:44:03 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,11 @@
 // Variable global para el manejo de señales
 extern volatile sig_atomic_t	g_signal_received;
 
-typedef struct s_redirect
-{
-    char				*file;
-    int					type;
-    struct s_redirect	*next;
-}	t_redirect;
-
 typedef struct s_command
 {
     char				**argv;
     int					argc;
     int					is_builtin;
-    t_redirect			*redirections;
-    struct s_command	*next;
 }	t_command;
 
 typedef struct s_expand_state
