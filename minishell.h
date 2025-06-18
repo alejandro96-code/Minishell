@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/18 18:47:57 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/18 19:18:37 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,10 +157,31 @@ void		reset_signal_to_default(void);
 int			count_env_vars(char **env);
 char		**copy_env_array(char **env);
 
+// utils/env_utils.c
+int			count_env_vars(char **env);
+char		**copy_env_array(char **env);
+
+// utils/expand_buffer.c
+int			resize_result_buffer(t_expand_state *state);
+int			add_char_to_result(t_expand_state *state, char c);
+int			add_string_to_result(t_expand_state *state, const char *str);
+
+// utils/expand_parsing.c
+int			extract_braced_var_name(t_expand_state *state, char *var_name);
+int			extract_var_name(t_expand_state *state, char *var_name);
+
+// utils/expand_helpers.c
+int			init_expand_state(t_expand_state *state, char *input,
+				char **env, int exit_status);
+void		process_character(t_expand_state *state, char current);
+
+// utils/expand_processing.c
+int			expand_variable_internal(t_expand_state *state);
+int			process_escape_in_double_quotes(t_expand_state *state);
+char		*process_quotes_and_vars(char *input, char **env, int exit_status);
+
 // utils/expand_variable.c
 char		*expand_variable(char *str, char **env, int exit_status);
-char		*process_quotes_and_vars(char *input, char **env, int exit_status);
-int			process_env_variable(char *str, char *result, int *j, char **env);
 
 // utils/find_user.c
 char		*find_user(char **env);
