@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/19 19:11:42 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:14:18 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,5 +200,8 @@ char		*get_prompt(char **env);
 
 // utils/quote_utils.c
 char		*remove_quotes(char *str);
+
+// main
+int	main(int argc, char **argv, char **envp);
 
 #endif
