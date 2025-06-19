@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 13:36:35 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:12:32 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	builtin_cd(char **args, char **env)
 		path = get_env_var("HOME", env);
 		if (!path)
 		{
-			perror("cd: HOME not set");
+			ft_putstr_fd("cd: HOME not set\n", 2);
 			return (1);
 		}
 	}

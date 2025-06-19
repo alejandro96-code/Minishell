@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 12:22:07 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:12:34 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ static char	*get_cmd_path_absolute(char *cmd)
 {
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	printf("minishell: %s: No such file or directory\n", cmd);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
 	return (NULL);
 }
 
@@ -26,7 +28,10 @@ static char	*get_cmd_path_relative(char *cmd, char **env)
 
 	cmd_path = find_command_path(cmd, env);
 	if (!cmd_path)
-		printf("%s: command not found\n", cmd);
+	{
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
 	return (cmd_path);
 }
 

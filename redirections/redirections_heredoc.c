@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 12:55:56 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:12:31 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,12 @@ static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
 	char	*line;
 	size_t	bufsize;
 	size_t	len;
+	ssize_t	result;
 
 	line = NULL;
 	bufsize = 0;
-	printf("> ");
+	result = write(1, "> ", 2);
+	(void)result;
 	while (getline(&line, &bufsize, stdin) != -1)
 	{
 		len = ft_strlen(line);
@@ -47,7 +49,8 @@ static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
 			&& ft_strlen(line) == ft_strlen(delimiter))
 			break ;
 		write_expanded_line(write_fd, line, env);
-		printf("> ");
+		result = write(1, "> ", 2);
+		(void)result;
 	}
 	free(line);
 }

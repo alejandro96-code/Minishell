@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 12:54:08 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:12:30 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	check_pipe_syntax_error(char *input)
 		&& trimmed_input[ft_strlen(trimmed_input) - 1] == '|')
 	{
 		free(trimmed_input);
-		printf("minishell: syntax error near unexpected token `|'\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
 		return (1);
 	}
 	if (trimmed_input)
@@ -44,7 +44,7 @@ static int	validate_commands(char ***commands)
 				free(trimmed);
 			ft_free_split(*commands);
 			*commands = NULL;
-			printf("minishell: syntax error near unexpected token `|'\n");
+			ft_putstr_fd("syntax error near unexpected token `|'\n", 2);
 			return (-1);
 		}
 		free(trimmed);

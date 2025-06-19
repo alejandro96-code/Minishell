@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 12:35:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 12:32:41 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:12:31 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,18 @@ void	exec_child_process(char **args, char **env, char *cmd_path)
 
 static void	handle_signal_interrupt(int sig)
 {
+	ssize_t	result;
+
 	if (sig == SIGINT)
 	{
-		printf("\n");
+		result = write(1, "\n", 1);
+		(void)result;
 		g_signal_received = SIGINT;
 	}
 	else if (sig == SIGQUIT)
 	{
-		printf("Quit (core dumped)\n");
+		result = write(1, "Quit (core dumped)\n", 19);
+		(void)result;
 		g_signal_received = SIGQUIT;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/19 19:01:47 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:11:42 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ char		*extract_next_argument(char **str);
 // parser/argument_splitter.c
 int			count_command_args(char *str);
 char		**split_command_args(char *str);
-
 
 // parser/argument_utils.c
 void		skip_whitespace(char **str);
