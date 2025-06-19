@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
+#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/19 09:16:53 by alejanr2         ###   ########.fr        #
+#    Updated: 2025/06/19 19:02:45 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,7 @@ all: $(NAME)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
-	@echo "$(YELLOW)libft compilando..."
+	@echo "$(YELLOW)Libft compilando..."
 	@$(MAKE) -C libft --no-print-directory
 	@echo "$(GREEN)Libft compilada!"
 	
@@ -75,9 +75,9 @@ $(PRINTF):
 	@$(MAKE) -C printf --no-print-directory
 
 $(NAME): $(OBJS) $(LIBFT) 
-	@echo "$(YELLOW)minishell compilando..."
+	@echo "$(YELLOW)Minishell compilando..."
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) libft/libft.a -lreadline -lhistory
-	@echo "$(GREEN)$(NAME) Minishell compilada!"
+	@echo "$(GREEN)Minishell compilada!"
 
 sanitize:
 	$(eval CFLAGS+=-fsanitize=address,leak -g3)
@@ -85,10 +85,10 @@ sanitize:
 sani: sanitize re
 
 clean:
-	@echo "$(YELLOW)libft y minishell limpiando..."
+	@echo "$(YELLOW)Libft y minishell limpiando..."
 	@make clean -C libft --no-print-directory
 	@find . -name "*.o" -type f -delete
-	@echo "$(GREEN)libft y minishell limpiadas!"
+	@echo "$(GREEN)Libft y minishell limpiadas!"
 
 fclean: clean
 	@make fclean -C libft --no-print-directory

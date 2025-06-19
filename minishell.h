@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/18 22:24:23 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 19:01:47 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,27 +90,27 @@ char		**free_args(char **args);
 void		free_command(t_command *cmd);
 
 // executors/exec_cmd.c
+int			execute_external(char **args, char **env);
+
+// executors/exec_path.c
+char		*search_in_paths(char **paths, char *cmd);
 char		*find_command_path(char *cmd, char **env);
+
+// executors/exec_process.c
 void		exec_child_process(char **args, char **env, char *cmd_path);
 int			exec_parent_process(pid_t pid);
-int			execute_external(char **args, char **env);
 
 // executors/exec_utils.c
 char		**extract_paths(char **envp);
 char		*get_command_full_path(char *cmd, char **env);
 
-// executors/exec_path.c
-char		*search_in_paths(char **paths, char *cmd);
-
-// executors/exec_process.c
-void		execute_command(char *cmd_line, char **envp);
-
 // parser/argument_extraction.c
 char		*extract_next_argument(char **str);
 
 // parser/argument_splitter.c
-char		**split_command_args(char *str);
 int			count_command_args(char *str);
+char		**split_command_args(char *str);
+
 
 // parser/argument_utils.c
 void		skip_whitespace(char **str);
@@ -120,6 +120,8 @@ void		skip_current_arg(char **str);
 
 // parser/command_parser.c
 t_command	*parse_command_input(const char *input, int *exit_status);
+
+// parser/command_utils.c
 int			is_builtin_command(const char *cmd);
 int			is_redirection(char c);
 char		*aux_split_redirection(char **str, char *start);
@@ -139,20 +141,21 @@ int			split_and_validate_commands(char *input, char ***commands);
 void		handle_child_process(int i, int cmd_count, int pipefd[2],
 				int *prev_pipe);
 
-// redirections/redirections.c
+// redirections/redirections_basic.c
 int			redirect_input(char *filename);
 int			redirect_output(char *filename, int append);
-// redirections/redirections_basic.c
 int			backup_file_descriptors(void);
 void		restore_file_descriptors(int original_stdin, int original_stdout);
 
 // redirections/redirections_handler.c
-void		handle_redirections(char ***args, char **env);
-int			check_redirections_exist(char **args);
 char		**create_filtered_args(char **args, int count, char **env);
 
 // redirections/redirections_heredoc.c
 int			heredoc(char *delimiter, char **env);
+
+//redirections/redirections.c
+int			check_redirections_exist(char **args);
+void		handle_redirections(char ***args, char **env);
 
 // signals/signals.c
 void		sigint_handler(int sig);
@@ -164,23 +167,19 @@ void		reset_signal_to_default(void);
 int			count_env_vars(char **env);
 char		**copy_env_array(char **env);
 
-// utils/env_utils.c
-int			count_env_vars(char **env);
-char		**copy_env_array(char **env);
-
 // utils/expand_buffer.c
 int			resize_result_buffer(t_expand_state *state);
 int			add_char_to_result(t_expand_state *state, char c);
 int			add_string_to_result(t_expand_state *state, const char *str);
 
-// utils/expand_parsing.c
-int			extract_braced_var_name(t_expand_state *state, char *var_name);
-int			extract_var_name(t_expand_state *state, char *var_name);
-
 // utils/expand_helpers.c
 int			init_expand_state(t_expand_state *state, char *input,
 				char **env, int exit_status);
 void		process_character(t_expand_state *state, char current);
+
+// utils/expand_parsing.c
+int			extract_braced_var_name(t_expand_state *state, char *var_name);
+int			extract_var_name(t_expand_state *state, char *var_name);
 
 // utils/expand_processing.c
 int			expand_variable_internal(t_expand_state *state);
@@ -194,14 +193,11 @@ char		*expand_variable(char *str, char **env, int exit_status);
 char		*find_user(char **env);
 
 // utils/input_processor.c
-char		*get_prompt(char **env);
 void		process_input(char *input, char ***env, int *exit_status);
 void		cleanup_and_exit(char **env);
 
 // utils/prompt_utils.c
-char		*get_current_directory_color(void);
-char		*format_prompt_with_colors(char *user, char *dir);
-char		*build_complete_prompt(char *user, char *dir);
+char		*get_prompt(char **env);
 
 // utils/quote_utils.c
 char		*remove_quotes(char *str);
