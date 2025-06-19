@@ -3,56 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   argument_splitter.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/18 22:23:50 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 09:01:19 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Salta espacios en blanco y tabulaciones
-void	skip_whitespace(char **str)
-{
-	while (**str && (**str == ' ' || **str == '\t'))
-		(*str)++;
-}
-
-// Procesa un argumento y avanza el puntero
-static void	skip_current_arg(char **str)
-{
-	int		in_quotes;
-	char	quote_char;
-	char	redir_tipe;
-
-	in_quotes = 0;
-	quote_char = 0;
-	if (is_redirection(**str))
-	{
-		redir_tipe = **str;
-		(*str)++;
-		if (**str && is_redirection(**str) && redir_tipe == **str)
-			(*str)++;
-		return ;
-	}
-	while (**str && (in_quotes || (**str != ' ' && **str != '\t' && !is_redirection(**str))))
-	{
-		if (!in_quotes && (**str == '"' || **str == '\''))
-		{
-			in_quotes = 1;
-			quote_char = **str;
-		}
-		else if (in_quotes && **str == quote_char)
-			in_quotes = 0;
-		(*str)++;
-	}
-}
-
 // Cuenta el número de argumentos en una cadena de comando
 int	count_command_args(char *str)
 {
-	int		count;
+	int	count;
 
 	count = 0;
 	while (*str)

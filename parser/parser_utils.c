@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/18 22:24:05 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 08:52:31 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	is_builtin_command(const char *cmd)
 		|| (ft_strncmp(cmd, "env", 3) == 0 && ft_strlen(cmd) == 3)
 		|| (ft_strncmp(cmd, "exit", 4) == 0 && ft_strlen(cmd) == 4));
 }
+
 int	is_redirection(char c)
 {
 	if (c == '<' || c == '>')

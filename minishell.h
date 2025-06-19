@@ -111,7 +111,12 @@ char		*extract_next_argument(char **str);
 // parser/argument_splitter.c
 char		**split_command_args(char *str);
 int			count_command_args(char *str);
+
+// parser/argument_utils.c
 void		skip_whitespace(char **str);
+void		skip_redirection(char **str);
+void		skip_regular_arg(char **str);
+void		skip_current_arg(char **str);
 
 // parser/command_parser.c
 t_command	*parse_command_input(const char *input, int *exit_status);

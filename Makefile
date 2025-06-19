@@ -30,6 +30,7 @@ SRC =	builtins/cd.c\
       parser/command_parser.c\
       parser/argument_extraction.c\
       parser/argument_splitter.c\
+      parser/argument_utils.c\
       parser/parser_utils.c\
       pipes/pipe_utils.c\
       pipes/pipe_exec.c\
