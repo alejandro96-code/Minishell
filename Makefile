@@ -3,12 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
+#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/18 19:50:58 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/19 09:16:53 by alejanr2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+# Colores
+YELLOW = \033[33m
+GREEN = \033[32m
 
 NAME = minishell
 CC = cc
@@ -60,17 +64,20 @@ LIBFT = libft/libft.a
 all: $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
-	$(MAKE) -C libft 
+	@echo "$(YELLOW)libft compilando..."
+	@$(MAKE) -C libft --no-print-directory
+	@echo "$(GREEN)Libft compilada!"
 	
 $(PRINTF):
-	$(MAKE) -C printf 
+	@$(MAKE) -C printf --no-print-directory
 
 $(NAME): $(OBJS) $(LIBFT) 
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) libft/libft.a -lreadline -lhistory
-
+	@echo "$(YELLOW)minishell compilando..."
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) libft/libft.a -lreadline -lhistory
+	@echo "$(GREEN)$(NAME) Minishell compilada!"
 
 sanitize:
 	$(eval CFLAGS+=-fsanitize=address,leak -g3)
@@ -78,14 +85,15 @@ sanitize:
 sani: sanitize re
 
 clean:
-	make clean -C libft
-	find . -name "*.o" -type f -delete
+	@echo "$(YELLOW)libft y minishell limpiando..."
+	@make clean -C libft --no-print-directory
+	@find . -name "*.o" -type f -delete
+	@echo "$(GREEN)libft y minishell limpiadas!"
 
 fclean: clean
-	make fclean -C libft
-	rm -f $(NAME)
+	@make fclean -C libft --no-print-directory
+	@rm -f $(NAME)
 	
-
 re: fclean all
 
 .PHONY: all clean fclean re

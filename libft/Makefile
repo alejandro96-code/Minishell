@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
+#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/28 23:36:25 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/12 21:53:43 by dgasco-g         ###   ########.fr        #
+#    Updated: 2025/06/19 09:09:43 by alejanr2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,20 +73,20 @@ CFLAGS	= -Wall -Werror -Wextra
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	ar rc libft.a $(OBJS)
+	@ar rc libft.a $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJS) $(BONUS_OBJS)
+	@rm -rf $(OBJS) $(BONUS_OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re:	fclean all
 
 bonus: $(BONUS_OBJS)
-	ar rcs $(NAME) $(BONUS_OBJS)
+	@ar rcs $(NAME) $(BONUS_OBJS)
 
 .PHONY: all clean fclean re bonus
