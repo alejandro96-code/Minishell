@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/17 01:09:20 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/19 01:56:04 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ int			redirect_input(char *filename);
 int			redirect_output(char *filename, int append);
 // redirections/redirections_basic.c
 int			backup_file_descriptors(void);
+int			backup_stdin_fd(void);
 void		restore_file_descriptors(int original_stdin, int original_stdout);
 
 // redirections/redirections_handler.c

@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/17 01:08:27 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/19 01:56:06 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ static int	setup_command_args(t_command *cmd, const char *input)
 	cmd->argv = split_command_args((char *)input);
 	if (!cmd->argv)
 		return (0);
+	
+	// Reorganizar argumentos si hay redirecciones al principio
+	// TEMPORALMENTE DESACTIVADO para evitar problemas con comillas
+	// cmd->argv = reorganize_command_args(cmd->argv);
+	
 	while (cmd->argv[cmd->argc] != NULL)
 		cmd->argc++;
 	if (cmd->argc > 0 && cmd->argv[0])

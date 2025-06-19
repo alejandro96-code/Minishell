@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_processor.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:30:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 13:04:50 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 01:56:08 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,11 @@ static void	expand_command_args(t_command *cmd, char **env, int exit_status)
 static void	process_single_command(t_command *cmd, char ***env,
 		int *exit_status)
 {
+	int	original_stdin;
 	int	original_stdout;
 
 	expand_command_args(cmd, *env, *exit_status);
+	original_stdin = backup_stdin_fd();
 	original_stdout = backup_file_descriptors();
 	handle_redirections(&cmd->argv, *env);
 	if (cmd->argv && cmd->argv[0])
@@ -47,7 +49,7 @@ static void	process_single_command(t_command *cmd, char ***env,
 		else
 			*exit_status = execute_external(cmd->argv, *env);
 	}
-	restore_file_descriptors(-1, original_stdout);
+	restore_file_descriptors(original_stdin, original_stdout);
 }
 
 void	process_input(char *input, char ***env, int *exit_status)

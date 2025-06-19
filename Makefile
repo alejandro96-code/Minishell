@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
+#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/14 13:24:49 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/19 01:42:33 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,8 +78,14 @@ clean:
 fclean: clean
 	make fclean -C libft
 	rm -f $(NAME)
+
+run_test: re
+		chmod +x test/launch.sh
+		./test/launch.sh
+val: re
+		valgrind -s --leak-check=full --show-leak-kinds=all ./minishell
 	
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re run_test val
