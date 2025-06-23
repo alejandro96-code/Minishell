@@ -6,7 +6,7 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/23 16:54:08 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:32:34 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include "get_next_line/get_next_line.h"
 # include <signal.h>
 # include <fcntl.h>
 # include <readline/history.h>

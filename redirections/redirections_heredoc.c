@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_heredoc.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/19 19:12:31 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/23 17:52:15 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,32 +28,33 @@ static void	write_expanded_line(int write_fd, char *line, char **env)
 	free(expanded_line);
 }
 
-// Leer entrada del heredoc hasta encontrar el delimitador
+// Leer entrada del heredoc hasta encontrar el delimitador usando get_next_line
 static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
 {
 	char	*line;
-	size_t	bufsize;
 	size_t	len;
 	ssize_t	result;
 
-	line = NULL;
-	bufsize = 0;
 	result = write(1, "> ", 2);
 	(void)result;
-	while (getline(&line, &bufsize, stdin) != -1)
+	while ((line = get_next_line(STDIN_FILENO)) != NULL)
 	{
 		len = ft_strlen(line);
 		if (len > 0 && line[len - 1] == '\n')
 			line[len - 1] = '\0';
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
 			&& ft_strlen(line) == ft_strlen(delimiter))
+		{
+			free(line);
 			break ;
+		}
 		write_expanded_line(write_fd, line, env);
+		free(line);
 		result = write(1, "> ", 2);
 		(void)result;
 	}
-	free(line);
 }
+		
 
 // Implementación del heredoc (<<): crea un pipe y redirige su lectura a stdin
 int	heredoc(char *delimiter, char **env)

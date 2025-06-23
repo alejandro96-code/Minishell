@@ -6,7 +6,7 @@
 #    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/23 15:35:53 by alejanr2         ###   ########.fr        #
+#    Updated: 2025/06/23 17:34:52 by alejanr2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,7 +57,11 @@ SRC =	builtins/cd.c\
       cleanup/cleanup.c\
       main.c
 
+GNL_SRC = get_next_line/get_next_line.c\
+          get_next_line/get_next_line_utils.c
+
 OBJS = $(SRC:.c=.o)
+GNL_OBJS = $(GNL_SRC:.c=.o)
 
 LIBFT = libft/libft.a
 
@@ -70,13 +74,10 @@ $(LIBFT):
 	@echo "$(YELLOW)Libft compilando..."
 	@$(MAKE) -C libft --no-print-directory
 	@echo "$(GREEN)Libft compilada!"
-	
-$(PRINTF):
-	@$(MAKE) -C printf --no-print-directory
 
-$(NAME): $(OBJS) $(LIBFT) 
+$(NAME): $(OBJS) $(GNL_OBJS) $(LIBFT) 
 	@echo "$(YELLOW)Minishell compilando..."
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) libft/libft.a -lreadline -lhistory
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(GNL_OBJS) libft/libft.a -lreadline -lhistory
 	@echo "$(GREEN)Minishell compilada!"
 
 sanitize:
