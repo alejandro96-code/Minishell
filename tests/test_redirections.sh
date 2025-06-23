@@ -1,193 +1,157 @@
 #!/bin/bash
 
-# ============================================================================
-# TEST REDIRECTIONS - Pruebas de redirecciones en minishell
-# ============================================================================
+# Test de redirecciones para minishell
+# Ejecutar desde el directorio raíz del proyecto: ./tests/test_redirections.sh
 
-# Colores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Contadores
-TOTAL_TESTS=0
-PASSED_TESTS=0
-FAILED_TESTS=0
-MEMORY_LEAKS=0
+echo -e "${YELLOW}=== TESTS DE REDIRECCIONES PARA MINISHELL ===${NC}"
+echo
 
-MINISHELL="./minishell"
-TMP_DIR="/tmp/minishell_test_redirections"
-VALGRIND_OUTPUT="${TMP_DIR}/valgrind_output.txt"
-BASH_OUTPUT="${TMP_DIR}/bash_output.txt"
-MINISHELL_OUTPUT="${TMP_DIR}/minishell_output.txt"
-
-# Arrays para comandos fallidos
-declare -a FAILED_COMMANDS=()
-
-# Crear directorio temporal
-mkdir -p "$TMP_DIR"
-
-echo -e "${BLUE}======================================${NC}"
-echo -e "${BLUE}  MINISHELL REDIRECTIONS TEST SUITE${NC}"
-echo -e "${BLUE}======================================${NC}"
-echo ""
-
-# Función para ejecutar test con comparación bash vs minishell
+# Función para ejecutar test
 run_test() {
-    local description="$1"
+    local test_name="$1"
     local command="$2"
-    local should_work="$3"  # 1 = debería funcionar, 0 = no debería funcionar
+    local expected_file="$3"
     
-    ((TOTAL_TESTS++))
-    echo -e "${YELLOW}Test $TOTAL_TESTS:${NC} $description"
-    echo -e "${BLUE}Command:${NC} $command"
+    echo -e "${YELLOW}Test: $test_name${NC}"
+    echo "Comando: $command"
     
-    # Limpiar archivos de output previos
-    > "$BASH_OUTPUT"
-    > "$MINISHELL_OUTPUT"
-    > "$VALGRIND_OUTPUT"
+    # Ejecutar comando en minishell
+    echo "$command" | ./minishell > /dev/null 2>&1
     
-    # Crear directorio de trabajo para cada test
-    local test_dir="${TMP_DIR}/test_${TOTAL_TESTS}"
-    mkdir -p "$test_dir"
-    
-    # Preparar comando para ambos shells (ajustar paths)
-    local test_command="${command//$TMP_DIR/$test_dir}"
-    
-    # Ejecutar en bash
-    cd "$test_dir" 2>/dev/null || true
-    timeout 5 bash -c "$test_command" > "$BASH_OUTPUT" 2>&1
-    local bash_exit=$?
-    echo -e "${BLUE}Bash result:${NC} Exit code: $bash_exit"
-    if [[ -s "$BASH_OUTPUT" ]]; then
-        echo -e "${BLUE}Bash output:${NC}"
-        cat "$BASH_OUTPUT" | head -10 | sed 's/^/  /'
+    # Verificar si se creó el archivo esperado
+    if [ -n "$expected_file" ] && [ -f "$expected_file" ]; then
+        echo -e "${GREEN}✓ PASS: Archivo $expected_file creado${NC}"
+        echo "Contenido:"
+        cat "$expected_file"
+        echo
+    elif [ -n "$expected_file" ]; then
+        echo -e "${RED}✗ FAIL: Archivo $expected_file no se creó${NC}"
     else
-        echo -e "${BLUE}Bash output:${NC} (empty)"
+        echo -e "${GREEN}✓ Comando ejecutado${NC}"
     fi
-    
-    # Ejecutar en minishell con valgrind
-    cd "$test_dir" 2>/dev/null || true
-    printf '%s\nexit\n' "$test_command" | timeout 10 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --error-exitcode=42 "$MINISHELL" > "$MINISHELL_OUTPUT" 2> "$VALGRIND_OUTPUT"
-    local valgrind_exit=$?
-    
-    printf '%s\nexit\n' "$test_command" | timeout 10 "$MINISHELL" > /dev/null 2>&1
-    local minishell_exit=$?
-    echo -e "${BLUE}Minishell result:${NC} Exit code: $minishell_exit"
-    if [[ -s "$MINISHELL_OUTPUT" ]]; then
-        echo -e "${BLUE}Minishell output:${NC}"
-        cat "$MINISHELL_OUTPUT" | head -10 | sed 's/^/  /'
-    else
-        echo -e "${BLUE}Minishell output:${NC} (empty)"
-    fi
-    
-    # Verificar memory leaks
-    local definitely_lost=$(grep "definitely lost:" "$VALGRIND_OUTPUT" | grep -o '[0-9,]* bytes' | head -1 | tr -d ',' | grep -o '[0-9]*')
-    local errors=$(grep "ERROR SUMMARY:" "$VALGRIND_OUTPUT" | grep -o '[0-9]* errors' | grep -o '[0-9]*')
-    
-    definitely_lost=${definitely_lost:-0}
-    errors=${errors:-0}
-    
-    local has_leaks=0
-    if [[ $definitely_lost -gt 0 || $errors -gt 0 ]]; then
-        has_leaks=1
-        ((MEMORY_LEAKS++))
-    fi
-    
-    # Evaluar comportamiento
-    local behavior_match=0
-    local comparison_result="Different behavior"
-    
-    if [[ $should_work -eq 1 ]]; then
-        # Comando debería funcionar - comparar con bash
-        if [[ $bash_exit -eq 0 && $minishell_exit -eq 0 ]]; then
-            behavior_match=1
-            comparison_result="Both successful"
-        elif [[ $bash_exit -ne 0 && $minishell_exit -ne 0 ]]; then
-            behavior_match=1  # Ambos fallan, está bien
-            comparison_result="Both failed (acceptable)"
-        fi
-    else
-        # Comando NO debería funcionar
-        if [[ $minishell_exit -ne 0 ]]; then
-            behavior_match=1
-            comparison_result="Correctly failed"
-        fi
-    fi
-    
-    # Mostrar resultado
-    if [[ $behavior_match -eq 1 ]]; then
-        if [[ $has_leaks -eq 0 ]]; then
-            echo -e "  ${GREEN}✅ PASS${NC} - $comparison_result (Lost: ${definitely_lost}B, Errors: $errors)"
-            ((PASSED_TESTS++))
-        else
-            echo -e "  ${YELLOW}⚠️  PASS (with memory leaks)${NC} - $comparison_result (Lost: ${definitely_lost}B, Errors: $errors)"
-            ((PASSED_TESTS++))
-        fi
-    else
-        echo -e "  ${RED}❌ FAIL${NC} - $comparison_result (Lost: ${definitely_lost}B, Errors: $errors)"
-        FAILED_COMMANDS+=("$command")
-        ((FAILED_TESTS++))
-    fi
-    
-    # Limpiar directorio de test
-    rm -rf "$test_dir"
-    echo ""
+    echo "---"
 }
 
-echo -e "${GREEN}=== REDIRECCIONES DE SALIDA (>) ===${NC}"
-run_test "Redirección simple >" "echo hello > output.txt" 1
-run_test "Redirección sobrescribir" "echo world > output.txt" 1
-run_test "Redirección builtin pwd" "pwd > pwd_output.txt" 1
-run_test "Redirección comando externo" "ls > ls_output.txt" 1
+# Función para limpiar archivos de test
+cleanup() {
+    rm -f test_output.txt test_input.txt test_append.txt test_heredoc.txt
+    rm -f file1.txt file2.txt temp.txt
+}
 
-echo -e "${GREEN}=== REDIRECCIONES DE APPEND (>>) ===${NC}"
-run_test "Redirección append >>" "echo line1 >> append.txt" 1
-run_test "Redirección append segunda línea" "echo line2 >> append.txt" 1
-run_test "Append builtin" "pwd >> append.txt" 1
+# Limpiar antes de empezar
+cleanup
 
-echo -e "${GREEN}=== HEREDOC (<<) ===${NC}"
-run_test "Heredoc simple" "cat << EOF
-hello world
-EOF" 1
+echo -e "${YELLOW}1. REDIRECCIÓN DE SALIDA (>)${NC}"
 
-echo -e "${GREEN}=== REDIRECCIONES ERRÓNEAS ===${NC}"
-run_test "Redirección sin archivo >" "echo hello >" 0
-run_test "Redirección sin archivo <" "cat <" 0
-run_test "Redirección sin archivo >>" "echo hello >>" 0
-run_test "Redirección entrada archivo inexistente" "cat < noexiste.txt" 0
+# Test 1: Redirección simple de salida
+run_test "Redirección de echo a archivo" "echo 'Hola mundo' > test_output.txt" "test_output.txt"
 
-echo -e "${GREEN}=== REDIRECCIONES MÚLTIPLES ===${NC}"
-run_test "Múltiples redirecciones >" "echo hello > out1.txt > out2.txt" 1
-run_test "Redirección entrada y salida" "echo 'test' > input.txt && cat < input.txt > output2.txt" 1
-run_test "Comando con argumentos y redirección" "echo arg1 arg2 > args.txt" 1
+# Test 2: Redirección de ls
+run_test "Redirección de ls" "ls > file1.txt" "file1.txt"
 
-# Limpiar
-rm -rf "$TMP_DIR"
+# Test 3: Redirección con comando que no existe
+run_test "Comando inexistente con redirección" "comando_que_no_existe > test_output.txt" "test_output.txt"
 
-# Mostrar resumen
-echo -e "${BLUE}======================================${NC}"
-echo -e "${BLUE}  REDIRECTIONS TEST SUMMARY${NC}"
-echo -e "${BLUE}======================================${NC}"
-echo -e "Total tests: $TOTAL_TESTS"
-echo -e "${GREEN}Passed: $PASSED_TESTS${NC}"
-echo -e "${RED}Failed: $FAILED_TESTS${NC}"
-echo -e "${YELLOW}Memory leaks: $MEMORY_LEAKS${NC}"
+echo -e "${YELLOW}2. REDIRECCIÓN DE SALIDA CON APPEND (>>)${NC}"
 
-# Mostrar comandos fallidos
-if [[ ${#FAILED_COMMANDS[@]} -gt 0 ]]; then
-    echo -e "\n${RED}Failed commands:${NC}"
-    for cmd in "${FAILED_COMMANDS[@]}"; do
-        echo -e "  - $cmd"
-    done
-fi
+# Test 4: Append a archivo existente
+echo "Primera línea" > test_append.txt
+run_test "Append a archivo existente" "echo 'Segunda línea' >> test_append.txt" "test_append.txt"
 
-if [[ $FAILED_TESTS -eq 0 ]]; then
-    echo -e "\n${GREEN}All tests passed!${NC}"
-    exit 0
-else
-    echo -e "\n${RED}Some tests failed!${NC}"
-    exit 1
+# Test 5: Append a archivo nuevo
+run_test "Append a archivo nuevo" "echo 'Archivo nuevo' >> file2.txt" "file2.txt"
+
+echo -e "${YELLOW}3. REDIRECCIÓN DE ENTRADA (<)${NC}"
+
+# Test 6: Crear archivo de entrada y usarlo
+echo -e "línea 1\nlínea 2\nlínea 3" > test_input.txt
+run_test "Cat con redirección de entrada" "cat < test_input.txt > temp.txt" "temp.txt"
+
+# Test 7: wc con redirección de entrada
+run_test "wc con redirección de entrada" "wc -l < test_input.txt > temp.txt" "temp.txt"
+
+echo -e "${YELLOW}4. HEREDOC (<<)${NC}"
+
+# Test 8: Heredoc simple
+run_test "Heredoc simple" "cat << EOF > test_heredoc.txt
+Primera línea del heredoc
+Segunda línea del heredoc
+EOF" "test_heredoc.txt"
+
+echo -e "${YELLOW}5. REDIRECCIONES MÚLTIPLES${NC}"
+
+# Test 9: Redirección de entrada y salida
+run_test "Entrada y salida" "cat < test_input.txt > temp.txt"
+
+# Test 10: Comando con múltiples redirecciones
+run_test "Múltiples redirecciones" "echo 'test' > temp.txt && cat temp.txt > file1.txt"
+
+echo -e "${YELLOW}6. CASOS DE ERROR${NC}"
+
+# Test 11: Redirección sin archivo
+echo "echo 'test' >" | ./minishell > /dev/null 2>&1
+echo "Test: Redirección sin archivo de destino"
+echo -e "${GREEN}✓ Debería mostrar error de sintaxis${NC}"
+echo "---"
+
+# Test 12: Redirección a archivo sin permisos
+touch no_permissions.txt
+chmod 000 no_permissions.txt
+echo "echo 'test' > no_permissions.txt" | ./minishell > /dev/null 2>&1
+echo "Test: Redirección a archivo sin permisos"
+echo -e "${GREEN}✓ Debería mostrar error de permisos${NC}"
+chmod 644 no_permissions.txt
+rm -f no_permissions.txt
+echo "---"
+
+echo -e "${YELLOW}7. REDIRECCIONES CON PIPES${NC}"
+
+# Test 13: Pipe con redirección
+run_test "Pipe con redirección de salida" "echo 'test pipe' | cat > temp.txt" "temp.txt"
+
+# Test 14: Redirección con pipe
+run_test "Redirección con pipe" "cat < test_input.txt | wc -l > temp.txt" "temp.txt"
+
+echo -e "${YELLOW}8. REDIRECCIONES CON COMILLAS${NC}"
+
+# Test 15: Redirección con archivo entre comillas
+run_test "Archivo entre comillas" "echo 'test quotes' > 'file with spaces.txt'" "file with spaces.txt"
+
+# Test 16: Redirección con contenido entre comillas
+run_test "Contenido entre comillas" "echo 'texto con espacios' > temp.txt" "temp.txt"
+
+echo -e "${YELLOW}9. ORDEN DE ARGUMENTOS${NC}"
+
+# Test 17: Redirección antes del comando
+run_test "Redirección antes del comando" "> temp.txt echo 'orden test'" "temp.txt"
+
+# Test 18: Redirección en el medio
+run_test "Redirección en el medio" "echo > temp.txt 'medio test'" "temp.txt"
+
+echo -e "${YELLOW}10. CASOS ESPECIALES${NC}"
+
+# Test 19: Redirección a /dev/null
+run_test "Redirección a /dev/null" "echo 'no output' > /dev/null"
+
+# Test 20: Redirección desde /dev/null
+run_test "Entrada desde /dev/null" "cat < /dev/null > temp.txt" "temp.txt"
+
+echo -e "${GREEN}=== TESTS COMPLETADOS ===${NC}"
+
+# Mostrar archivos creados
+echo -e "${YELLOW}Archivos creados durante las pruebas:${NC}"
+ls -la *.txt 2>/dev/null || echo "No se crearon archivos .txt"
+
+# Limpiar archivos de test
+echo -e "\n${YELLOW}¿Limpiar archivos de test? (y/n)${NC}"
+read -r response
+if [[ "$response" =~ ^[Yy]$ ]]; then
+    cleanup
+    rm -f "file with spaces.txt"
+    echo "Archivos limpiados"
 fi

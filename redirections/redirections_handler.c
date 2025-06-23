@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_handler.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/19 01:56:07 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/23 14:51:04 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	process_redirection_operator(char **args, int *i, int count,
 	if (*i + 1 >= count || !args[*i + 1])
 		return (0);
 	process_redirection(args, i, env);
-	*i += 1; // Solo incrementar en 1, ya que process_redirection ya incrementa el índice
+	*i += 1;
 	return (1);
 }
 

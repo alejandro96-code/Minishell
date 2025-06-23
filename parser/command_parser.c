@@ -6,7 +6,7 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/23 14:45:12 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/23 14:50:01 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ static t_command	*init_command(void)
 	cmd->argv = NULL;
 	cmd->argc = 0;
 	cmd->is_builtin = 0;
-	cmd->redirections = NULL;
-	cmd->next = NULL;
 	return (cmd);
 }
 
@@ -67,9 +65,6 @@ static int	setup_command_args(t_command *cmd, const char *input)
 	cmd->argv = split_command_args((char *)input);
 	if (!cmd->argv)
 		return (0);
-	// Reorganizar argumentos si hay redirecciones al principio
-	// TEMPORALMENTE DESACTIVADO para evitar problemas con comillas
-	// cmd->argv = reorganize_command_args(cmd->argv);
 	while (cmd->argv[cmd->argc] != NULL)
 		cmd->argc++;
 	if (cmd->argc > 0 && cmd->argv[0])

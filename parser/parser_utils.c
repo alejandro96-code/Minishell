@@ -6,7 +6,7 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/23 14:45:00 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/23 14:50:33 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ static int	find_command_position(char **args)
 	{
 		if (!is_redirection_operator(args[i]))
 			return (i);
-		// Si es una redirección, saltamos también el archivo/delimitador
 		if (args[i + 1])
 			i += 2;
 		else
