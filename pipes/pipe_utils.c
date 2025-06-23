@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/19 19:12:30 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/23 16:56:12 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,25 @@ static int	check_pipe_syntax_error(char *input)
 	char	*trimmed_input;
 
 	trimmed_input = ft_strtrim(input, " \t\n");
-	if (trimmed_input && ft_strlen(trimmed_input) > 0
-		&& trimmed_input[ft_strlen(trimmed_input) - 1] == '|')
+	if (!trimmed_input || ft_strlen(trimmed_input) == 0)
+	{
+		if (trimmed_input)
+			free(trimmed_input);
+		return (0);
+	}
+	if (trimmed_input[0] == '|')
 	{
 		free(trimmed_input);
 		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
 		return (1);
 	}
-	if (trimmed_input)
+	if (trimmed_input[ft_strlen(trimmed_input) - 1] == '|')
+	{
 		free(trimmed_input);
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+		return (1);
+	}
+	free(trimmed_input);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/23 15:37:38 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:54:08 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,6 @@ char		*get_prompt(char **env);
 char		*remove_quotes(char *str);
 
 // main
-int	main(int argc, char **argv, char **envp);
+int			main(int argc, char **argv, char **envp);
 
 #endif

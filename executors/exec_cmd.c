@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/19 19:12:34 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/23 17:00:56 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ static char	*get_cmd_path_relative(char *cmd, char **env)
 	cmd_path = find_command_path(cmd, env);
 	if (!cmd_path)
 	{
+		ft_putstr_fd("command not found: ", 2);
 		ft_putstr_fd(cmd, 2);
-		ft_putstr_fd(": command not found\n", 2);
+		ft_putstr_fd("\n", 2);
 	}
 	return (cmd_path);
 }

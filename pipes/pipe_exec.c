@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_exec.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/18 19:18:36 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/23 17:04:42 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ static void	execute_external_child(char **args, char **env)
 	cmd_path = find_command_path(args[0], env);
 	if (!cmd_path)
 	{
+		ft_putstr_fd("Command not found: ", STDERR_FILENO);
 		ft_putstr_fd(args[0], STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
 		exit(127);
 	}
 	execve(cmd_path, args, env);
