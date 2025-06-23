@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/16 22:41:23 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/19 01:56:10 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,17 @@ int	backup_file_descriptors(void)
 	if (original_stdout == -1)
 		perror("dup stdout");
 	return (original_stdout);
+}
+
+// Hacer backup de stdin
+int	backup_stdin_fd(void)
+{
+	int	original_stdin;
+
+	original_stdin = dup(STDIN_FILENO);
+	if (original_stdin == -1)
+		perror("dup stdin");
+	return (original_stdin);
 }
 
 // Restaurar los file descriptors originales

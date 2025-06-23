@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/19 19:14:18 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/23 14:45:32 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ void		handle_child_process(int i, int cmd_count, int pipefd[2],
 int			redirect_input(char *filename);
 int			redirect_output(char *filename, int append);
 int			backup_file_descriptors(void);
+int			backup_stdin_fd(void);
 void		restore_file_descriptors(int original_stdin, int original_stdout);
 
 // redirections/redirections_handler.c

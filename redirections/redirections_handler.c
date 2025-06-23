@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_handler.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/14 13:01:48 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/19 01:56:07 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,18 @@ static void	handle_redirection_type(char **args, int *i, char *cleaned_filename,
 		char **env)
 {
 	char	*cleaned_delimiter;
+	int		result;
 
 	if (ft_strncmp(args[*i], "<", 1) == 0 && ft_strlen(args[*i]) == 1)
-		redirect_input(cleaned_filename);
+	{
+		result = redirect_input(cleaned_filename);
+		if (result != 0)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(cleaned_filename, STDERR_FILENO);
+			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		}
+	}
 	else if (ft_strncmp(args[*i], "<<", 2) == 0 && ft_strlen(args[*i]) == 2)
 	{
 		cleaned_delimiter = remove_quotes(args[*i + 1]);
@@ -67,7 +76,7 @@ static int	process_redirection_operator(char **args, int *i, int count,
 	if (*i + 1 >= count || !args[*i + 1])
 		return (0);
 	process_redirection(args, i, env);
-	*i += 2;
+	*i += 1; // Solo incrementar en 1, ya que process_redirection ya incrementa el índice
 	return (1);
 }
 

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
+#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/19 19:11:29 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/23 14:45:01 by alejanr2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,9 +91,20 @@ clean:
 	@echo "$(GREEN)Libft y minishell limpiadas!"
 
 fclean: clean
+<<<<<<< HEAD
 	@make fclean -C libft --no-print-directory
 	@rm -f $(NAME)
+=======
+	make fclean -C libft
+	rm -f $(NAME)
+
+run_test: re
+		chmod +x test/launch.sh
+		./test/launch.sh
+val: re
+		valgrind -s --leak-check=full --show-leak-kinds=all ./minishell
+>>>>>>> didac
 	
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re run_test val
