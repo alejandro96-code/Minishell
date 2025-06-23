@@ -6,7 +6,7 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/23 14:50:33 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/19 08:52:31 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,25 +47,14 @@ char	*aux_split_redirection(char **str, char *start)
 	return (ft_substr(start, 0, 1));
 }
 
-int	redirection_last_arg(const char *input)
+// Actualiza el estado de las comillas durante el parsing
+static void	update_quote_state(char c, int *in_single_quotes,
+		int *in_double_quotes)
 {
-	int	i;
-	int	boolean;
-
-	boolean = 0;
-	i = 0;
-	while (input[i])
-	{
-		if (!boolean && (is_redirection(input[i])))
-			boolean = 1;
-		else if (boolean && (!is_redirection(input[i]))
-			&& !ft_isspace(input[i]))
-			boolean = 0;
-		i++;
-	}
-	if (boolean)
-		return (0);
-	return (1);
+	if (c == '\'' && !*in_double_quotes)
+		*in_single_quotes = !*in_single_quotes;
+	else if (c == '"' && !*in_single_quotes)
+		*in_double_quotes = !*in_double_quotes;
 }
 
 // Valida la sintaxis de las redirecciones
@@ -93,74 +82,5 @@ int	validate_redirections(const char *input)
 		}
 		i++;
 	}
-	return (redirection_last_arg(input));
-}
-
-// Verifica si un argumento es un operador de redirección
-static int	is_redirection_operator(char *arg)
-{
-	return ((ft_strncmp(arg, "<", 1) == 0 && ft_strlen(arg) == 1)
-		|| (ft_strncmp(arg, "<<", 2) == 0 && ft_strlen(arg) == 2)
-		|| (ft_strncmp(arg, ">", 1) == 0 && ft_strlen(arg) == 1)
-		|| (ft_strncmp(arg, ">>", 2) == 0 && ft_strlen(arg) == 2));
-}
-
-// Cuenta el número total de argumentos en el array
-static int	count_args(char **args)
-{
-	int	count;
-
-	count = 0;
-	while (args[count])
-		count++;
-	return (count);
-}
-
-// Busca la posición del primer comando (no redirección) en el array
-static int	find_command_position(char **args)
-{
-	int	i;
-
-	i = 0;
-	while (args[i])
-	{
-		if (!is_redirection_operator(args[i]))
-			return (i);
-		if (args[i + 1])
-			i += 2;
-		else
-			i++;
-	}
-	return (-1);
-}
-
-// Reorganiza los argumentos moviendo el comando al principio
-char	**reorganize_command_args(char **args)
-{
-	char	**new_args;
-	int		total_args;
-	int		cmd_pos;
-	int		i;
-	int		j;
-
-	if (!args || !args[0] || !is_redirection_operator(args[0]))
-		return (args);
-	cmd_pos = find_command_position(args);
-	if (cmd_pos == -1)
-		return (args);
-	total_args = count_args(args);
-	new_args = malloc(sizeof(char *) * (total_args + 1));
-	if (!new_args)
-		return (args);
-	new_args[0] = ft_strdup(args[cmd_pos]);
-	j = 1;
-	i = 0;
-	while (i < total_args)
-	{
-		if (i != cmd_pos)
-			new_args[j++] = ft_strdup(args[i]);
-		i++;
-	}
-	new_args[j] = NULL;
-	return (ft_free_split(args), new_args);
+	return (1);
 }

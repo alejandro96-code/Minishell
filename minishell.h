@@ -6,7 +6,7 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/23 14:48:58 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/23 15:37:38 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,19 @@ void		skip_current_arg(char **str);
 // parser/command_parser.c
 t_command	*parse_command_input(const char *input, int *exit_status);
 
-// parser/command_utils.c
+// parser/parser_builtin_utils.c
 int			is_builtin_command(const char *cmd);
+
+// parser/parser_redirection_utils.c
 int			is_redirection(char c);
 char		*aux_split_redirection(char **str, char *start);
+
+// parser/parser_redirection_validation.c
+int			redirection_last_arg(const char *input);
 int			validate_redirections(const char *input);
+
+// parser/parser_argument_reorganizer.c
+char		**reorganize_command_args(char **args);
 
 // pipes/pipe_exec.c
 char		**parse_command_arguments(char *command, char **env);
@@ -201,7 +209,6 @@ char		*get_prompt(char **env);
 
 // utils/quote_utils.c
 char		*remove_quotes(char *str);
-void		update_quote_state(char c, int *in_single_quotes, int *in_double_quotes);
 
 // main
 int	main(int argc, char **argv, char **envp);
