@@ -3,14 +3,113 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/23 16:56:12 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/24 19:08:56 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static int	count_pipes(char *input)
+{
+    int		i;
+    int		count;
+    char	quote;
+    int		in_quotes;
+
+    i = -1;
+    count = 0;
+    quote = 0;
+    in_quotes = 0;
+    while (input[++i])
+    {
+        if (!in_quotes && (input[i] == '\"' || input[i] == '\''))
+        {
+            in_quotes = 1;
+            quote = input[i];
+        }
+        else if (in_quotes && input[i] == quote)
+        {
+            in_quotes = 0;
+            quote = 0;
+        }
+        else if (!in_quotes && input[i] == '|')
+            count++;
+    }
+    return (count + 1);
+}
+
+static char	*extract_command(char *input, int start, int end)
+{
+    char	*cmd;
+    int		len;
+
+    len = end - start;
+    cmd = malloc(sizeof(char) * (len + 1));
+    if (!cmd)
+        return (NULL);
+    ft_strlcpy(cmd, input + start, len + 1);
+    return (cmd);
+}
+
+static int	find_next_pipe(char *input, int start)
+{
+    int		i;
+    char	quote;
+    int		in_quotes;
+
+    i = start;
+    quote = 0;
+    in_quotes = 0;
+    while (input[i])
+    {
+        if (!in_quotes && (input[i] == '\"' || input[i] == '\''))
+        {
+            in_quotes = 1;
+            quote = input[i];
+        }
+        else if (in_quotes && input[i] == quote)
+        {
+            in_quotes = 0;
+            quote = 0;
+        }
+        else if (!in_quotes && input[i] == '|')
+            return (i);
+        i++;
+    }
+    return (i);
+}
+
+static char	**pipe_spliter(char *input)
+{
+    char	**result;
+    int		cmd_count;
+    int		i;
+    int		start;
+    int		end;
+
+    cmd_count = count_pipes(input);
+    result = malloc(sizeof(char *) * (cmd_count + 1));
+    if (!result)
+        return (NULL);
+    i = 0;
+    start = 0;
+    while (i < cmd_count)
+    {
+        end = find_next_pipe(input, start);
+        result[i] = extract_command(input, start, end);
+        if (!result[i])
+        {
+            ft_free_split(result);
+            return (NULL);
+        }
+        start = end + 1;
+        i++;
+    }
+    return (result[i] = NULL, result);
+}
 
 static int	check_pipe_syntax_error(char *input)
 {
@@ -70,7 +169,7 @@ int	split_and_validate_commands(char *input, char ***commands)
 		*commands = NULL;
 		return (-1);
 	}
-	*commands = ft_split(input, '|');
+	*commands = pipe_spliter(input);
 	return (validate_commands(commands));
 }
 
