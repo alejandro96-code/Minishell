@@ -3,14 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   input_processor.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 14:30:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/19 01:56:08 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/24 14:13:41 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// Detecta si hay pipes fuera de comillas
+static int	has_unquoted_pipes(const char *input)
+{
+	int	i;
+	int	in_single_quotes;
+	int	in_double_quotes;
+
+	i = 0;
+	in_single_quotes = 0;
+	in_double_quotes = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'' && !in_double_quotes)
+			in_single_quotes = !in_single_quotes;
+		else if (input[i] == '"' && !in_single_quotes)
+			in_double_quotes = !in_double_quotes;
+		else if (input[i] == '|' && !in_single_quotes && !in_double_quotes)
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 static void	expand_command_args(t_command *cmd, char **env, int exit_status)
 {
@@ -57,7 +80,7 @@ void	process_input(char *input, char ***env, int *exit_status)
 	t_command	*cmd;
 
 	g_signal_received = 0;
-	if (ft_strchr(input, '|') != NULL)
+	if (has_unquoted_pipes(input))
 	{
 		*exit_status = run_command_pipeline(input, *env);
 		free(input);

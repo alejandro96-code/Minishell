@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_heredoc.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/23 17:52:15 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/24 14:16:43 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
 
 	result = write(1, "> ", 2);
 	(void)result;
-	while ((line = get_next_line(STDIN_FILENO)) != NULL)
+	line = get_next_line(STDIN_FILENO);
+	while (line != NULL)
 	{
 		len = ft_strlen(line);
 		if (len > 0 && line[len - 1] == '\n')
@@ -52,9 +53,9 @@ static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
 		free(line);
 		result = write(1, "> ", 2);
 		(void)result;
+		line = get_next_line(STDIN_FILENO);
 	}
 }
-		
 
 // Implementación del heredoc (<<): crea un pipe y redirige su lectura a stdin
 int	heredoc(char *delimiter, char **env)

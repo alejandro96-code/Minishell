@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+         #
+#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/23 17:34:52 by alejanr2         ###   ########.fr        #
+#    Updated: 2025/06/24 14:06:56 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -87,13 +87,13 @@ sani: sanitize re
 
 clean:
 	@echo "$(YELLOW)Libft y minishell limpiando..."
-	@make clean -C libft --no-print-directory
+	@$(MAKE) clean -C libft --no-print-directory
 	@find . -name "*.o" -type f -delete
 	@echo "$(GREEN)Libft y minishell limpiadas!"
 
 fclean: clean
-	make fclean -C libft
-	rm -f $(NAME)
+	@$(MAKE) fclean -C libft --no-print-directory
+	@$(RM) $(NAME)
 
 run_test: re
 		chmod +x test/launch.sh
