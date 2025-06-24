@@ -23,7 +23,7 @@ static void	process_heredoc_lines(int write_fd, char *delimiter, char **env)
 	line = get_next_line(STDIN_FILENO);
 	while (line != NULL && g_signal_received != 42)
 	{
-		if (process_single_hdoc_line(write_fd, line, delimiter, env))
+		if (proc_sin_hdoc_line(write_fd, line, delimiter, env))
 		{
 			free(line);
 			break ;
