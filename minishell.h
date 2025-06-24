@@ -76,7 +76,7 @@ int			is_builtin(char *cmd);
 int			execute_builtin(char **args, char ***env, int *exit_status);
 
 // builtins/pwd.c
-int			builtin_pwd(char **args, char **env);
+int			builtin_pwd(char **env);
 
 // builtins/unset.c
 int			builtin_unset(char **args, char ***env);

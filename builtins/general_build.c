@@ -31,7 +31,7 @@ int	execute_builtin(char **args, char ***env, int *exit_status)
 	else if (!ft_strncmp(args[0], "echo", 4) && args[0][4] == '\0')
 		result = builtin_echo(args, *env);
 	else if (!ft_strncmp(args[0], "pwd", 3) && args[0][3] == '\0')
-		result = builtin_pwd(args, *env);
+		result = builtin_pwd(*env);
 	else if (!ft_strncmp(args[0], "export", 6) && args[0][6] == '\0')
 		result = builtin_export(args, env);
 	else if (!ft_strncmp(args[0], "unset", 5) && args[0][5] == '\0')

@@ -57,6 +57,6 @@ int	proc_sin_hdoc_line(int w_fd, char *line, char *limit, char **env)
 	if (ft_strncmp(line, limit, ft_strlen(limit)) == 0
 		&& ft_strlen(line) == ft_strlen(limit))
 		return (1);
-	write_expanded_line(w_fd, line, env);
+	write_expanded_line(write_fd, line, env);
 	return (0);
 }
