@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/23 17:32:34 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:35:30 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,12 @@ char		**create_filtered_args(char **args, int count, char **env);
 
 // redirections/redirections_heredoc.c
 int			heredoc(char *delimiter, char **env);
+
+// redirections/redirections_heredoc_helper.c
+void		heredoc_sigint_handler(int sig);
+void		write_expanded_line(int write_fd, char *line, char **env);
+void		setup_heredoc_signals(struct sigaction *old_sigint);
+int			proc_sin_hdoc_line(int w_fd, char *line, char *limit, char **env);
 
 //redirections/redirections.c
 int			check_redirections_exist(char **args);

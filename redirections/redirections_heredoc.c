@@ -6,55 +6,48 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/24 14:16:43 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/24 15:32:40 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Escribir línea expandida al heredoc
-static void	write_expanded_line(int write_fd, char *line, char **env)
-{
-	char	*expanded_line;
-	ssize_t	bytes_written;
-
-	expanded_line = expand_variable(line, env, 0);
-	bytes_written = write(write_fd, expanded_line, ft_strlen(expanded_line));
-	if (bytes_written == -1)
-		perror("write");
-	bytes_written = write(write_fd, "\n", 1);
-	if (bytes_written == -1)
-		perror("write");
-	free(expanded_line);
-}
-
-// Leer entrada del heredoc hasta encontrar el delimitador usando get_next_line
-static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
+// Procesar entrada del heredoc línea por línea
+static void	process_heredoc_lines(int write_fd, char *delimiter, char **env)
 {
 	char	*line;
-	size_t	len;
 	ssize_t	result;
 
 	result = write(1, "> ", 2);
 	(void)result;
 	line = get_next_line(STDIN_FILENO);
-	while (line != NULL)
+	while (line != NULL && g_signal_received != 42)
 	{
-		len = ft_strlen(line);
-		if (len > 0 && line[len - 1] == '\n')
-			line[len - 1] = '\0';
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
-			&& ft_strlen(line) == ft_strlen(delimiter))
+		if (process_single_hdoc_line(write_fd, line, delimiter, env))
 		{
 			free(line);
 			break ;
 		}
-		write_expanded_line(write_fd, line, env);
 		free(line);
+		if (g_signal_received == 42)
+			break ;
 		result = write(1, "> ", 2);
 		(void)result;
 		line = get_next_line(STDIN_FILENO);
 	}
+	if (line)
+		free(line);
+}
+
+// Leer entrada del heredoc hasta encontrar el delimitador usando get_next_line
+static void	read_heredoc_input(int write_fd, char *delimiter, char **env)
+{
+	struct sigaction	old_sigint;
+
+	setup_heredoc_signals(&old_sigint);
+	process_heredoc_lines(write_fd, delimiter, env);
+	g_signal_received = 0;
+	sigaction(SIGINT, &old_sigint, NULL);
 }
 
 // Implementación del heredoc (<<): crea un pipe y redirige su lectura a stdin

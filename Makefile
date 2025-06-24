@@ -6,7 +6,7 @@
 #    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/24 14:06:56 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/24 15:32:39 by alejandro        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRC =	builtins/cd.c\
       redirections/redirections_handler.c\
       redirections/redirections_basic.c\
       redirections/redirections_heredoc.c\
+      redirections/redirections_heredoc_helper.c\
       signals/signals.c\
       utils/expand_buffer.c\
       utils/expand_parsing.c\
