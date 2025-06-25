@@ -68,9 +68,16 @@ int			builtin_exit(char **args, int exit_status);
 // builtins/export.c
 int			builtin_export(char **args, char ***env);
 int			handle_export(char *arg, char ***env);
-int			find_env_var(char *key, char **env);
+
+// builtins/export_utils.c
+char		*find_equal_in_string(char *str);
 int			replace_env_value(char *key, char *new_value, char ***env);
+int			find_env_var(char *key, char **env);
+
+// builtins/export_utils2.c
 int			add_env_value(char *new_value, char ***env);
+int			handle_export_no_equal(char *arg, char *arg_copy, char ***env);
+int			handle_export_with_equal(char *arg, char *arg_copy, char *equal, char ***env);
 
 // builtins/general_build.c
 int			is_builtin(char *cmd);
@@ -149,6 +156,11 @@ int			run_command_pipeline(char *input, char **env);
 int			split_and_validate_commands(char *input, char ***commands);
 void		handle_child_process(int i, int cmd_count, int pipefd[2],
 				int *prev_pipe);
+
+// pipes/pipe_utils2.c
+int			count_pipes(char *input);
+char		*extract_command(char *input, int start, int end);
+int			find_next_pipe(char *input, int start);
 
 // redirections/redirections_basic.c
 int			redirect_input(char *filename);

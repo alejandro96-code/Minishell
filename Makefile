@@ -24,6 +24,8 @@ SRC =	builtins/cd.c\
       builtins/env.c\
       builtins/exit.c\
       builtins/export.c\
+      builtins/export_utils.c\
+      builtins/export_utils2.c\
       builtins/general_build.c\
       builtins/pwd.c\
       builtins/unset.c\
@@ -37,6 +39,7 @@ SRC =	builtins/cd.c\
       parser/argument_utils.c\
       parser/parser_utils.c\
       pipes/pipe_utils.c\
+      pipes/pipe_utils2.c\
       pipes/pipe_exec.c\
       pipes/pipe_handler.c\
       redirections/redirections.c\
