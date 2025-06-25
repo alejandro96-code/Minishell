@@ -26,7 +26,10 @@
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "[c]": {
+                "editor.defaultFormatter": "keyhr.42-c-format"
+            }
         }
 
     ]

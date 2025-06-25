@@ -77,7 +77,8 @@ int	handle_export_no_equal(char *arg, char *arg_copy, char ***env)
 	return (result);
 }
 
-int	handle_export_with_equal(char *arg, char *arg_copy, char *equal, char ***env)
+int	handle_export_with_equal(char *arg, char *arg_copy, char *equal,
+		char ***env)
 {
 	char	*key;
 	int		result;

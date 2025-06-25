@@ -14,31 +14,31 @@
 
 static char	**pipe_spliter(char *input)
 {
-    char	**result;
-    int		cmd_count;
-    int		i;
-    int		start;
-    int		end;
+	char	**result;
+	int		cmd_count;
+	int		i;
+	int		start;
+	int		end;
 
-    cmd_count = count_pipes(input);
-    result = malloc(sizeof(char *) * (cmd_count + 1));
-    if (!result)
-        return (NULL);
-    i = 0;
-    start = 0;
-    while (i < cmd_count)
-    {
-        end = find_next_pipe(input, start);
-        result[i] = extract_command(input, start, end);
-        if (!result[i])
-        {
-            ft_free_split(result);
-            return (NULL);
-        }
-        start = end + 1;
-        i++;
-    }
-    return (result[i] = NULL, result);
+	cmd_count = count_pipes(input);
+	result = malloc(sizeof(char *) * (cmd_count + 1));
+	if (!result)
+		return (NULL);
+	i = 0;
+	start = 0;
+	while (i < cmd_count)
+	{
+		end = find_next_pipe(input, start);
+		result[i] = extract_command(input, start, end);
+		if (!result[i])
+		{
+			ft_free_split(result);
+			return (NULL);
+		}
+		start = end + 1;
+		i++;
+	}
+	return (result[i] = NULL, result);
 }
 
 static int	check_pipe_syntax_error(char *input)

@@ -68,13 +68,14 @@ int	find_env_var(char *key, char **env)
 		env_equal = ft_strchr(env[i], '=');
 		if (env_equal)
 		{
-			if ((size_t)(env_equal - env[i]) == key_len
-				&& ft_strncmp(env[i], key, key_len) == 0)
+			if ((size_t)(env_equal - env[i]) == key_len && ft_strncmp(env[i],
+					key, key_len) == 0)
 				return (i);
 		}
 		else
 		{
-			if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '\0')
+			if (ft_strncmp(env[i], key, key_len) == 0
+				&& env[i][key_len] == '\0')
 				return (i);
 		}
 		i++;
