@@ -68,6 +68,7 @@ int			builtin_exit(char **args, int exit_status);
 // builtins/export.c
 int			builtin_export(char **args, char ***env);
 int			handle_export(char *arg, char ***env);
+int			find_env_var(char *key, char **env);
 int			replace_env_value(char *key, char *new_value, char ***env);
 int			add_env_value(char *new_value, char ***env);
 
