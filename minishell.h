@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/24 15:35:30 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/26 13:40:08 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ int			find_env_var(char *key, char **env);
 // builtins/export_utils2.c
 int			add_env_value(char *new_value, char ***env);
 int			handle_export_no_equal(char *arg, char *arg_copy, char ***env);
-int			handle_export_with_equal(char *arg, char *arg_copy, char *equal, char ***env);
+int			handle_export_with_equal(char *arg, char *arg_copy, \
+								char *equal, char ***env);
 
 // builtins/general_build.c
 int			is_builtin(char *cmd);

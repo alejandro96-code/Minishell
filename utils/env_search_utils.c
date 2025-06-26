@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_search_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:55:03 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 13:55:03 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/26 13:41:23 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	find_env_var(char *key, char **env)
 		}
 		else
 		{
-			if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '\0')
+			if (ft_strncmp(env[i], key, key_len) == 0
+				&& env[i][key_len] == '\0')
 				return (i);
 		}
 		i++;

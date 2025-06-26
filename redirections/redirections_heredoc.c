@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_heredoc.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 00:00:00 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/24 15:32:40 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/26 13:36:04 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	process_heredoc_lines(int write_fd, char *delimiter, char **env)
 		if (proc_sin_hdoc_line(write_fd, line, delimiter, env))
 		{
 			free(line);
-			break ;
+			return ;
 		}
 		free(line);
 		if (g_signal_received == 42)
