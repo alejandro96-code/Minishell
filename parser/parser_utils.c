@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/19 08:52:31 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/26 23:44:47 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	validate_redirections(const char *input)
 			i++;
 			while (input[i] && (input[i] == ' ' || input[i] == '\t'))
 				i++;
-			if (input[i] && is_redirection(input[i--]))
+			if (!input[i] || is_redirection(input[i]))
 				return (0);
 		}
 		i++;

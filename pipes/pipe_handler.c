@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/14 12:54:01 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/26 23:45:11 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ int	run_command_pipeline(char *input, char **env)
 	cmd_count = split_and_validate_commands(input, &commands);
 	if (cmd_count <= 0 || !commands)
 		return (1);
+	if (!pipe_after_redirec(input))
+		return (print_error_in_pipe(), ft_free_split(commands), 2);
 	i = 0;
 	while (i < cmd_count)
 	{

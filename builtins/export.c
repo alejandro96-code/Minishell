@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/25 00:00:00 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/26 21:17:58 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	print_export_vars(char **env)
+int	print_export_vars(char **env)
 {
 	int	i;
 
@@ -24,6 +24,7 @@ static void	print_export_vars(char **env)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 		i++;
 	}
+	return (0);
 }
 
 static int	is_valid_export(char *str)
@@ -62,20 +63,19 @@ static int	process_export_arg(char *arg, char ***env)
 int	builtin_export(char **args, char ***env)
 {
 	int	i;
+	int	exit_code;
 
 	if (!args[1])
-	{
-		print_export_vars(*env);
-		return (0);
-	}
+		return (print_export_vars(*env));
 	i = 1;
+	exit_code = 0;
 	while (args[i])
 	{
 		if (process_export_arg(args[i], env))
-			return (1);
+			exit_code = 1;
 		i++;
 	}
-	return (0);
+	return (exit_code);
 }
 
 int	handle_export(char *arg, char ***env)

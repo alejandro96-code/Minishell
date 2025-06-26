@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/26 13:40:08 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/26 23:26:25 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,11 @@ int			builtin_exit(char **args, int exit_status);
 // builtins/export.c
 int			builtin_export(char **args, char ***env);
 int			handle_export(char *arg, char ***env);
-
-// builtins/export_utils.c
-char		*find_equal_in_string(char *str);
 int			replace_env_value(char *key, char *new_value, char ***env);
-int			find_env_var(char *key, char **env);
-
-// builtins/export_utils2.c
 int			add_env_value(char *new_value, char ***env);
+int			print_export_vars(char **env);
+char		*find_equal_in_string(char *str);
+int			find_env_var(char *key, char **env);
 int			handle_export_no_equal(char *arg, char *arg_copy, char ***env);
 int			handle_export_with_equal(char *arg, char *arg_copy, \
 								char *equal, char ***env);
@@ -143,6 +140,10 @@ int			validate_redirections(const char *input);
 
 // parser/parser_argument_reorganizer.c
 char		**reorganize_command_args(char **args);
+
+// parser/parser_redirection.c
+int			pipe_after_redirec(const char *input);
+void		print_error_in_pipe(void);
 
 // pipes/pipe_exec.c
 char		**parse_command_arguments(char *command, char **env);

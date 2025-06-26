@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 00:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/25 00:00:00 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/26 21:17:57 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	handle_export_no_equal(char *arg, char *arg_copy, char ***env)
 {
 	int	result;
 
-	if (find_env_var(arg_copy, *env) != -1)
+	if (replace_env_value(arg_copy, arg, env))
 	{
 		free(arg_copy);
 		return (1);

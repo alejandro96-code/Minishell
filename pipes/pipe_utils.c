@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/24 19:08:56 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/26 23:27:42 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ static int	check_pipe_syntax_error(char *input)
 	if (trimmed_input[0] == '|')
 	{
 		free(trimmed_input);
-		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+		print_error_in_pipe();
 		return (1);
 	}
 	if (trimmed_input[ft_strlen(trimmed_input) - 1] == '|')
 	{
 		free(trimmed_input);
-		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+		print_error_in_pipe();
 		return (1);
 	}
 	free(trimmed_input);

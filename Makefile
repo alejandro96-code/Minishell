@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+         #
+#    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/24 15:32:39 by alejandro        ###   ########.fr        #
+#    Updated: 2025/06/26 23:10:18 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRC =	builtins/cd.c\
       parser/argument_splitter.c\
       parser/argument_utils.c\
       parser/parser_utils.c\
+      parser/parser_redirections.c\
       pipes/pipe_utils.c\
       pipes/pipe_utils2.c\
       pipes/pipe_exec.c\
