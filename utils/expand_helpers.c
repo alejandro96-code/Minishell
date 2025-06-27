@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_helpers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:30:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/18 19:16:50 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/27 18:35:26 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,30 +32,60 @@ int	init_expand_state(t_expand_state *state, char *input, char **env,
 	return (1);
 }
 
-// Procesa un carácter durante la expansión
-void	process_character(t_expand_state *state, char current)
+int	handle_quotes(t_expand_state *state, char current)
 {
 	if (current == '\'' && !state->in_double_quotes)
 	{
 		state->in_single_quotes = !state->in_single_quotes;
 		state->input_pos++;
+		return (1);
 	}
 	else if (current == '"' && !state->in_single_quotes)
 	{
 		state->in_double_quotes = !state->in_double_quotes;
 		state->input_pos++;
+		return (1);
 	}
-	else if (current == '$' && !state->in_single_quotes)
+	return (0);
+}
+
+int	handle_dollar_and_escape(t_expand_state *state, char current)
+{
+	if (current == '$' && !state->in_single_quotes)
 	{
-		expand_variable_internal(state);
+		if (state->input[state->input_pos + 1] == '"')
+		{
+			state->input_pos++;
+			process_character(state, state->input[state->input_pos]);
+		}
+		else
+		{
+			expand_variable_internal(state);
+		}
+		return (1);
 	}
 	else if (current == '\\' && state->in_double_quotes)
 	{
 		process_escape_in_double_quotes(state);
+		return (1);
 	}
-	else
-	{
-		add_char_to_result(state, current);
-		state->input_pos++;
-	}
+	return (0);
+}
+
+int	handle_special_chars(t_expand_state *state, char current)
+{
+	if (handle_quotes(state, current))
+		return (1);
+	if (handle_dollar_and_escape(state, current))
+		return (1);
+	return (0);
+}
+
+// Procesa un carácter durante la expansión
+void	process_character(t_expand_state *state, char current)
+{
+	if (handle_special_chars(state, current))
+		return ;
+	add_char_to_result(state, current);
+	state->input_pos++;
 }
