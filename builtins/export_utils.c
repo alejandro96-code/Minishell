@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 00:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/26 21:17:56 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/27 17:49:46 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,39 @@ char	*find_equal_in_string(char *str)
 	return (NULL);
 }
 
+int	check_env_key_match(char *env_str, char *key, size_t key_len)
+{
+	int	j;
+
+	j = 0;
+	while (env_str[j] && env_str[j] != '=')
+		j++;
+	if (env_str[j] == '=' && (size_t)j == key_len
+		&& ft_strncmp(env_str, key, key_len) == 0)
+		return (1);
+	if (!env_str[j] && ft_strncmp(env_str, key, key_len) == 0
+		&& env_str[key_len] == '\0')
+		return (1);
+	return (0);
+}
+
+int	replace_env_at_index(int i, char *new_value, char ***env)
+{
+	char	*new_str;
+
+	new_str = ft_strdup(new_value);
+	if (!new_str)
+		return (0);
+	free((*env)[i]);
+	(*env)[i] = new_str;
+	return (1);
+}
+
 int	replace_env_value(char *key, char *new_value, char ***env)
 {
 	int		i;
 	size_t	key_len;
 	char	*env_str;
-	char	*new_str;
-	int		j;
 
 	if (!key || !new_value || !env || !*env)
 		return (0);
@@ -41,29 +67,8 @@ int	replace_env_value(char *key, char *new_value, char ***env)
 	while ((*env)[i])
 	{
 		env_str = (*env)[i];
-		j = 0;
-		while (env_str[j] && env_str[j] != '=')
-			j++;
-		if (env_str[j] == '=' && (size_t)j == key_len
-			&& ft_strncmp(env_str, key, key_len) == 0)
-		{
-			new_str = ft_strdup(new_value);
-			if (!new_str)
-				return (0);
-			free((*env)[i]);
-			(*env)[i] = new_str;
-			return (1);
-		}
-		if (!env_str[j] && ft_strncmp(env_str, key, key_len) == 0
-			&& env_str[key_len] == '\0')
-		{
-			new_str = ft_strdup(new_value);
-			if (!new_str)
-				return (0);
-			free((*env)[i]);
-			(*env)[i] = new_str;
-			return (1);
-		}
+		if (check_env_key_match(env_str, key, key_len))
+			return (replace_env_at_index(i, new_value, env));
 		i++;
 	}
 	return (0);
