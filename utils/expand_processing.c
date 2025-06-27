@@ -6,7 +6,7 @@
 /*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/27 18:35:28 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:36:59 by alejanr2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	expand_variable_internal(t_expand_state *state)
 		name_len = extract_var_name(state, var_name);
 	if (name_len == 0)
 	{
-				add_char_to_result(state, '$');
+		add_char_to_result(state, '$');
 		return (1);
 	}
 	value = get_env_var(var_name, state->env);
