@@ -1,0 +1,1114 @@
+REPORTE DE MEMORY LEAKS - MINISHELL
+Generado: Sun Jun 29 03:13:08 AM CEST 2025
+========================================
+
+Sun Jun 29 03:13:22 AM CEST 2025: Iniciando Tests Básicos
+----------------------------------------
+[1;33m🔧 Iniciando tests de memory leaks para minishell[0m
+========================================================
+[0;34m📋 Ejecutando tests categorizados...[0m
+
+[1;33m=== TESTS BÁSICOS ===[0m
+[0;34m🧪 Test: Comando simple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587028==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587028==    by 0x40523D: main_loop (main.c:37)
+==1587028==    by 0x40523D: main (main.c:59)
+==1587028== 
+==1587028== LEAK SUMMARY:
+==1587028==    definitely lost: 0 bytes in 0 blocks
+==1587028==    indirectly lost: 0 bytes in 0 blocks
+==1587028==      possibly lost: 0 bytes in 0 blocks
+==1587028==    still reachable: 213,964 bytes in 307 blocks
+==1587028==         suppressed: 0 bytes in 0 blocks
+==1587028== 
+==1587028== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comando inexistente[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587034==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587034==    by 0x40523D: main_loop (main.c:37)
+==1587034==    by 0x40523D: main (main.c:59)
+==1587034== 
+==1587034== LEAK SUMMARY:
+==1587034==    definitely lost: 0 bytes in 0 blocks
+==1587034==    indirectly lost: 0 bytes in 0 blocks
+==1587034==      possibly lost: 0 bytes in 0 blocks
+==1587034==    still reachable: 213,983 bytes in 307 blocks
+==1587034==         suppressed: 0 bytes in 0 blocks
+==1587034== 
+==1587034== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Múltiples comandos simples[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587062==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587062==    by 0x40523D: main_loop (main.c:37)
+==1587062==    by 0x40523D: main (main.c:59)
+==1587062== 
+==1587062== LEAK SUMMARY:
+==1587062==    definitely lost: 0 bytes in 0 blocks
+==1587062==    indirectly lost: 0 bytes in 0 blocks
+==1587062==      possibly lost: 0 bytes in 0 blocks
+==1587062==    still reachable: 214,050 bytes in 313 blocks
+==1587062==         suppressed: 0 bytes in 0 blocks
+==1587062== 
+==1587062== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE BUILTINS ===[0m
+[0;34m🧪 Test: builtin echo simple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587079==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587079==    by 0x40523D: main_loop (main.c:37)
+==1587079==    by 0x40523D: main (main.c:59)
+==1587079== 
+==1587079== LEAK SUMMARY:
+==1587079==    definitely lost: 0 bytes in 0 blocks
+==1587079==    indirectly lost: 0 bytes in 0 blocks
+==1587079==      possibly lost: 0 bytes in 0 blocks
+==1587079==    still reachable: 213,977 bytes in 307 blocks
+==1587079==         suppressed: 0 bytes in 0 blocks
+==1587079== 
+==1587079== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin echo con flags[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587093==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587093==    by 0x40523D: main_loop (main.c:37)
+==1587093==    by 0x40523D: main (main.c:59)
+==1587093== 
+==1587093== LEAK SUMMARY:
+==1587093==    definitely lost: 0 bytes in 0 blocks
+==1587093==    indirectly lost: 0 bytes in 0 blocks
+==1587093==      possibly lost: 0 bytes in 0 blocks
+==1587093==    still reachable: 213,974 bytes in 307 blocks
+==1587093==         suppressed: 0 bytes in 0 blocks
+==1587093== 
+==1587093== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin echo múltiple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587098==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587098==    by 0x40523D: main_loop (main.c:37)
+==1587098==    by 0x40523D: main (main.c:59)
+==1587098== 
+==1587098== LEAK SUMMARY:
+==1587098==    definitely lost: 0 bytes in 0 blocks
+==1587098==    indirectly lost: 0 bytes in 0 blocks
+==1587098==      possibly lost: 0 bytes in 0 blocks
+==1587098==    still reachable: 214,066 bytes in 313 blocks
+==1587098==         suppressed: 0 bytes in 0 blocks
+==1587098== 
+==1587098== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin pwd[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587103==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587103==    by 0x40523D: main_loop (main.c:37)
+==1587103==    by 0x40523D: main (main.c:59)
+==1587103== 
+==1587103== LEAK SUMMARY:
+==1587103==    definitely lost: 0 bytes in 0 blocks
+==1587103==    indirectly lost: 0 bytes in 0 blocks
+==1587103==      possibly lost: 0 bytes in 0 blocks
+==1587103==    still reachable: 213,965 bytes in 307 blocks
+==1587103==         suppressed: 0 bytes in 0 blocks
+==1587103== 
+==1587103== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin pwd múltiple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587130==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587130==    by 0x40523D: main_loop (main.c:37)
+==1587130==    by 0x40523D: main (main.c:59)
+==1587130== 
+==1587130== LEAK SUMMARY:
+==1587130==    definitely lost: 0 bytes in 0 blocks
+==1587130==    indirectly lost: 0 bytes in 0 blocks
+==1587130==      possibly lost: 0 bytes in 0 blocks
+==1587130==    still reachable: 214,045 bytes in 313 blocks
+==1587130==         suppressed: 0 bytes in 0 blocks
+==1587130== 
+==1587130== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin env[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587146==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587146==    by 0x40523D: main_loop (main.c:37)
+==1587146==    by 0x40523D: main (main.c:59)
+==1587146== 
+==1587146== LEAK SUMMARY:
+==1587146==    definitely lost: 0 bytes in 0 blocks
+==1587146==    indirectly lost: 0 bytes in 0 blocks
+==1587146==      possibly lost: 0 bytes in 0 blocks
+==1587146==    still reachable: 213,965 bytes in 307 blocks
+==1587146==         suppressed: 0 bytes in 0 blocks
+==1587146== 
+==1587146== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin env después de export[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587159==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587159==    by 0x40523D: main_loop (main.c:37)
+==1587159==    by 0x40523D: main (main.c:59)
+==1587159== 
+==1587159== LEAK SUMMARY:
+==1587159==    definitely lost: 0 bytes in 0 blocks
+==1587159==    indirectly lost: 0 bytes in 0 blocks
+==1587159==      possibly lost: 0 bytes in 0 blocks
+==1587159==    still reachable: 214,038 bytes in 311 blocks
+==1587159==         suppressed: 0 bytes in 0 blocks
+==1587159== 
+==1587159== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin cd home[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587164==    by 0x4892A0F: rl_initialize (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587164==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587164==    by 0x40523D: main_loop (main.c:37)
+==1587164==    by 0x40523D: main (main.c:59)
+==1587164== 
+==1587164== 15 bytes in 1 blocks are definitely lost in loss record 9 of 73
+==1587164==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1587164==    by 0x40151A: resolve_home_path (cd.c:68)
+==1587164==    by 0x401394: builtin_cd (cd.c:49)
+==1587164==    by 0x4022C3: execute_builtin (general_build.c:30)
+==1587164==    by 0x404FB1: process_single_command (input_processor.c:71)
+--
+==1587164==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587164==    by 0x40523D: main_loop (main.c:37)
+==1587164==    by 0x40523D: main (main.c:59)
+==1587164== 
+==1587164== LEAK SUMMARY:
+==1587164==    definitely lost: 15 bytes in 1 blocks
+==1587164==    indirectly lost: 0 bytes in 0 blocks
+==1587164==      possibly lost: 0 bytes in 0 blocks
+==1587164==    still reachable: 213,916 bytes in 307 blocks
+==1587164==         suppressed: 0 bytes in 0 blocks
+==1587164== 
+==1587164== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin cd directorio inexistente[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587177==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587177==    by 0x40523D: main_loop (main.c:37)
+==1587177==    by 0x40523D: main (main.c:59)
+==1587177== 
+==1587177== LEAK SUMMARY:
+==1587177==    definitely lost: 0 bytes in 0 blocks
+==1587177==    indirectly lost: 0 bytes in 0 blocks
+==1587177==      possibly lost: 0 bytes in 0 blocks
+==1587177==    still reachable: 213,988 bytes in 307 blocks
+==1587177==         suppressed: 0 bytes in 0 blocks
+==1587177== 
+==1587177== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin cd con PATH relativo[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587182==    by 0x4892A0F: rl_initialize (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587182==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587182==    by 0x40523D: main_loop (main.c:37)
+==1587182==    by 0x40523D: main (main.c:59)
+==1587182== 
+==1587182== 85 bytes in 2 blocks are definitely lost in loss record 22 of 71
+==1587182==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1587182==    by 0x405CE5: ft_strdup (in /home/dgasco-g/Desktop/curso/Mini/minishell)
+==1587182==    by 0x401451: resolve_relative_path (cd.c:90)
+==1587182==    by 0x401451: builtin_cd (cd.c:51)
+==1587182==    by 0x4022C3: execute_builtin (general_build.c:30)
+--
+==1587182==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587182==    by 0x40523D: main_loop (main.c:37)
+==1587182==    by 0x40523D: main (main.c:59)
+==1587182== 
+==1587182== LEAK SUMMARY:
+==1587182==    definitely lost: 85 bytes in 2 blocks
+==1587182==    indirectly lost: 0 bytes in 0 blocks
+==1587182==      possibly lost: 0 bytes in 0 blocks
+==1587182==    still reachable: 213,852 bytes in 308 blocks
+==1587182==         suppressed: 0 bytes in 0 blocks
+==1587182== 
+==1587182== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin export simple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587201==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587201==    by 0x40523D: main_loop (main.c:37)
+==1587201==    by 0x40523D: main (main.c:59)
+==1587201== 
+==1587201== LEAK SUMMARY:
+==1587201==    definitely lost: 0 bytes in 0 blocks
+==1587201==    indirectly lost: 0 bytes in 0 blocks
+==1587201==      possibly lost: 0 bytes in 0 blocks
+==1587201==    still reachable: 213,998 bytes in 308 blocks
+==1587201==         suppressed: 0 bytes in 0 blocks
+==1587201== 
+==1587201== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin export múltiple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587225==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587225==    by 0x40523D: main_loop (main.c:37)
+==1587225==    by 0x40523D: main (main.c:59)
+==1587225== 
+==1587225== LEAK SUMMARY:
+==1587225==    definitely lost: 0 bytes in 0 blocks
+==1587225==    indirectly lost: 0 bytes in 0 blocks
+==1587225==      possibly lost: 0 bytes in 0 blocks
+==1587225==    still reachable: 214,138 bytes in 316 blocks
+==1587225==         suppressed: 0 bytes in 0 blocks
+==1587225== 
+==1587225== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin export sin valor[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587230==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587230==    by 0x40523D: main_loop (main.c:37)
+==1587230==    by 0x40523D: main (main.c:59)
+==1587230== 
+==1587230== LEAK SUMMARY:
+==1587230==    definitely lost: 0 bytes in 0 blocks
+==1587230==    indirectly lost: 0 bytes in 0 blocks
+==1587230==      possibly lost: 0 bytes in 0 blocks
+==1587230==    still reachable: 213,996 bytes in 308 blocks
+==1587230==         suppressed: 0 bytes in 0 blocks
+==1587230== 
+==1587230== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin export con espacios[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587243==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587243==    by 0x40523D: main_loop (main.c:37)
+==1587243==    by 0x40523D: main (main.c:59)
+==1587243== 
+==1587243== LEAK SUMMARY:
+==1587243==    definitely lost: 0 bytes in 0 blocks
+==1587243==    indirectly lost: 0 bytes in 0 blocks
+==1587243==      possibly lost: 0 bytes in 0 blocks
+==1587243==    still reachable: 214,024 bytes in 308 blocks
+==1587243==         suppressed: 0 bytes in 0 blocks
+==1587243== 
+==1587243== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin unset[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587248==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587248==    by 0x40523D: main_loop (main.c:37)
+==1587248==    by 0x40523D: main (main.c:59)
+==1587248== 
+==1587248== LEAK SUMMARY:
+==1587248==    definitely lost: 0 bytes in 0 blocks
+==1587248==    indirectly lost: 0 bytes in 0 blocks
+==1587248==      possibly lost: 0 bytes in 0 blocks
+==1587248==    still reachable: 214,034 bytes in 310 blocks
+==1587248==         suppressed: 0 bytes in 0 blocks
+==1587248== 
+==1587248== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin unset múltiple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587253==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587253==    by 0x40523D: main_loop (main.c:37)
+==1587253==    by 0x40523D: main (main.c:59)
+==1587253== 
+==1587253== LEAK SUMMARY:
+==1587253==    definitely lost: 0 bytes in 0 blocks
+==1587253==    indirectly lost: 0 bytes in 0 blocks
+==1587253==      possibly lost: 0 bytes in 0 blocks
+==1587253==    still reachable: 214,081 bytes in 313 blocks
+==1587253==         suppressed: 0 bytes in 0 blocks
+==1587253== 
+==1587253== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE VARIABLES DE ENTORNO ===[0m
+[0;34m🧪 Test: Expansión de variable simple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587280==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587280==    by 0x40523D: main_loop (main.c:37)
+==1587280==    by 0x40523D: main (main.c:59)
+==1587280== 
+==1587280== LEAK SUMMARY:
+==1587280==    definitely lost: 0 bytes in 0 blocks
+==1587280==    indirectly lost: 0 bytes in 0 blocks
+==1587280==      possibly lost: 0 bytes in 0 blocks
+==1587280==    still reachable: 213,972 bytes in 307 blocks
+==1587280==         suppressed: 0 bytes in 0 blocks
+==1587280== 
+==1587280== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Expansión de variable inexistente[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587296==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587296==    by 0x40523D: main_loop (main.c:37)
+==1587296==    by 0x40523D: main (main.c:59)
+==1587296== 
+==1587296== LEAK SUMMARY:
+==1587296==    definitely lost: 0 bytes in 0 blocks
+==1587296==    indirectly lost: 0 bytes in 0 blocks
+==1587296==      possibly lost: 0 bytes in 0 blocks
+==1587296==    still reachable: 213,983 bytes in 307 blocks
+==1587296==         suppressed: 0 bytes in 0 blocks
+==1587296== 
+==1587296== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Expansión múltiple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587309==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587309==    by 0x40523D: main_loop (main.c:37)
+==1587309==    by 0x40523D: main (main.c:59)
+==1587309== 
+==1587309== LEAK SUMMARY:
+==1587309==    definitely lost: 0 bytes in 0 blocks
+==1587309==    indirectly lost: 0 bytes in 0 blocks
+==1587309==      possibly lost: 0 bytes in 0 blocks
+==1587309==    still reachable: 213,984 bytes in 307 blocks
+==1587309==         suppressed: 0 bytes in 0 blocks
+==1587309== 
+==1587309== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==1587309== 
+---
+
+[0;34m🧪 Test: Variable con comillas[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587314==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587314==    by 0x40523D: main_loop (main.c:37)
+==1587314==    by 0x40523D: main (main.c:59)
+==1587314== 
+==1587314== LEAK SUMMARY:
+==1587314==    definitely lost: 0 bytes in 0 blocks
+==1587314==    indirectly lost: 0 bytes in 0 blocks
+==1587314==      possibly lost: 0 bytes in 0 blocks
+==1587314==    still reachable: 213,974 bytes in 307 blocks
+==1587314==         suppressed: 0 bytes in 0 blocks
+==1587314== 
+==1587314== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Expansión de $?[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587327==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587327==    by 0x40523D: main_loop (main.c:37)
+==1587327==    by 0x40523D: main (main.c:59)
+==1587327== 
+==1587327== LEAK SUMMARY:
+==1587327==    definitely lost: 0 bytes in 0 blocks
+==1587327==    indirectly lost: 0 bytes in 0 blocks
+==1587327==      possibly lost: 0 bytes in 0 blocks
+==1587327==    still reachable: 213,969 bytes in 307 blocks
+==1587327==         suppressed: 0 bytes in 0 blocks
+==1587327== 
+==1587327== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE QUOTES ===[0m
+[0;34m🧪 Test: Comillas simples[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587332==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587332==    by 0x40523D: main_loop (main.c:37)
+==1587332==    by 0x40523D: main (main.c:59)
+==1587332== 
+==1587332== LEAK SUMMARY:
+==1587332==    definitely lost: 0 bytes in 0 blocks
+==1587332==    indirectly lost: 0 bytes in 0 blocks
+==1587332==      possibly lost: 0 bytes in 0 blocks
+==1587332==    still reachable: 213,979 bytes in 307 blocks
+==1587332==         suppressed: 0 bytes in 0 blocks
+==1587332== 
+==1587332== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comillas dobles[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587351==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587351==    by 0x40523D: main_loop (main.c:37)
+==1587351==    by 0x40523D: main (main.c:59)
+==1587351== 
+==1587351== LEAK SUMMARY:
+==1587351==    definitely lost: 0 bytes in 0 blocks
+==1587351==    indirectly lost: 0 bytes in 0 blocks
+==1587351==      possibly lost: 0 bytes in 0 blocks
+==1587351==    still reachable: 213,979 bytes in 307 blocks
+==1587351==         suppressed: 0 bytes in 0 blocks
+==1587351== 
+==1587351== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comillas mixtas[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587375==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587375==    by 0x40523D: main_loop (main.c:37)
+==1587375==    by 0x40523D: main (main.c:59)
+==1587375== 
+==1587375== LEAK SUMMARY:
+==1587375==    definitely lost: 0 bytes in 0 blocks
+==1587375==    indirectly lost: 0 bytes in 0 blocks
+==1587375==      possibly lost: 0 bytes in 0 blocks
+==1587375==    still reachable: 213,981 bytes in 307 blocks
+==1587375==         suppressed: 0 bytes in 0 blocks
+==1587375== 
+==1587375== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comillas anidadas[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587380==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587380==    by 0x40523D: main_loop (main.c:37)
+==1587380==    by 0x40523D: main (main.c:59)
+==1587380== 
+==1587380== LEAK SUMMARY:
+==1587380==    definitely lost: 0 bytes in 0 blocks
+==1587380==    indirectly lost: 0 bytes in 0 blocks
+==1587380==      possibly lost: 0 bytes in 0 blocks
+==1587380==    still reachable: 213,983 bytes in 307 blocks
+==1587380==         suppressed: 0 bytes in 0 blocks
+==1587380== 
+==1587380== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comillas vacías[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587392==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587392==    by 0x40523D: main_loop (main.c:37)
+==1587392==    by 0x40523D: main (main.c:59)
+==1587392== 
+==1587392== LEAK SUMMARY:
+==1587392==    definitely lost: 0 bytes in 0 blocks
+==1587392==    indirectly lost: 0 bytes in 0 blocks
+==1587392==      possibly lost: 0 bytes in 0 blocks
+==1587392==    still reachable: 213,972 bytes in 307 blocks
+==1587392==         suppressed: 0 bytes in 0 blocks
+==1587392== 
+==1587392== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE PIPES ===[0m
+[0;34m🧪 Test: Pipe simple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587404==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587404==    by 0x40523D: main_loop (main.c:37)
+==1587404==    by 0x40523D: main (main.c:59)
+==1587404== 
+==1587404== LEAK SUMMARY:
+==1587404==    definitely lost: 0 bytes in 0 blocks
+==1587404==    indirectly lost: 0 bytes in 0 blocks
+==1587404==      possibly lost: 0 bytes in 0 blocks
+==1587404==    still reachable: 214,243 bytes in 307 blocks
+==1587404==         suppressed: 0 bytes in 0 blocks
+==1587404== 
+==1587404== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+--
+==1587397==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587397==    by 0x40523D: main_loop (main.c:37)
+==1587397==    by 0x40523D: main (main.c:59)
+==1587397== 
+==1587397== LEAK SUMMARY:
+==1587397==    definitely lost: 0 bytes in 0 blocks
+==1587397==    indirectly lost: 0 bytes in 0 blocks
+==1587397==      possibly lost: 0 bytes in 0 blocks
+==1587397==    still reachable: 213,977 bytes in 307 blocks
+==1587397==         suppressed: 0 bytes in 0 blocks
+==1587397== 
+==1587397== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe doble[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587425==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587425==    by 0x40523D: main_loop (main.c:37)
+==1587425==    by 0x40523D: main (main.c:59)
+==1587425== 
+==1587425== LEAK SUMMARY:
+==1587425==    definitely lost: 0 bytes in 0 blocks
+==1587425==    indirectly lost: 0 bytes in 0 blocks
+==1587425==      possibly lost: 0 bytes in 0 blocks
+==1587425==    still reachable: 214,269 bytes in 308 blocks
+==1587425==         suppressed: 0 bytes in 0 blocks
+==1587425== 
+==1587425== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+--
+==1587424==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587424==    by 0x40523D: main_loop (main.c:37)
+==1587424==    by 0x40523D: main (main.c:59)
+==1587424== 
+==1587424== LEAK SUMMARY:
+==1587424==    definitely lost: 0 bytes in 0 blocks
+==1587424==    indirectly lost: 0 bytes in 0 blocks
+==1587424==      possibly lost: 0 bytes in 0 blocks
+==1587424==    still reachable: 213,983 bytes in 307 blocks
+==1587424==         suppressed: 0 bytes in 0 blocks
+==1587424== 
+==1587424== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe triple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587445==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587445==    by 0x40523D: main_loop (main.c:37)
+==1587445==    by 0x40523D: main (main.c:59)
+==1587445== 
+==1587445== LEAK SUMMARY:
+==1587445==    definitely lost: 0 bytes in 0 blocks
+==1587445==    indirectly lost: 0 bytes in 0 blocks
+==1587445==      possibly lost: 0 bytes in 0 blocks
+==1587445==    still reachable: 214,295 bytes in 309 blocks
+==1587445==         suppressed: 0 bytes in 0 blocks
+==1587445== 
+==1587445== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+--
+==1587432==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587432==    by 0x40523D: main_loop (main.c:37)
+==1587432==    by 0x40523D: main (main.c:59)
+==1587432== 
+==1587432== LEAK SUMMARY:
+==1587432==    definitely lost: 0 bytes in 0 blocks
+==1587432==    indirectly lost: 0 bytes in 0 blocks
+==1587432==      possibly lost: 0 bytes in 0 blocks
+==1587432==    still reachable: 213,989 bytes in 307 blocks
+==1587432==         suppressed: 0 bytes in 0 blocks
+==1587432== 
+==1587432== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe con ls y grep[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587459==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587459==    by 0x40523D: main_loop (main.c:37)
+==1587459==    by 0x40523D: main (main.c:59)
+==1587459== 
+==1587459== LEAK SUMMARY:
+==1587459==    definitely lost: 0 bytes in 0 blocks
+==1587459==    indirectly lost: 0 bytes in 0 blocks
+==1587459==      possibly lost: 0 bytes in 0 blocks
+==1587459==    still reachable: 213,981 bytes in 307 blocks
+==1587459==         suppressed: 0 bytes in 0 blocks
+==1587459== 
+==1587459== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe con comandos builtin[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587467==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587467==    by 0x40523D: main_loop (main.c:37)
+==1587467==    by 0x40523D: main (main.c:59)
+==1587467== 
+==1587467== LEAK SUMMARY:
+==1587467==    definitely lost: 0 bytes in 0 blocks
+==1587467==    indirectly lost: 0 bytes in 0 blocks
+==1587467==      possibly lost: 0 bytes in 0 blocks
+==1587467==    still reachable: 213,969 bytes in 306 blocks
+==1587467==         suppressed: 0 bytes in 0 blocks
+==1587467== 
+==1587467== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+HOME=/home/dgasco-g
+--
+==1587466==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587466==    by 0x40523D: main_loop (main.c:37)
+==1587466==    by 0x40523D: main (main.c:59)
+==1587466== 
+==1587466== LEAK SUMMARY:
+==1587466==    definitely lost: 0 bytes in 0 blocks
+==1587466==    indirectly lost: 0 bytes in 0 blocks
+==1587466==      possibly lost: 0 bytes in 0 blocks
+==1587466==    still reachable: 213,977 bytes in 307 blocks
+==1587466==         suppressed: 0 bytes in 0 blocks
+==1587466== 
+==1587466== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE REDIRECCIONES ===[0m
+[0;34m🧪 Test: Redirección de salida[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587473==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587473==    by 0x40523D: main_loop (main.c:37)
+==1587473==    by 0x40523D: main (main.c:59)
+==1587473== 
+==1587473== LEAK SUMMARY:
+==1587473==    definitely lost: 0 bytes in 0 blocks
+==1587473==    indirectly lost: 0 bytes in 0 blocks
+==1587473==      possibly lost: 0 bytes in 0 blocks
+==1587473==    still reachable: 213,984 bytes in 307 blocks
+==1587473==         suppressed: 0 bytes in 0 blocks
+==1587473== 
+==1587473== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Redirección de entrada[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587486==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587486==    by 0x40523D: main_loop (main.c:37)
+==1587486==    by 0x40523D: main (main.c:59)
+==1587486== 
+==1587486== LEAK SUMMARY:
+==1587486==    definitely lost: 0 bytes in 0 blocks
+==1587486==    indirectly lost: 0 bytes in 0 blocks
+==1587486==      possibly lost: 0 bytes in 0 blocks
+==1587486==    still reachable: 208,361 bytes in 225 blocks
+==1587486==         suppressed: 0 bytes in 0 blocks
+==1587486== 
+==1587486== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Redirección append[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587506==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587506==    by 0x40523D: main_loop (main.c:37)
+==1587506==    by 0x40523D: main (main.c:59)
+==1587506== 
+==1587506== LEAK SUMMARY:
+==1587506==    definitely lost: 0 bytes in 0 blocks
+==1587506==    indirectly lost: 0 bytes in 0 blocks
+==1587506==      possibly lost: 0 bytes in 0 blocks
+==1587506==    still reachable: 213,985 bytes in 307 blocks
+==1587506==         suppressed: 0 bytes in 0 blocks
+==1587506== 
+==1587506== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Redirecciones múltiples[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587531==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587531==    by 0x40523D: main_loop (main.c:37)
+==1587531==    by 0x40523D: main (main.c:59)
+==1587531== 
+==1587531== LEAK SUMMARY:
+==1587531==    definitely lost: 0 bytes in 0 blocks
+==1587531==    indirectly lost: 0 bytes in 0 blocks
+==1587531==      possibly lost: 0 bytes in 0 blocks
+==1587531==    still reachable: 214,043 bytes in 310 blocks
+==1587531==         suppressed: 0 bytes in 0 blocks
+==1587531== 
+==1587531== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE HEREDOC ===[0m
+[0;34m🧪 Test: Heredoc simple[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587536==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587536==    by 0x40523D: main_loop (main.c:37)
+==1587536==    by 0x40523D: main (main.c:59)
+==1587536== 
+==1587536== LEAK SUMMARY:
+==1587536==    definitely lost: 0 bytes in 0 blocks
+==1587536==    indirectly lost: 0 bytes in 0 blocks
+==1587536==      possibly lost: 0 bytes in 0 blocks
+==1587536==    still reachable: 208,360 bytes in 226 blocks
+==1587536==         suppressed: 0 bytes in 0 blocks
+==1587536== 
+==1587536== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Heredoc con variables[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587550==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587550==    by 0x40523D: main_loop (main.c:37)
+==1587550==    by 0x40523D: main (main.c:59)
+==1587550== 
+==1587550== LEAK SUMMARY:
+==1587550==    definitely lost: 0 bytes in 0 blocks
+==1587550==    indirectly lost: 0 bytes in 0 blocks
+==1587550==      possibly lost: 0 bytes in 0 blocks
+==1587550==    still reachable: 208,360 bytes in 226 blocks
+==1587550==         suppressed: 0 bytes in 0 blocks
+==1587550== 
+==1587550== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE PARSING COMPLEJO ===[0m
+[0;34m🧪 Test: Comando con muchos argumentos[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587557==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587557==    by 0x40523D: main_loop (main.c:37)
+==1587557==    by 0x40523D: main (main.c:59)
+==1587557== 
+==1587557== LEAK SUMMARY:
+==1587557==    definitely lost: 0 bytes in 0 blocks
+==1587557==    indirectly lost: 0 bytes in 0 blocks
+==1587557==      possibly lost: 0 bytes in 0 blocks
+==1587557==    still reachable: 214,018 bytes in 307 blocks
+==1587557==         suppressed: 0 bytes in 0 blocks
+==1587557== 
+==1587557== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Múltiples pipes y redirecciones[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587583==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587583==    by 0x40523D: main_loop (main.c:37)
+==1587583==    by 0x40523D: main (main.c:59)
+==1587583== 
+==1587583== LEAK SUMMARY:
+==1587583==    definitely lost: 0 bytes in 0 blocks
+==1587583==    indirectly lost: 0 bytes in 0 blocks
+==1587583==      possibly lost: 0 bytes in 0 blocks
+==1587583==    still reachable: 214,282 bytes in 307 blocks
+==1587583==         suppressed: 0 bytes in 0 blocks
+==1587583== 
+==1587583== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+--
+==1587562==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587562==    by 0x40523D: main_loop (main.c:37)
+==1587562==    by 0x40523D: main (main.c:59)
+==1587562== 
+==1587562== LEAK SUMMARY:
+==1587562==    definitely lost: 0 bytes in 0 blocks
+==1587562==    indirectly lost: 0 bytes in 0 blocks
+==1587562==      possibly lost: 0 bytes in 0 blocks
+==1587562==    still reachable: 213,990 bytes in 307 blocks
+==1587562==         suppressed: 0 bytes in 0 blocks
+==1587562== 
+==1587562== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comando largo con variables[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587589==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587589==    by 0x40523D: main_loop (main.c:37)
+==1587589==    by 0x40523D: main (main.c:59)
+==1587589== 
+==1587589== LEAK SUMMARY:
+==1587589==    definitely lost: 0 bytes in 0 blocks
+==1587589==    indirectly lost: 0 bytes in 0 blocks
+==1587589==      possibly lost: 0 bytes in 0 blocks
+==1587589==    still reachable: 213,989 bytes in 307 blocks
+==1587589==         suppressed: 0 bytes in 0 blocks
+==1587589== 
+==1587589== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==1587589== 
+---
+
+[1;33m=== TESTS DE SEÑALES ===[0m
+[0;34m🧪 Test: Comando con Ctrl+C simulado[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587605==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587605==    by 0x40523D: main_loop (main.c:37)
+==1587605==    by 0x40523D: main (main.c:59)
+==1587605== 
+==1587605== LEAK SUMMARY:
+==1587605==    definitely lost: 0 bytes in 0 blocks
+==1587605==    indirectly lost: 0 bytes in 0 blocks
+==1587605==      possibly lost: 0 bytes in 0 blocks
+==1587605==    still reachable: 213,969 bytes in 307 blocks
+==1587605==         suppressed: 0 bytes in 0 blocks
+==1587605== 
+==1587605== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Múltiples comandos interrumpidos[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587623==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587623==    by 0x40523D: main_loop (main.c:37)
+==1587623==    by 0x40523D: main (main.c:59)
+==1587623== 
+==1587623== LEAK SUMMARY:
+==1587623==    definitely lost: 0 bytes in 0 blocks
+==1587623==    indirectly lost: 0 bytes in 0 blocks
+==1587623==      possibly lost: 0 bytes in 0 blocks
+==1587623==    still reachable: 214,013 bytes in 310 blocks
+==1587623==         suppressed: 0 bytes in 0 blocks
+==1587623== 
+==1587623== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE EDGE CASES ===[0m
+[0;34m🧪 Test: Input vacío[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587675==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587675==    by 0x40523D: main_loop (main.c:37)
+==1587675==    by 0x40523D: main (main.c:59)
+==1587675== 
+==1587675== LEAK SUMMARY:
+==1587675==    definitely lost: 0 bytes in 0 blocks
+==1587675==    indirectly lost: 0 bytes in 0 blocks
+==1587675==      possibly lost: 0 bytes in 0 blocks
+==1587675==    still reachable: 213,925 bytes in 304 blocks
+==1587675==         suppressed: 0 bytes in 0 blocks
+==1587675== 
+==1587675== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Solo espacios[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587680==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587680==    by 0x40523D: main_loop (main.c:37)
+==1587680==    by 0x40523D: main (main.c:59)
+==1587680== 
+==1587680== LEAK SUMMARY:
+==1587680==    definitely lost: 0 bytes in 0 blocks
+==1587680==    indirectly lost: 0 bytes in 0 blocks
+==1587680==      possibly lost: 0 bytes in 0 blocks
+==1587680==    still reachable: 213,965 bytes in 307 blocks
+==1587680==         suppressed: 0 bytes in 0 blocks
+==1587680== 
+==1587680== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Solo tabs[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587693==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587693==    by 0x40523D: main_loop (main.c:37)
+==1587693==    by 0x40523D: main (main.c:59)
+==1587693== 
+==1587693== LEAK SUMMARY:
+==1587693==    definitely lost: 0 bytes in 0 blocks
+==1587693==    indirectly lost: 0 bytes in 0 blocks
+==1587693==      possibly lost: 0 bytes in 0 blocks
+==1587693==    still reachable: 213,925 bytes in 304 blocks
+==1587693==         suppressed: 0 bytes in 0 blocks
+==1587693== 
+==1587693== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comando con espacios extra[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587702==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587702==    by 0x40523D: main_loop (main.c:37)
+==1587702==    by 0x40523D: main (main.c:59)
+==1587702== 
+==1587702== LEAK SUMMARY:
+==1587702==    definitely lost: 0 bytes in 0 blocks
+==1587702==    indirectly lost: 0 bytes in 0 blocks
+==1587702==      possibly lost: 0 bytes in 0 blocks
+==1587702==    still reachable: 213,977 bytes in 307 blocks
+==1587702==         suppressed: 0 bytes in 0 blocks
+==1587702== 
+==1587702== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe al final (error)[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587708==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587708==    by 0x40523D: main_loop (main.c:37)
+==1587708==    by 0x40523D: main (main.c:59)
+==1587708== 
+==1587708== LEAK SUMMARY:
+==1587708==    definitely lost: 0 bytes in 0 blocks
+==1587708==    indirectly lost: 0 bytes in 0 blocks
+==1587708==      possibly lost: 0 bytes in 0 blocks
+==1587708==    still reachable: 213,973 bytes in 307 blocks
+==1587708==         suppressed: 0 bytes in 0 blocks
+==1587708== 
+==1587708== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Redirección sin archivo[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587735==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587735==    by 0x40523D: main_loop (main.c:37)
+==1587735==    by 0x40523D: main (main.c:59)
+==1587735== 
+==1587735== LEAK SUMMARY:
+==1587735==    definitely lost: 0 bytes in 0 blocks
+==1587735==    indirectly lost: 0 bytes in 0 blocks
+==1587735==      possibly lost: 0 bytes in 0 blocks
+==1587735==    still reachable: 213,973 bytes in 307 blocks
+==1587735==         suppressed: 0 bytes in 0 blocks
+==1587735== 
+==1587735== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Caracteres especiales[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587751==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587751==    by 0x40523D: main_loop (main.c:37)
+==1587751==    by 0x40523D: main (main.c:59)
+==1587751== 
+==1587751== LEAK SUMMARY:
+==1587751==    definitely lost: 0 bytes in 0 blocks
+==1587751==    indirectly lost: 0 bytes in 0 blocks
+==1587751==      possibly lost: 0 bytes in 0 blocks
+==1587751==    still reachable: 213,975 bytes in 307 blocks
+==1587751==         suppressed: 0 bytes in 0 blocks
+==1587751== 
+==1587751== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE MEMORIA INTENSIVOS ===[0m
+[0;34m🧪 Test: Muchas variables export[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587765==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587765==    by 0x40523D: main_loop (main.c:37)
+==1587765==    by 0x40523D: main (main.c:59)
+==1587765== 
+==1587765== LEAK SUMMARY:
+==1587765==    definitely lost: 0 bytes in 0 blocks
+==1587765==    indirectly lost: 0 bytes in 0 blocks
+==1587765==      possibly lost: 0 bytes in 0 blocks
+==1587765==    still reachable: 217,839 bytes in 504 blocks
+==1587765==         suppressed: 0 bytes in 0 blocks
+==1587765== 
+==1587765== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comando muy largo[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587771==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587771==    by 0x40523D: main_loop (main.c:37)
+==1587771==    by 0x40523D: main (main.c:59)
+==1587771== 
+==1587771== LEAK SUMMARY:
+==1587771==    definitely lost: 0 bytes in 0 blocks
+==1587771==    indirectly lost: 0 bytes in 0 blocks
+==1587771==      possibly lost: 0 bytes in 0 blocks
+==1587771==    still reachable: 219,831 bytes in 307 blocks
+==1587771==         suppressed: 0 bytes in 0 blocks
+==1587771== 
+==1587771== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Muchos pipes[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587790==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587790==    by 0x40523D: main_loop (main.c:37)
+==1587790==    by 0x40523D: main (main.c:59)
+==1587790== 
+==1587790== LEAK SUMMARY:
+==1587790==    definitely lost: 0 bytes in 0 blocks
+==1587790==    indirectly lost: 0 bytes in 0 blocks
+==1587790==      possibly lost: 0 bytes in 0 blocks
+==1587790==    still reachable: 214,477 bytes in 316 blocks
+==1587790==         suppressed: 0 bytes in 0 blocks
+==1587790== 
+==1587790== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+test
+--
+==1587785==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587785==    by 0x40523D: main_loop (main.c:37)
+==1587785==    by 0x40523D: main (main.c:59)
+==1587785== 
+==1587785== LEAK SUMMARY:
+==1587785==    definitely lost: 0 bytes in 0 blocks
+==1587785==    indirectly lost: 0 bytes in 0 blocks
+==1587785==      possibly lost: 0 bytes in 0 blocks
+==1587785==    still reachable: 214,031 bytes in 307 blocks
+==1587785==         suppressed: 0 bytes in 0 blocks
+==1587785== 
+==1587785== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE ESTRÉS ===[0m
+[0;34m🧪 Test: Muchos comandos seguidos[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587816==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587816==    by 0x40523D: main_loop (main.c:37)
+==1587816==    by 0x40523D: main (main.c:59)
+==1587816== 
+==1587816== LEAK SUMMARY:
+==1587816==    definitely lost: 0 bytes in 0 blocks
+==1587816==    indirectly lost: 0 bytes in 0 blocks
+==1587816==      possibly lost: 0 bytes in 0 blocks
+==1587816==    still reachable: 214,876 bytes in 364 blocks
+==1587816==         suppressed: 0 bytes in 0 blocks
+==1587816== 
+==1587816== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Export y unset alternados[0m
+[0;31m❌ LEAK DETECTADO[0m
+Detalles del leak:
+==1587833==    by 0x4892CD4: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1587833==    by 0x40523D: main_loop (main.c:37)
+==1587833==    by 0x40523D: main (main.c:59)
+==1587833== 
+==1587833== LEAK SUMMARY:
+==1587833==    definitely lost: 0 bytes in 0 blocks
+==1587833==    indirectly lost: 0 bytes in 0 blocks
+==1587833==      possibly lost: 0 bytes in 0 blocks
+==1587833==    still reachable: 214,936 bytes in 364 blocks
+==1587833==         suppressed: 0 bytes in 0 blocks
+==1587833== 
+==1587833== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+========================================================
+[0;34m📊 RESUMEN DE TESTS[0m
+Total de tests ejecutados: [1;33m57[0m
+Tests con memory leaks: [0;31m57[0m
+Tests sin leaks: [0;32m0[0m
+[0;31m⚠️  Se detectaron memory leaks en 57 tests[0m
+[1;33m💡 Revisar las funciones de cleanup y liberación de memoria[0m
+[0;34m✅ Tests completados[0m
+
+Código de salida: 0
+Finalizado: Sun Jun 29 03:14:14 AM CEST 2025
+========================================
+

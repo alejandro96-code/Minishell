@@ -1,0 +1,1055 @@
+REPORTE DE MEMORY LEAKS - MINISHELL
+Generado: Sun Jun 29 04:28:50 AM CEST 2025
+========================================
+
+Sun Jun 29 04:28:53 AM CEST 2025: Iniciando Tests Básicos
+----------------------------------------
+[1;33m🔧 Iniciando tests de memory leaks para minishell[0m
+========================================================
+[0;34m📋 Ejecutando tests categorizados...[0m
+
+[1;33m=== TESTS BÁSICOS ===[0m
+[0;34m🧪 Test: Comando simple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622176==    by 0x40528D: main_loop (main.c:37)
+==1622176==    by 0x40528D: main (main.c:59)
+==1622176== 
+==1622176== LEAK SUMMARY:
+==1622176==    definitely lost: 0 bytes in 0 blocks
+==1622176==    indirectly lost: 0 bytes in 0 blocks
+==1622176==      possibly lost: 0 bytes in 0 blocks
+==1622176==    still reachable: 213,958 bytes in 307 blocks
+==1622176==         suppressed: 0 bytes in 0 blocks
+==1622176== 
+==1622176== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comando inexistente[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622192==    by 0x40528D: main_loop (main.c:37)
+==1622192==    by 0x40528D: main (main.c:59)
+==1622192== 
+==1622192== LEAK SUMMARY:
+==1622192==    definitely lost: 0 bytes in 0 blocks
+==1622192==    indirectly lost: 0 bytes in 0 blocks
+==1622192==      possibly lost: 0 bytes in 0 blocks
+==1622192==    still reachable: 213,977 bytes in 307 blocks
+==1622192==         suppressed: 0 bytes in 0 blocks
+==1622192== 
+==1622192== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Múltiples comandos simples[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622223==    by 0x40528D: main_loop (main.c:37)
+==1622223==    by 0x40528D: main (main.c:59)
+==1622223== 
+==1622223== LEAK SUMMARY:
+==1622223==    definitely lost: 0 bytes in 0 blocks
+==1622223==    indirectly lost: 0 bytes in 0 blocks
+==1622223==      possibly lost: 0 bytes in 0 blocks
+==1622223==    still reachable: 214,044 bytes in 313 blocks
+==1622223==         suppressed: 0 bytes in 0 blocks
+==1622223== 
+==1622223== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE BUILTINS ===[0m
+[0;34m🧪 Test: builtin echo simple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622245==    by 0x40528D: main_loop (main.c:37)
+==1622245==    by 0x40528D: main (main.c:59)
+==1622245== 
+==1622245== LEAK SUMMARY:
+==1622245==    definitely lost: 0 bytes in 0 blocks
+==1622245==    indirectly lost: 0 bytes in 0 blocks
+==1622245==      possibly lost: 0 bytes in 0 blocks
+==1622245==    still reachable: 213,971 bytes in 307 blocks
+==1622245==         suppressed: 0 bytes in 0 blocks
+==1622245== 
+==1622245== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin echo con flags[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622255==    by 0x40528D: main_loop (main.c:37)
+==1622255==    by 0x40528D: main (main.c:59)
+==1622255== 
+==1622255== LEAK SUMMARY:
+==1622255==    definitely lost: 0 bytes in 0 blocks
+==1622255==    indirectly lost: 0 bytes in 0 blocks
+==1622255==      possibly lost: 0 bytes in 0 blocks
+==1622255==    still reachable: 213,968 bytes in 307 blocks
+==1622255==         suppressed: 0 bytes in 0 blocks
+==1622255== 
+==1622255== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin echo múltiple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622287==    by 0x40528D: main_loop (main.c:37)
+==1622287==    by 0x40528D: main (main.c:59)
+==1622287== 
+==1622287== LEAK SUMMARY:
+==1622287==    definitely lost: 0 bytes in 0 blocks
+==1622287==    indirectly lost: 0 bytes in 0 blocks
+==1622287==      possibly lost: 0 bytes in 0 blocks
+==1622287==    still reachable: 214,060 bytes in 313 blocks
+==1622287==         suppressed: 0 bytes in 0 blocks
+==1622287== 
+==1622287== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin pwd[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622297==    by 0x40528D: main_loop (main.c:37)
+==1622297==    by 0x40528D: main (main.c:59)
+==1622297== 
+==1622297== LEAK SUMMARY:
+==1622297==    definitely lost: 0 bytes in 0 blocks
+==1622297==    indirectly lost: 0 bytes in 0 blocks
+==1622297==      possibly lost: 0 bytes in 0 blocks
+==1622297==    still reachable: 213,959 bytes in 307 blocks
+==1622297==         suppressed: 0 bytes in 0 blocks
+==1622297== 
+==1622297== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin pwd múltiple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622324==    by 0x40528D: main_loop (main.c:37)
+==1622324==    by 0x40528D: main (main.c:59)
+==1622324== 
+==1622324== LEAK SUMMARY:
+==1622324==    definitely lost: 0 bytes in 0 blocks
+==1622324==    indirectly lost: 0 bytes in 0 blocks
+==1622324==      possibly lost: 0 bytes in 0 blocks
+==1622324==    still reachable: 214,039 bytes in 313 blocks
+==1622324==         suppressed: 0 bytes in 0 blocks
+==1622324== 
+==1622324== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin env[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622334==    by 0x40528D: main_loop (main.c:37)
+==1622334==    by 0x40528D: main (main.c:59)
+==1622334== 
+==1622334== LEAK SUMMARY:
+==1622334==    definitely lost: 0 bytes in 0 blocks
+==1622334==    indirectly lost: 0 bytes in 0 blocks
+==1622334==      possibly lost: 0 bytes in 0 blocks
+==1622334==    still reachable: 213,959 bytes in 307 blocks
+==1622334==         suppressed: 0 bytes in 0 blocks
+==1622334== 
+==1622334== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin env después de export[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622352==    by 0x40528D: main_loop (main.c:37)
+==1622352==    by 0x40528D: main (main.c:59)
+==1622352== 
+==1622352== LEAK SUMMARY:
+==1622352==    definitely lost: 0 bytes in 0 blocks
+==1622352==    indirectly lost: 0 bytes in 0 blocks
+==1622352==      possibly lost: 0 bytes in 0 blocks
+==1622352==    still reachable: 214,032 bytes in 311 blocks
+==1622352==         suppressed: 0 bytes in 0 blocks
+==1622352== 
+==1622352== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin cd home[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622363==    by 0x40528D: main_loop (main.c:37)
+==1622363==    by 0x40528D: main (main.c:59)
+==1622363== 
+==1622363== LEAK SUMMARY:
+==1622363==    definitely lost: 0 bytes in 0 blocks
+==1622363==    indirectly lost: 0 bytes in 0 blocks
+==1622363==      possibly lost: 0 bytes in 0 blocks
+==1622363==    still reachable: 213,910 bytes in 307 blocks
+==1622363==         suppressed: 0 bytes in 0 blocks
+==1622363== 
+==1622363== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin cd directorio inexistente[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622387==    by 0x40528D: main_loop (main.c:37)
+==1622387==    by 0x40528D: main (main.c:59)
+==1622387== 
+==1622387== LEAK SUMMARY:
+==1622387==    definitely lost: 0 bytes in 0 blocks
+==1622387==    indirectly lost: 0 bytes in 0 blocks
+==1622387==      possibly lost: 0 bytes in 0 blocks
+==1622387==    still reachable: 213,982 bytes in 307 blocks
+==1622387==         suppressed: 0 bytes in 0 blocks
+==1622387== 
+==1622387== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin cd con PATH relativo[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622403==    by 0x40528D: main_loop (main.c:37)
+==1622403==    by 0x40528D: main (main.c:59)
+==1622403== 
+==1622403== LEAK SUMMARY:
+==1622403==    definitely lost: 0 bytes in 0 blocks
+==1622403==    indirectly lost: 0 bytes in 0 blocks
+==1622403==      possibly lost: 0 bytes in 0 blocks
+==1622403==    still reachable: 213,990 bytes in 310 blocks
+==1622403==         suppressed: 0 bytes in 0 blocks
+==1622403== 
+==1622403== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin export simple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622424==    by 0x40528D: main_loop (main.c:37)
+==1622424==    by 0x40528D: main (main.c:59)
+==1622424== 
+==1622424== LEAK SUMMARY:
+==1622424==    definitely lost: 0 bytes in 0 blocks
+==1622424==    indirectly lost: 0 bytes in 0 blocks
+==1622424==      possibly lost: 0 bytes in 0 blocks
+==1622424==    still reachable: 213,992 bytes in 308 blocks
+==1622424==         suppressed: 0 bytes in 0 blocks
+==1622424== 
+==1622424== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin export múltiple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622440==    by 0x40528D: main_loop (main.c:37)
+==1622440==    by 0x40528D: main (main.c:59)
+==1622440== 
+==1622440== LEAK SUMMARY:
+==1622440==    definitely lost: 0 bytes in 0 blocks
+==1622440==    indirectly lost: 0 bytes in 0 blocks
+==1622440==      possibly lost: 0 bytes in 0 blocks
+==1622440==    still reachable: 214,132 bytes in 316 blocks
+==1622440==         suppressed: 0 bytes in 0 blocks
+==1622440== 
+==1622440== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin export sin valor[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622450==    by 0x40528D: main_loop (main.c:37)
+==1622450==    by 0x40528D: main (main.c:59)
+==1622450== 
+==1622450== LEAK SUMMARY:
+==1622450==    definitely lost: 0 bytes in 0 blocks
+==1622450==    indirectly lost: 0 bytes in 0 blocks
+==1622450==      possibly lost: 0 bytes in 0 blocks
+==1622450==    still reachable: 213,990 bytes in 308 blocks
+==1622450==         suppressed: 0 bytes in 0 blocks
+==1622450== 
+==1622450== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin export con espacios[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622460==    by 0x40528D: main_loop (main.c:37)
+==1622460==    by 0x40528D: main (main.c:59)
+==1622460== 
+==1622460== LEAK SUMMARY:
+==1622460==    definitely lost: 0 bytes in 0 blocks
+==1622460==    indirectly lost: 0 bytes in 0 blocks
+==1622460==      possibly lost: 0 bytes in 0 blocks
+==1622460==    still reachable: 214,018 bytes in 308 blocks
+==1622460==         suppressed: 0 bytes in 0 blocks
+==1622460== 
+==1622460== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin unset[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622492==    by 0x40528D: main_loop (main.c:37)
+==1622492==    by 0x40528D: main (main.c:59)
+==1622492== 
+==1622492== LEAK SUMMARY:
+==1622492==    definitely lost: 0 bytes in 0 blocks
+==1622492==    indirectly lost: 0 bytes in 0 blocks
+==1622492==      possibly lost: 0 bytes in 0 blocks
+==1622492==    still reachable: 214,028 bytes in 310 blocks
+==1622492==         suppressed: 0 bytes in 0 blocks
+==1622492== 
+==1622492== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: builtin unset múltiple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622502==    by 0x40528D: main_loop (main.c:37)
+==1622502==    by 0x40528D: main (main.c:59)
+==1622502== 
+==1622502== LEAK SUMMARY:
+==1622502==    definitely lost: 0 bytes in 0 blocks
+==1622502==    indirectly lost: 0 bytes in 0 blocks
+==1622502==      possibly lost: 0 bytes in 0 blocks
+==1622502==    still reachable: 214,075 bytes in 313 blocks
+==1622502==         suppressed: 0 bytes in 0 blocks
+==1622502== 
+==1622502== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE VARIABLES DE ENTORNO ===[0m
+[0;34m🧪 Test: Expansión de variable simple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622531==    by 0x40528D: main_loop (main.c:37)
+==1622531==    by 0x40528D: main (main.c:59)
+==1622531== 
+==1622531== LEAK SUMMARY:
+==1622531==    definitely lost: 0 bytes in 0 blocks
+==1622531==    indirectly lost: 0 bytes in 0 blocks
+==1622531==      possibly lost: 0 bytes in 0 blocks
+==1622531==    still reachable: 213,966 bytes in 307 blocks
+==1622531==         suppressed: 0 bytes in 0 blocks
+==1622531== 
+==1622531== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Expansión de variable inexistente[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622541==    by 0x40528D: main_loop (main.c:37)
+==1622541==    by 0x40528D: main (main.c:59)
+==1622541== 
+==1622541== LEAK SUMMARY:
+==1622541==    definitely lost: 0 bytes in 0 blocks
+==1622541==    indirectly lost: 0 bytes in 0 blocks
+==1622541==      possibly lost: 0 bytes in 0 blocks
+==1622541==    still reachable: 213,977 bytes in 307 blocks
+==1622541==         suppressed: 0 bytes in 0 blocks
+==1622541== 
+==1622541== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Expansión múltiple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622551==    by 0x40528D: main_loop (main.c:37)
+==1622551==    by 0x40528D: main (main.c:59)
+==1622551== 
+==1622551== LEAK SUMMARY:
+==1622551==    definitely lost: 0 bytes in 0 blocks
+==1622551==    indirectly lost: 0 bytes in 0 blocks
+==1622551==      possibly lost: 0 bytes in 0 blocks
+==1622551==    still reachable: 213,978 bytes in 307 blocks
+==1622551==         suppressed: 0 bytes in 0 blocks
+==1622551== 
+==1622551== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Variable con comillas[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622570==    by 0x40528D: main_loop (main.c:37)
+==1622570==    by 0x40528D: main (main.c:59)
+==1622570== 
+==1622570== LEAK SUMMARY:
+==1622570==    definitely lost: 0 bytes in 0 blocks
+==1622570==    indirectly lost: 0 bytes in 0 blocks
+==1622570==      possibly lost: 0 bytes in 0 blocks
+==1622570==    still reachable: 213,968 bytes in 307 blocks
+==1622570==         suppressed: 0 bytes in 0 blocks
+==1622570== 
+==1622570== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Expansión de $?[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622594==    by 0x40528D: main_loop (main.c:37)
+==1622594==    by 0x40528D: main (main.c:59)
+==1622594== 
+==1622594== LEAK SUMMARY:
+==1622594==    definitely lost: 0 bytes in 0 blocks
+==1622594==    indirectly lost: 0 bytes in 0 blocks
+==1622594==      possibly lost: 0 bytes in 0 blocks
+==1622594==    still reachable: 213,963 bytes in 307 blocks
+==1622594==         suppressed: 0 bytes in 0 blocks
+==1622594== 
+==1622594== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE QUOTES ===[0m
+[0;34m🧪 Test: Comillas simples[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622610==    by 0x40528D: main_loop (main.c:37)
+==1622610==    by 0x40528D: main (main.c:59)
+==1622610== 
+==1622610== LEAK SUMMARY:
+==1622610==    definitely lost: 0 bytes in 0 blocks
+==1622610==    indirectly lost: 0 bytes in 0 blocks
+==1622610==      possibly lost: 0 bytes in 0 blocks
+==1622610==    still reachable: 213,973 bytes in 307 blocks
+==1622610==         suppressed: 0 bytes in 0 blocks
+==1622610== 
+==1622610== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comillas dobles[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622631==    by 0x40528D: main_loop (main.c:37)
+==1622631==    by 0x40528D: main (main.c:59)
+==1622631== 
+==1622631== LEAK SUMMARY:
+==1622631==    definitely lost: 0 bytes in 0 blocks
+==1622631==    indirectly lost: 0 bytes in 0 blocks
+==1622631==      possibly lost: 0 bytes in 0 blocks
+==1622631==    still reachable: 213,973 bytes in 307 blocks
+==1622631==         suppressed: 0 bytes in 0 blocks
+==1622631== 
+==1622631== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comillas mixtas[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622649==    by 0x40528D: main_loop (main.c:37)
+==1622649==    by 0x40528D: main (main.c:59)
+==1622649== 
+==1622649== LEAK SUMMARY:
+==1622649==    definitely lost: 0 bytes in 0 blocks
+==1622649==    indirectly lost: 0 bytes in 0 blocks
+==1622649==      possibly lost: 0 bytes in 0 blocks
+==1622649==    still reachable: 213,975 bytes in 307 blocks
+==1622649==         suppressed: 0 bytes in 0 blocks
+==1622649== 
+==1622649== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comillas anidadas[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622659==    by 0x40528D: main_loop (main.c:37)
+==1622659==    by 0x40528D: main (main.c:59)
+==1622659== 
+==1622659== LEAK SUMMARY:
+==1622659==    definitely lost: 0 bytes in 0 blocks
+==1622659==    indirectly lost: 0 bytes in 0 blocks
+==1622659==      possibly lost: 0 bytes in 0 blocks
+==1622659==    still reachable: 213,977 bytes in 307 blocks
+==1622659==         suppressed: 0 bytes in 0 blocks
+==1622659== 
+==1622659== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comillas vacías[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622669==    by 0x40528D: main_loop (main.c:37)
+==1622669==    by 0x40528D: main (main.c:59)
+==1622669== 
+==1622669== LEAK SUMMARY:
+==1622669==    definitely lost: 0 bytes in 0 blocks
+==1622669==    indirectly lost: 0 bytes in 0 blocks
+==1622669==      possibly lost: 0 bytes in 0 blocks
+==1622669==    still reachable: 213,966 bytes in 307 blocks
+==1622669==         suppressed: 0 bytes in 0 blocks
+==1622669== 
+==1622669== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE PIPES ===[0m
+[0;34m🧪 Test: Pipe simple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622703==    by 0x40528D: main_loop (main.c:37)
+==1622703==    by 0x40528D: main (main.c:59)
+==1622703== 
+==1622703== LEAK SUMMARY:
+==1622703==    definitely lost: 0 bytes in 0 blocks
+==1622703==    indirectly lost: 0 bytes in 0 blocks
+==1622703==      possibly lost: 0 bytes in 0 blocks
+==1622703==    still reachable: 214,237 bytes in 307 blocks
+==1622703==         suppressed: 0 bytes in 0 blocks
+==1622703== 
+==1622703== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+==1622702== 
+==1622702== HEAP SUMMARY:
+==1622702==     in use at exit: 213,971 bytes in 307 blocks
+==1622702==   total heap usage: 538 allocs, 231 frees, 238,474 bytes allocated
+==1622702== 
+--
+==1622702==    by 0x40528D: main_loop (main.c:37)
+==1622702==    by 0x40528D: main (main.c:59)
+==1622702== 
+==1622702== LEAK SUMMARY:
+==1622702==    definitely lost: 0 bytes in 0 blocks
+==1622702==    indirectly lost: 0 bytes in 0 blocks
+==1622702==      possibly lost: 0 bytes in 0 blocks
+==1622702==    still reachable: 213,971 bytes in 307 blocks
+==1622702==         suppressed: 0 bytes in 0 blocks
+==1622702== 
+==1622702== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe doble[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622734==    by 0x40528D: main_loop (main.c:37)
+==1622734==    by 0x40528D: main (main.c:59)
+==1622734== 
+==1622734== LEAK SUMMARY:
+==1622734==    definitely lost: 0 bytes in 0 blocks
+==1622734==    indirectly lost: 0 bytes in 0 blocks
+==1622734==      possibly lost: 0 bytes in 0 blocks
+==1622734==    still reachable: 214,263 bytes in 308 blocks
+==1622734==         suppressed: 0 bytes in 0 blocks
+==1622734== 
+==1622734== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+==1622714== 
+==1622714== HEAP SUMMARY:
+==1622714==     in use at exit: 213,977 bytes in 307 blocks
+==1622714==   total heap usage: 541 allocs, 234 frees, 238,542 bytes allocated
+==1622714== 
+--
+==1622714==    by 0x40528D: main_loop (main.c:37)
+==1622714==    by 0x40528D: main (main.c:59)
+==1622714== 
+==1622714== LEAK SUMMARY:
+==1622714==    definitely lost: 0 bytes in 0 blocks
+==1622714==    indirectly lost: 0 bytes in 0 blocks
+==1622714==      possibly lost: 0 bytes in 0 blocks
+==1622714==    still reachable: 213,977 bytes in 307 blocks
+==1622714==         suppressed: 0 bytes in 0 blocks
+==1622714== 
+==1622714== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe triple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622747==    by 0x40528D: main_loop (main.c:37)
+==1622747==    by 0x40528D: main (main.c:59)
+==1622747== 
+==1622747== LEAK SUMMARY:
+==1622747==    definitely lost: 0 bytes in 0 blocks
+==1622747==    indirectly lost: 0 bytes in 0 blocks
+==1622747==      possibly lost: 0 bytes in 0 blocks
+==1622747==    still reachable: 214,289 bytes in 309 blocks
+==1622747==         suppressed: 0 bytes in 0 blocks
+==1622747== 
+==1622747== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+==1622746== 
+==1622746== HEAP SUMMARY:
+==1622746==     in use at exit: 213,983 bytes in 307 blocks
+==1622746==   total heap usage: 543 allocs, 236 frees, 238,578 bytes allocated
+==1622746== 
+--
+==1622746==    by 0x40528D: main_loop (main.c:37)
+==1622746==    by 0x40528D: main (main.c:59)
+==1622746== 
+==1622746== LEAK SUMMARY:
+==1622746==    definitely lost: 0 bytes in 0 blocks
+==1622746==    indirectly lost: 0 bytes in 0 blocks
+==1622746==      possibly lost: 0 bytes in 0 blocks
+==1622746==    still reachable: 213,983 bytes in 307 blocks
+==1622746==         suppressed: 0 bytes in 0 blocks
+==1622746== 
+==1622746== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe con ls y grep[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622760==    by 0x40528D: main_loop (main.c:37)
+==1622760==    by 0x40528D: main (main.c:59)
+==1622760== 
+==1622760== LEAK SUMMARY:
+==1622760==    definitely lost: 0 bytes in 0 blocks
+==1622760==    indirectly lost: 0 bytes in 0 blocks
+==1622760==      possibly lost: 0 bytes in 0 blocks
+==1622760==    still reachable: 213,975 bytes in 307 blocks
+==1622760==         suppressed: 0 bytes in 0 blocks
+==1622760== 
+==1622760== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe con comandos builtin[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622781==    by 0x40528D: main_loop (main.c:37)
+==1622781==    by 0x40528D: main (main.c:59)
+==1622781== 
+==1622781== LEAK SUMMARY:
+==1622781==    definitely lost: 0 bytes in 0 blocks
+==1622781==    indirectly lost: 0 bytes in 0 blocks
+==1622781==      possibly lost: 0 bytes in 0 blocks
+==1622781==    still reachable: 213,963 bytes in 306 blocks
+==1622781==         suppressed: 0 bytes in 0 blocks
+==1622781== 
+==1622781== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+HOME=/home/dgasco-g
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+==1622780== 
+==1622780== HEAP SUMMARY:
+==1622780==     in use at exit: 213,971 bytes in 307 blocks
+==1622780==   total heap usage: 538 allocs, 231 frees, 238,474 bytes allocated
+--
+==1622780==    by 0x40528D: main_loop (main.c:37)
+==1622780==    by 0x40528D: main (main.c:59)
+==1622780== 
+==1622780== LEAK SUMMARY:
+==1622780==    definitely lost: 0 bytes in 0 blocks
+==1622780==    indirectly lost: 0 bytes in 0 blocks
+==1622780==      possibly lost: 0 bytes in 0 blocks
+==1622780==    still reachable: 213,971 bytes in 307 blocks
+==1622780==         suppressed: 0 bytes in 0 blocks
+==1622780== 
+==1622780== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE REDIRECCIONES ===[0m
+[0;34m🧪 Test: Redirección de salida[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622792==    by 0x40528D: main_loop (main.c:37)
+==1622792==    by 0x40528D: main (main.c:59)
+==1622792== 
+==1622792== LEAK SUMMARY:
+==1622792==    definitely lost: 0 bytes in 0 blocks
+==1622792==    indirectly lost: 0 bytes in 0 blocks
+==1622792==      possibly lost: 0 bytes in 0 blocks
+==1622792==    still reachable: 213,978 bytes in 307 blocks
+==1622792==         suppressed: 0 bytes in 0 blocks
+==1622792== 
+==1622792== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Redirección de entrada[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622816==    by 0x40528D: main_loop (main.c:37)
+==1622816==    by 0x40528D: main (main.c:59)
+==1622816== 
+==1622816== LEAK SUMMARY:
+==1622816==    definitely lost: 0 bytes in 0 blocks
+==1622816==    indirectly lost: 0 bytes in 0 blocks
+==1622816==      possibly lost: 0 bytes in 0 blocks
+==1622816==    still reachable: 208,361 bytes in 225 blocks
+==1622816==         suppressed: 0 bytes in 0 blocks
+==1622816== 
+==1622816== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Redirección append[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622846==    by 0x40528D: main_loop (main.c:37)
+==1622846==    by 0x40528D: main (main.c:59)
+==1622846== 
+==1622846== LEAK SUMMARY:
+==1622846==    definitely lost: 0 bytes in 0 blocks
+==1622846==    indirectly lost: 0 bytes in 0 blocks
+==1622846==      possibly lost: 0 bytes in 0 blocks
+==1622846==    still reachable: 213,979 bytes in 307 blocks
+==1622846==         suppressed: 0 bytes in 0 blocks
+==1622846== 
+==1622846== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Redirecciones múltiples[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622856==    by 0x40528D: main_loop (main.c:37)
+==1622856==    by 0x40528D: main (main.c:59)
+==1622856== 
+==1622856== LEAK SUMMARY:
+==1622856==    definitely lost: 0 bytes in 0 blocks
+==1622856==    indirectly lost: 0 bytes in 0 blocks
+==1622856==      possibly lost: 0 bytes in 0 blocks
+==1622856==    still reachable: 214,037 bytes in 310 blocks
+==1622856==         suppressed: 0 bytes in 0 blocks
+==1622856== 
+==1622856== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE HEREDOC ===[0m
+[0;34m🧪 Test: Heredoc simple[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622874==    by 0x40528D: main_loop (main.c:37)
+==1622874==    by 0x40528D: main (main.c:59)
+==1622874== 
+==1622874== LEAK SUMMARY:
+==1622874==    definitely lost: 0 bytes in 0 blocks
+==1622874==    indirectly lost: 0 bytes in 0 blocks
+==1622874==      possibly lost: 0 bytes in 0 blocks
+==1622874==    still reachable: 208,360 bytes in 226 blocks
+==1622874==         suppressed: 0 bytes in 0 blocks
+==1622874== 
+==1622874== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Heredoc con variables[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622885==    by 0x40528D: main_loop (main.c:37)
+==1622885==    by 0x40528D: main (main.c:59)
+==1622885== 
+==1622885== LEAK SUMMARY:
+==1622885==    definitely lost: 0 bytes in 0 blocks
+==1622885==    indirectly lost: 0 bytes in 0 blocks
+==1622885==      possibly lost: 0 bytes in 0 blocks
+==1622885==    still reachable: 208,360 bytes in 226 blocks
+==1622885==         suppressed: 0 bytes in 0 blocks
+==1622885== 
+==1622885== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE PARSING COMPLEJO ===[0m
+[0;34m🧪 Test: Comando con muchos argumentos[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622904==    by 0x40528D: main_loop (main.c:37)
+==1622904==    by 0x40528D: main (main.c:59)
+==1622904== 
+==1622904== LEAK SUMMARY:
+==1622904==    definitely lost: 0 bytes in 0 blocks
+==1622904==    indirectly lost: 0 bytes in 0 blocks
+==1622904==      possibly lost: 0 bytes in 0 blocks
+==1622904==    still reachable: 214,012 bytes in 307 blocks
+==1622904==         suppressed: 0 bytes in 0 blocks
+==1622904== 
+==1622904== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Múltiples pipes y redirecciones[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622940==    by 0x40528D: main_loop (main.c:37)
+==1622940==    by 0x40528D: main (main.c:59)
+==1622940== 
+==1622940== LEAK SUMMARY:
+==1622940==    definitely lost: 0 bytes in 0 blocks
+==1622940==    indirectly lost: 0 bytes in 0 blocks
+==1622940==      possibly lost: 0 bytes in 0 blocks
+==1622940==    still reachable: 214,276 bytes in 307 blocks
+==1622940==         suppressed: 0 bytes in 0 blocks
+==1622940== 
+==1622940== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+==1622928== 
+==1622928== HEAP SUMMARY:
+==1622928==     in use at exit: 213,984 bytes in 307 blocks
+==1622928==   total heap usage: 539 allocs, 232 frees, 238,571 bytes allocated
+==1622928== 
+--
+==1622928==    by 0x40528D: main_loop (main.c:37)
+==1622928==    by 0x40528D: main (main.c:59)
+==1622928== 
+==1622928== LEAK SUMMARY:
+==1622928==    definitely lost: 0 bytes in 0 blocks
+==1622928==    indirectly lost: 0 bytes in 0 blocks
+==1622928==      possibly lost: 0 bytes in 0 blocks
+==1622928==    still reachable: 213,984 bytes in 307 blocks
+==1622928==         suppressed: 0 bytes in 0 blocks
+==1622928== 
+==1622928== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comando largo con variables[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622951==    by 0x40528D: main_loop (main.c:37)
+==1622951==    by 0x40528D: main (main.c:59)
+==1622951== 
+==1622951== LEAK SUMMARY:
+==1622951==    definitely lost: 0 bytes in 0 blocks
+==1622951==    indirectly lost: 0 bytes in 0 blocks
+==1622951==      possibly lost: 0 bytes in 0 blocks
+==1622951==    still reachable: 213,983 bytes in 307 blocks
+==1622951==         suppressed: 0 bytes in 0 blocks
+==1622951== 
+==1622951== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE SEÑALES ===[0m
+[0;34m🧪 Test: Comando con Ctrl+C simulado[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622967==    by 0x40528D: main_loop (main.c:37)
+==1622967==    by 0x40528D: main (main.c:59)
+==1622967== 
+==1622967== LEAK SUMMARY:
+==1622967==    definitely lost: 0 bytes in 0 blocks
+==1622967==    indirectly lost: 0 bytes in 0 blocks
+==1622967==      possibly lost: 0 bytes in 0 blocks
+==1622967==    still reachable: 213,963 bytes in 307 blocks
+==1622967==         suppressed: 0 bytes in 0 blocks
+==1622967== 
+==1622967== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Múltiples comandos interrumpidos[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1622986==    by 0x40528D: main_loop (main.c:37)
+==1622986==    by 0x40528D: main (main.c:59)
+==1622986== 
+==1622986== LEAK SUMMARY:
+==1622986==    definitely lost: 0 bytes in 0 blocks
+==1622986==    indirectly lost: 0 bytes in 0 blocks
+==1622986==      possibly lost: 0 bytes in 0 blocks
+==1622986==    still reachable: 214,007 bytes in 310 blocks
+==1622986==         suppressed: 0 bytes in 0 blocks
+==1622986== 
+==1622986== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE EDGE CASES ===[0m
+[0;34m🧪 Test: Input vacío[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623033==    by 0x40528D: main_loop (main.c:37)
+==1623033==    by 0x40528D: main (main.c:59)
+==1623033== 
+==1623033== LEAK SUMMARY:
+==1623033==    definitely lost: 0 bytes in 0 blocks
+==1623033==    indirectly lost: 0 bytes in 0 blocks
+==1623033==      possibly lost: 0 bytes in 0 blocks
+==1623033==    still reachable: 213,775 bytes in 302 blocks
+==1623033==         suppressed: 0 bytes in 0 blocks
+==1623033== 
+==1623033== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Solo espacios[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623055==    by 0x40528D: main_loop (main.c:37)
+==1623055==    by 0x40528D: main (main.c:59)
+==1623055== 
+==1623055== LEAK SUMMARY:
+==1623055==    definitely lost: 0 bytes in 0 blocks
+==1623055==    indirectly lost: 0 bytes in 0 blocks
+==1623055==      possibly lost: 0 bytes in 0 blocks
+==1623055==    still reachable: 213,959 bytes in 307 blocks
+==1623055==         suppressed: 0 bytes in 0 blocks
+==1623055== 
+==1623055== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Solo tabs[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623065==    by 0x40528D: main_loop (main.c:37)
+==1623065==    by 0x40528D: main (main.c:59)
+==1623065== 
+==1623065== LEAK SUMMARY:
+==1623065==    definitely lost: 0 bytes in 0 blocks
+==1623065==    indirectly lost: 0 bytes in 0 blocks
+==1623065==      possibly lost: 0 bytes in 0 blocks
+==1623065==    still reachable: 213,919 bytes in 304 blocks
+==1623065==         suppressed: 0 bytes in 0 blocks
+==1623065== 
+==1623065== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comando con espacios extra[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623075==    by 0x40528D: main_loop (main.c:37)
+==1623075==    by 0x40528D: main (main.c:59)
+==1623075== 
+==1623075== LEAK SUMMARY:
+==1623075==    definitely lost: 0 bytes in 0 blocks
+==1623075==    indirectly lost: 0 bytes in 0 blocks
+==1623075==      possibly lost: 0 bytes in 0 blocks
+==1623075==    still reachable: 213,971 bytes in 307 blocks
+==1623075==         suppressed: 0 bytes in 0 blocks
+==1623075== 
+==1623075== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Pipe al final (error)[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623105==    by 0x40528D: main_loop (main.c:37)
+==1623105==    by 0x40528D: main (main.c:59)
+==1623105== 
+==1623105== LEAK SUMMARY:
+==1623105==    definitely lost: 0 bytes in 0 blocks
+==1623105==    indirectly lost: 0 bytes in 0 blocks
+==1623105==      possibly lost: 0 bytes in 0 blocks
+==1623105==    still reachable: 213,967 bytes in 307 blocks
+==1623105==         suppressed: 0 bytes in 0 blocks
+==1623105== 
+==1623105== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Redirección sin archivo[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623126==    by 0x40528D: main_loop (main.c:37)
+==1623126==    by 0x40528D: main (main.c:59)
+==1623126== 
+==1623126== LEAK SUMMARY:
+==1623126==    definitely lost: 0 bytes in 0 blocks
+==1623126==    indirectly lost: 0 bytes in 0 blocks
+==1623126==      possibly lost: 0 bytes in 0 blocks
+==1623126==    still reachable: 213,967 bytes in 307 blocks
+==1623126==         suppressed: 0 bytes in 0 blocks
+==1623126== 
+==1623126== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Caracteres especiales[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623142==    by 0x40528D: main_loop (main.c:37)
+==1623142==    by 0x40528D: main (main.c:59)
+==1623142== 
+==1623142== LEAK SUMMARY:
+==1623142==    definitely lost: 0 bytes in 0 blocks
+==1623142==    indirectly lost: 0 bytes in 0 blocks
+==1623142==      possibly lost: 0 bytes in 0 blocks
+==1623142==    still reachable: 213,969 bytes in 307 blocks
+==1623142==         suppressed: 0 bytes in 0 blocks
+==1623142== 
+==1623142== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE MEMORIA INTENSIVOS ===[0m
+[0;34m🧪 Test: Muchas variables export[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623153==    by 0x40528D: main_loop (main.c:37)
+==1623153==    by 0x40528D: main (main.c:59)
+==1623153== 
+==1623153== LEAK SUMMARY:
+==1623153==    definitely lost: 0 bytes in 0 blocks
+==1623153==    indirectly lost: 0 bytes in 0 blocks
+==1623153==      possibly lost: 0 bytes in 0 blocks
+==1623153==    still reachable: 217,833 bytes in 504 blocks
+==1623153==         suppressed: 0 bytes in 0 blocks
+==1623153== 
+==1623153== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Comando muy largo[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623164==    by 0x40528D: main_loop (main.c:37)
+==1623164==    by 0x40528D: main (main.c:59)
+==1623164== 
+==1623164== LEAK SUMMARY:
+==1623164==    definitely lost: 0 bytes in 0 blocks
+==1623164==    indirectly lost: 0 bytes in 0 blocks
+==1623164==      possibly lost: 0 bytes in 0 blocks
+==1623164==    still reachable: 219,825 bytes in 307 blocks
+==1623164==         suppressed: 0 bytes in 0 blocks
+==1623164== 
+==1623164== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Muchos pipes[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623198==    by 0x40528D: main_loop (main.c:37)
+==1623198==    by 0x40528D: main (main.c:59)
+==1623198== 
+==1623198== LEAK SUMMARY:
+==1623198==    definitely lost: 0 bytes in 0 blocks
+==1623198==    indirectly lost: 0 bytes in 0 blocks
+==1623198==      possibly lost: 0 bytes in 0 blocks
+==1623198==    still reachable: 214,471 bytes in 316 blocks
+==1623198==         suppressed: 0 bytes in 0 blocks
+==1623198== 
+==1623198== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+test
+[33mdgasco-g@Minishell~[31m/home/dgasco-g/Desktop/curso/Mini/tests[0m: exit
+==1623183== 
+==1623183== HEAP SUMMARY:
+==1623183==     in use at exit: 214,025 bytes in 307 blocks
+==1623183==   total heap usage: 559 allocs, 252 frees, 238,894 bytes allocated
+--
+==1623183==    by 0x40528D: main_loop (main.c:37)
+==1623183==    by 0x40528D: main (main.c:59)
+==1623183== 
+==1623183== LEAK SUMMARY:
+==1623183==    definitely lost: 0 bytes in 0 blocks
+==1623183==    indirectly lost: 0 bytes in 0 blocks
+==1623183==      possibly lost: 0 bytes in 0 blocks
+==1623183==    still reachable: 214,025 bytes in 307 blocks
+==1623183==         suppressed: 0 bytes in 0 blocks
+==1623183== 
+==1623183== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[1;33m=== TESTS DE ESTRÉS ===[0m
+[0;34m🧪 Test: Muchos comandos seguidos[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623219==    by 0x40528D: main_loop (main.c:37)
+==1623219==    by 0x40528D: main (main.c:59)
+==1623219== 
+==1623219== LEAK SUMMARY:
+==1623219==    definitely lost: 0 bytes in 0 blocks
+==1623219==    indirectly lost: 0 bytes in 0 blocks
+==1623219==      possibly lost: 0 bytes in 0 blocks
+==1623219==    still reachable: 214,870 bytes in 364 blocks
+==1623219==         suppressed: 0 bytes in 0 blocks
+==1623219== 
+==1623219== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+[0;34m🧪 Test: Export y unset alternados[0m
+[0;31m❌ LEAK DETECTADO (en tu código)[0m
+Detalles del leak:
+==1623249==    by 0x40528D: main_loop (main.c:37)
+==1623249==    by 0x40528D: main (main.c:59)
+==1623249== 
+==1623249== LEAK SUMMARY:
+==1623249==    definitely lost: 0 bytes in 0 blocks
+==1623249==    indirectly lost: 0 bytes in 0 blocks
+==1623249==      possibly lost: 0 bytes in 0 blocks
+==1623249==    still reachable: 214,930 bytes in 364 blocks
+==1623249==         suppressed: 0 bytes in 0 blocks
+==1623249== 
+==1623249== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---
+
+========================================================
+[0;34m📊 RESUMEN DE TESTS[0m
+Total de tests ejecutados: [1;33m57[0m
+Tests con memory leaks: [0;31m57[0m
+Tests sin leaks: [0;32m0[0m
+[0;31m⚠️  Se detectaron memory leaks en 57 tests[0m
+[1;33m💡 Revisar las funciones de cleanup y liberación de memoria[0m
+[0;34m✅ Tests completados[0m
+
+Código de salida: 0
+Finalizado: Sun Jun 29 04:29:44 AM CEST 2025
+========================================
+
