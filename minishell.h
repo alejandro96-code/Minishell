@@ -6,7 +6,7 @@
 /*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/26 23:26:25 by dgasco-g         ###   ########.fr       */
+/*   Updated: 2025/06/29 04:19:50 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,14 @@ typedef struct s_expand_state
 // builtins/cd.c
 char		*get_env_var(char *name, char **env);
 int			builtin_cd(char **args, char **env);
+
+// builtins/cd_utils.c
+char		*handle_no_path_case(char **env, int *should_free);
+char		*handle_tilde_path(char *original_path, \
+				char **env, int *should_free);
+char		*handle_relative_path_case(char *original_path, int *should_free);
 char		*resolve_home_path(char *path, char **env);
 char		*resolve_relative_path(char *path);
-int			try_change_directory(char *path);
 
 // builtins/echo.c
 int			builtin_echo(char **args, char **env);

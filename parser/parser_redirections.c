@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 22:43:18 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/27 17:25:30 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/29 03:01:17 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	skip_filename_with_quotes(const char *input, int i)
 			j++;
 			break ;
 		}
-		else if (!in_quotes && (ft_isspace(input[j]) || input[j] == '|'))
-			break ;
+		else if (!in_quotes && input[j] == '|')
+			return (0);
 		j++;
 	}
 	return (j);
@@ -62,13 +62,16 @@ int	pipe_after_redirection_aux(const char *input, int i)
 	int	j;
 
 	j = skip_redirection_operator(input, i);
-	if (input[j])
-		j = skip_filename_with_quotes(input, j);
+	if (!input[j])
+		return (1);
+	j = skip_filename_with_quotes(input, j);
+	if (j == 0)
+		return (1);
 	while (input[j] && ft_isspace(input[j]))
 		j++;
 	if (input[j] == '|')
-		return (1);
-	return (1);
+		return (0);
+	return (0);
 }
 
 int	pipe_after_redirec(const char *input)
@@ -91,7 +94,8 @@ int	pipe_after_redirec(const char *input)
 			in_quotes = 0;
 		if (is_redirection(input[i]) && !in_quotes)
 		{
-			pipe_after_redirection_aux(input, i);
+			if (pipe_after_redirection_aux(input, i))
+				return (0);
 		}
 		i++;
 	}

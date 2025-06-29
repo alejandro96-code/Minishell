@@ -6,7 +6,7 @@
 #    By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/07 20:15:32 by dgasco-g          #+#    #+#              #
-#    Updated: 2025/06/26 23:10:18 by dgasco-g         ###   ########.fr        #
+#    Updated: 2025/06/29 04:19:17 by dgasco-g         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ CFLAGS =  -Wall -Wextra -Werror -g -O3
 RM = rm -f
 
 SRC =	builtins/cd.c\
+      builtins/cd_utils.c\
       builtins/echo.c\
       builtins/env.c\
       builtins/exit.c\

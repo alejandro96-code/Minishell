@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 23:56:33 by dgasco-g          #+#    #+#             */
-/*   Updated: 2025/06/19 19:12:32 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/29 04:19:21 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,72 +30,40 @@ char	*get_env_var(char *name, char **env)
 	return (NULL);
 }
 
-// Implementación del builtin cd
-int	builtin_cd(char **args, char **env)
-{
-	char	*path;
-
-	path = args[1];
-	if (!path)
-	{
-		path = get_env_var("HOME", env);
-		if (!path)
-		{
-			ft_putstr_fd("cd: HOME not set\n", 2);
-			return (1);
-		}
-	}
-	if (path[0] == '~')
-		path = resolve_home_path(path, env);
-	else if (path[0] != '/')
-		path = resolve_relative_path(path);
-	if (!path)
-		return (1);
-	return (try_change_directory(path));
-}
-
-char	*resolve_home_path(char *path, char **env)
-{
-	char	*home;
-	char	*new_path;
-
-	home = get_env_var("HOME", env);
-	if (!home)
-	{
-		ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
-		return (NULL);
-	}
-	new_path = malloc(ft_strlen(home) + ft_strlen(path));
-	if (!new_path)
-	{
-		perror("malloc");
-		return (NULL);
-	}
-	ft_strlcpy(new_path, home, ft_strlen(home) + 1);
-	ft_strcat(new_path, path + 1);
-	return (new_path);
-}
-
-char	*resolve_relative_path(char *path)
-{
-	char	cwd[1024];
-
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd");
-		return (NULL);
-	}
-	ft_strcat(cwd, "/");
-	ft_strcat(cwd, path);
-	return (ft_strdup(cwd));
-}
-
-int	try_change_directory(char *path)
+// Cambia al directorio y libera memoria si es necesaria
+static int	change_and_free(char *path, int should_free)
 {
 	if (chdir(path) != 0)
 	{
+		if (should_free)
+			free(path);
 		perror("cd");
 		return (1);
 	}
+	if (should_free)
+		free(path);
 	return (0);
+}
+
+// Implementación del builtin cd (máximo 25 líneas)
+int	builtin_cd(char **args, char **env)
+{
+	char	*path;
+	int		should_free;
+
+	should_free = 0;
+	if (!args[1])
+		path = handle_no_path_case(env, &should_free);
+	else if (args[1][0] == '~')
+		path = handle_tilde_path(args[1], env, &should_free);
+	else if (args[1][0] != '/')
+		path = handle_relative_path_case(args[1], &should_free);
+	else
+	{
+		path = args[1];
+		should_free = 0;
+	}
+	if (!path)
+		return (1);
+	return (change_and_free(path, should_free));
 }

@@ -1,0 +1,4 @@
+REPORTE DE MEMORY LEAKS - MINISHELL
+Generado: Sun Jun 29 04:28:35 AM CEST 2025
+========================================
+

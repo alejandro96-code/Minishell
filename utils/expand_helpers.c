@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_helpers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejanr2 <alejanr2@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:30:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/27 18:35:26 by alejanr2         ###   ########.fr       */
+/*   Updated: 2025/06/29 03:37:27 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	init_expand_state(t_expand_state *state, char *input, char **env,
 	state->input = input;
 	state->input_pos = 0;
 	state->result_size = ft_strlen(input) * 2 + 256;
-	state->result = malloc(state->result_size);
+	state->result = ft_calloc(1, state->result_size);
 	if (!state->result)
 		return (0);
 	state->result_pos = 0;

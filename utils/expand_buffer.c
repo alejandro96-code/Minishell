@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_buffer.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dgasco-g <dgasco-g@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 19:00:00 by alejandro         #+#    #+#             */
-/*   Updated: 2025/06/18 19:16:46 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/06/29 03:36:56 by dgasco-g         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,13 @@ int	resize_result_buffer(t_expand_state *state)
 	new_result = malloc(new_size);
 	if (!new_result)
 		return (0);
-	ft_strlcpy(new_result, state->result, state->result_pos + 1);
+	if (state->result && state->result_pos >= 0)
+	{
+		state->result[state->result_pos] = '\0';
+		ft_strlcpy(new_result, state->result, state->result_pos + 1);
+	}
+	else
+		new_result[0] = '\0';
 	free(state->result);
 	state->result = new_result;
 	state->result_size = new_size;
